@@ -11,8 +11,9 @@ An object of class \code{character} of length 3.
 .fgcz_style_assets
 }
 \description{
-The three files that every FGCZ report needs alongside it: the format YAML,
-the SCSS theme, and the HTML header. \code{template.qmd} is deliberately excluded
--- it is a starter you copy once, not an asset staged on every render.
+The three files that every FGCZ report needs alongside it: the directory
+metadata (\verb{_metadata.yml}), the SCSS theme, and the HTML header.
+\code{template.qmd} is deliberately excluded -- it is a starter you copy once, not
+an asset staged on every render.
 }
 \keyword{internal}

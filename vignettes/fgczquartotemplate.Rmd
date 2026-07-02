@@ -30,18 +30,20 @@ list.files(fgcz_quarto_dir())
 
 | File | Role |
 |------|------|
-| `_fgcz-report.yml` | Shared format defaults, pulled into a report via `metadata-files`. |
+| `_metadata.yml` | Shared format defaults, applied automatically to every `.qmd` in the directory. |
 | `fgcz.scss` | Theme overrides — tabset/card styling, figure rows. |
 | `fgcz_header_quarto.html` | FGCZ header, injected via `include-in-header`. |
 | `template.qmd` | Generic starter report demonstrating the layout patterns. |
 
 ## Why the assets must sit next to the report
 
-The three styling files reference each other by **bare filename** — the format
-YAML names `fgcz.scss` and `fgcz_header_quarto.html`:
+Quarto applies a file named `_metadata.yml` automatically to every `.qmd` in
+its directory (and subdirectories) — that is how the styling attaches without
+any front-matter reference. The file in turn names `fgcz.scss` and
+`fgcz_header_quarto.html` by **bare filename**:
 
 ```{r peek-yml}
-writeLines(head(readLines(fgcz_quarto_dir("_fgcz-report.yml")), 30))
+writeLines(head(readLines(fgcz_quarto_dir("_metadata.yml")), 30))
 ```
 
 Quarto resolves those names relative to the directory of the **input `.qmd`**,
@@ -51,17 +53,20 @@ sit next to the report at render time. That is exactly what
 
 ## The portable report header
 
-A report never hard-codes a path into the package. It keeps the same header it
-would have if the assets were local:
+Because `_metadata.yml` attaches by directory, a report carries **no**
+FGCZ-specific front matter at all — just its own params and title:
 
 ````yaml
 ---
 params:
   reportTitle: "CountQC"
 title: "`r knitr::inline_expr("params$reportTitle")`"
-metadata-files: ["_fgcz-report.yml"]
 ---
 ````
+
+Rendered with a bare `quarto render CountQC.qmd`, it still picks up the full
+styling — the package need not even be installed, as long as the three assets
+are in the directory.
 
 ## Staging the assets
 
@@ -108,6 +113,8 @@ That is the single call downstream packages use in place of a bare
    GitHub, `Remotes: prolfqua/fgczquartotemplate`).
 2. Replace `quarto::quarto_render()` calls with
    `fgczquartotemplate::fgcz_render()`.
-3. Keep report headers as `metadata-files: ["_fgcz-report.yml"]`.
-4. Git-ignore the staged copies in the render directory so the packaged assets
+3. Leave report front matter free of any styling reference — the staged
+   `_metadata.yml` attaches automatically.
+4. Git-ignore the staged copies (`_metadata.yml`, `fgcz.scss`,
+   `fgcz_header_quarto.html`) in the render directory so the packaged assets
    remain the single source of truth.

@@ -1,9 +1,9 @@
 # fgczquartotemplate
 
 Shared **Quarto report assets** for FGCZ analysis packages (`ezRun`,
-`prolfqua`, …). It packages one common look-and-feel — a format YAML, an SCSS
-theme, and an HTML header — plus a starter report template and small helpers to
-stage those files next to a `.qmd` and render it.
+`prolfqua`, …). It packages one common look-and-feel — a directory-level
+`_metadata.yml`, an SCSS theme, and an HTML header — plus a starter report
+template and small helpers to stage those files next to a `.qmd` and render it.
 
 The goal: keep the FGCZ report styling in **one place** so every package that
 produces Quarto reports shares it and a theme change is a single package bump.
@@ -14,30 +14,38 @@ Installed under `inst/quarto/`:
 
 | File | Role |
 |------|------|
-| `_fgcz-report.yml` | Shared format defaults, pulled into a report via `metadata-files: ["_fgcz-report.yml"]`. |
+| `_metadata.yml` | Shared format defaults. Quarto applies it **automatically** to every `.qmd` in its directory — reports need no reference to it. |
 | `fgcz.scss` | Theme overrides — tabset/card styling, figure rows. |
 | `fgcz_header_quarto.html` | FGCZ header, injected via `include-in-header`. |
 | `template.qmd` | Generic starter report demonstrating the tabset, figure+callout, and nesting patterns. |
 
-## Why a render wrapper (and not just an absolute path)
+## How the styling attaches (no front-matter coupling)
 
-The three styling files reference each other by **bare filename**
-(`theme: [spacelab, fgcz.scss]`, `include-in-header: fgcz_header_quarto.html`),
-and Quarto resolves such paths relative to the **input `.qmd`'s directory** —
-not relative to the YAML that names them. So they must physically sit next to
-the `.qmd` at render time. `fgcz_copy_assets()` / `fgcz_render()` put them
-there; the report's header stays fully portable and never hard-codes a path.
+Quarto automatically merges a file named `_metadata.yml` into every `.qmd` in
+its directory and subdirectories. So a report carries **no** `metadata-files`
+line and no path to this package — it stays a plain `.qmd`. As long as the
+three files above sit in the same directory, a bare
+
+```sh
+quarto render CountQC.qmd
+```
+
+renders with full FGCZ styling **even if this package is not installed**.
+
+The `_metadata.yml` references `fgcz.scss` and `fgcz_header_quarto.html` by bare
+filename, which Quarto resolves relative to the input `.qmd`, so all three must
+travel together. The package's only job is to *stage* them next to a `.qmd`
+that lives elsewhere — that is what `fgcz_copy_assets()` / `fgcz_render()` do.
 
 ## Usage
 
-Your report keeps exactly the header it has today:
+Your report's front matter is just its own params/title — nothing FGCZ-specific:
 
 ```yaml
 ---
 params:
   reportTitle: "CountQC"
 title: "`r params$reportTitle`"
-metadata-files: ["_fgcz-report.yml"]
 ---
 ```
 
@@ -75,7 +83,7 @@ fgczquartotemplate::fgcz_copy_assets("some/dir")  # stage the 3 styling files
    `.gitignore`:
 
    ```
-   _fgcz-report.yml
+   _metadata.yml
    fgcz.scss
    fgcz_header_quarto.html
    ```

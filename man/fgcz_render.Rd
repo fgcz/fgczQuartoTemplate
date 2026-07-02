@@ -17,9 +17,9 @@ The value of \code{\link[quarto:quarto_render]{quarto::quarto_render()}}, invisi
 }
 \description{
 Stages the shared styling assets next to \code{input} (via \code{\link[=fgcz_copy_assets]{fgcz_copy_assets()}})
-and then renders it with \code{\link[quarto:quarto_render]{quarto::quarto_render()}}. The \code{.qmd} keeps its
-portable header (\verb{metadata-files: ["_fgcz-report.yml"]}) and does not need to
-know where the assets live.
+and then renders it with \code{\link[quarto:quarto_render]{quarto::quarto_render()}}. The \code{.qmd} needs no
+styling front matter at all: the staged \verb{_metadata.yml} is picked up by
+Quarto automatically, so the report stays fully portable.
 }
 \examples{
 \dontrun{

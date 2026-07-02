@@ -16,10 +16,10 @@ the packaged assets stay the single source of truth.}
 Character vector of the copied file paths, invisibly.
 }
 \description{
-Copies \verb{_fgcz-report.yml}, \code{fgcz.scss} and \code{fgcz_header_quarto.html} from the
-installed package into \code{dir} so that a report referencing them by relative
-path renders correctly. Call this before rendering, or use \code{\link[=fgcz_render]{fgcz_render()}},
-which calls it for you.
+Copies \verb{_metadata.yml}, \code{fgcz.scss} and \code{fgcz_header_quarto.html} from the
+installed package into \code{dir}. Because \verb{_metadata.yml} is directory metadata,
+any \code{.qmd} in \code{dir} then renders with the FGCZ styling automatically. Call
+this before rendering, or use \code{\link[=fgcz_render]{fgcz_render()}}, which calls it for you.
 }
 \examples{
 \dontrun{

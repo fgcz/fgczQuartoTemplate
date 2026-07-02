@@ -5,8 +5,9 @@
 #' one look and feel:
 #'
 #' \describe{
-#'   \item{`_fgcz-report.yml`}{Shared format defaults, included from a `.qmd`
-#'     via `metadata-files: ["_fgcz-report.yml"]`.}
+#'   \item{`_metadata.yml`}{Shared format defaults. Quarto applies this file
+#'     automatically to every `.qmd` in its directory (and subdirectories)
+#'     because of its reserved name -- reports need no reference to it.}
 #'   \item{`fgcz.scss`}{Theme overrides (tabset/card styling, figure rows).}
 #'   \item{`fgcz_header_quarto.html`}{FGCZ header injected via
 #'     `include-in-header`.}
@@ -14,23 +15,27 @@
 #'     figure-with-callout, and nesting patterns.}
 #' }
 #'
-#' These three styling files reference each other by **bare filename**, and
-#' Quarto resolves such paths relative to the directory of the input `.qmd`.
-#' They must therefore sit next to the `.qmd` at render time; see
-#' [fgcz_copy_assets()] and [fgcz_render()].
+#' Because `_metadata.yml` is applied by directory, a `.qmd` rendered with a
+#' plain `quarto render` picks up the FGCZ styling with **no package involved
+#' and no front-matter reference** -- as long as these three files sit in the
+#' same directory. The `_metadata.yml` references `fgcz.scss` and
+#' `fgcz_header_quarto.html` by bare filename, which Quarto resolves relative to
+#' the input `.qmd`, so all three must travel together; see [fgcz_copy_assets()]
+#' and [fgcz_render()].
 #'
 #' @name fgczquartotemplate-assets
 NULL
 
 #' The names of the shared styling assets
 #'
-#' The three files that every FGCZ report needs alongside it: the format YAML,
-#' the SCSS theme, and the HTML header. `template.qmd` is deliberately excluded
-#' -- it is a starter you copy once, not an asset staged on every render.
+#' The three files that every FGCZ report needs alongside it: the directory
+#' metadata (`_metadata.yml`), the SCSS theme, and the HTML header.
+#' `template.qmd` is deliberately excluded -- it is a starter you copy once, not
+#' an asset staged on every render.
 #'
 #' @keywords internal
 .fgcz_style_assets <- c(
-  "_fgcz-report.yml",
+  "_metadata.yml",
   "fgcz.scss",
   "fgcz_header_quarto.html"
 )
@@ -53,10 +58,10 @@ fgcz_quarto_dir <- function(...) {
 
 #' Copy the shared report assets next to a `.qmd`
 #'
-#' Copies `_fgcz-report.yml`, `fgcz.scss` and `fgcz_header_quarto.html` from the
-#' installed package into `dir` so that a report referencing them by relative
-#' path renders correctly. Call this before rendering, or use [fgcz_render()],
-#' which calls it for you.
+#' Copies `_metadata.yml`, `fgcz.scss` and `fgcz_header_quarto.html` from the
+#' installed package into `dir`. Because `_metadata.yml` is directory metadata,
+#' any `.qmd` in `dir` then renders with the FGCZ styling automatically. Call
+#' this before rendering, or use [fgcz_render()], which calls it for you.
 #'
 #' @param dir Directory that contains (or will contain) the `.qmd` to render.
 #' @param overwrite Overwrite existing copies in `dir`. Defaults to `TRUE` so
@@ -114,9 +119,9 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #' Render an FGCZ Quarto report
 #'
 #' Stages the shared styling assets next to `input` (via [fgcz_copy_assets()])
-#' and then renders it with [quarto::quarto_render()]. The `.qmd` keeps its
-#' portable header (`metadata-files: ["_fgcz-report.yml"]`) and does not need to
-#' know where the assets live.
+#' and then renders it with [quarto::quarto_render()]. The `.qmd` needs no
+#' styling front matter at all: the staged `_metadata.yml` is picked up by
+#' Quarto automatically, so the report stays fully portable.
 #'
 #' @param input Path to the `.qmd` to render.
 #' @param ... Passed on to [quarto::quarto_render()] (e.g. `execute_params`,

@@ -2,7 +2,6 @@
 params:
   reportTitle: "Analysis"
 title: "`r params$reportTitle`"
-metadata-files: ["_fgcz-report.yml"]
 ---
 
 ```{r setup}
