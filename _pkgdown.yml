@@ -1,4 +1,10 @@
 url: https://prolfqua.github.io/fgczquartotemplate/
 template:
   bootstrap: 5
-
+navbar:
+  structure:
+    right: [example, github]
+  components:
+    example:
+      text: Example report
+      href: example-report.html

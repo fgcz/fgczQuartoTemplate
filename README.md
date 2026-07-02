@@ -1,108 +1,111 @@
 # fgczquartotemplate
 
-Shared **Quarto report assets** for FGCZ analysis packages (`ezRun`,
-`prolfqua`, …). It packages one common look-and-feel — a directory-level
-`_metadata.yml`, an SCSS theme, and an HTML header — plus a starter report
-template and small helpers to stage those files next to a `.qmd` and render it.
+One shared **FGCZ look-and-feel** for Quarto reports (theme + header + defaults),
+reusable across `ezRun`, `prolfqua`, `prolfquapp`, …
 
-The goal: keep the FGCZ report styling in **one place** so every package that
-produces Quarto reports shares it and a theme change is a single package bump.
+**👉 [See a live example report](https://prolfqua.github.io/fgczquartotemplate/example-report.html)** — the real layout, tabsets, and figures.
 
-## What's inside
+There are **two ways** to use it. Pick one.
 
-Installed under `inst/quarto/`:
+---
 
-| File | Role |
-|------|------|
-| `_metadata.yml` | Shared format defaults. Quarto applies it **automatically** to every `.qmd` in its directory — reports need no reference to it. |
-| `fgcz.scss` | Theme overrides — tabset/card styling, figure rows. |
-| `fgcz_header_quarto.html` | FGCZ header, injected via `include-in-header`. |
-| `template.qmd` | Generic starter report demonstrating the tabset, figure+callout, and nesting patterns. |
+## Way 1 — Quarto extension (plain `quarto render`, no R)
 
-## How the styling attaches (no front-matter coupling)
+Best when you render with the `quarto` CLI.
 
-Quarto automatically merges a file named `_metadata.yml` into every `.qmd` in
-its directory and subdirectories. So a report carries **no** `metadata-files`
-line and no path to this package — it stays a plain `.qmd`. As long as the
-three files above sit in the same directory, a bare
+**Step 1.** In your project, once:
 
 ```sh
-quarto render CountQC.qmd
+quarto add prolfqua/fgczquartotemplate
 ```
 
-renders with full FGCZ styling **even if this package is not installed**.
-
-The `_metadata.yml` references `fgcz.scss` and `fgcz_header_quarto.html` by bare
-filename, which Quarto resolves relative to the input `.qmd`, so all three must
-travel together. The package's only job is to *stage* them next to a `.qmd`
-that lives elsewhere — that is what `fgcz_copy_assets()` / `fgcz_render()` do.
-
-## Usage
-
-Your report's front matter is just its own params/title — nothing FGCZ-specific:
+**Step 2.** In your report's YAML header:
 
 ```yaml
 ---
-params:
-  reportTitle: "CountQC"
-title: "`r params$reportTitle`"
+title: "My report"
+format: fgczquartotemplate-html
 ---
 ```
 
-Render it through the wrapper — the shared assets are staged automatically:
+**Step 3.** Render:
 
-```r
-fgczquartotemplate::fgcz_render(
-  "CountQC.qmd",
-  execute_params = list(reportTitle = "CountQC")
-)
+```sh
+quarto render my_report.qmd
 ```
 
-Bootstrap a brand-new report from the starter template:
+Done. ✅
+
+---
+
+## Way 2 — R helper (stage files, then render)
+
+Best when you render from R (e.g. inside a package). **No `format:` line, no `quarto add`.**
+
+**Step 1.** Install:
 
 ```r
-fgczquartotemplate::fgcz_use_template("reports/my_analysis",
-                                      to = "my_analysis.qmd")
-# edit reports/my_analysis/my_analysis.qmd, then:
-fgczquartotemplate::fgcz_render("reports/my_analysis/my_analysis.qmd")
+remotes::install_github("prolfqua/fgczquartotemplate")
 ```
 
-Just need the paths (e.g. to stage assets yourself)?
+**Step 2.** Your report's YAML header — just this, nothing FGCZ-specific:
+
+```yaml
+---
+title: "My report"
+---
+```
+
+**Step 3.** Stage the styling next to the report, then render:
 
 ```r
-fgczquartotemplate::fgcz_quarto_dir()             # the inst/quarto directory
-fgczquartotemplate::fgcz_copy_assets("some/dir")  # stage the 3 styling files
+fgczquartotemplate::fgcz_render("my_report.qmd")
 ```
 
-## Using it from ezRun / prolfqua
+Done. ✅ (`fgcz_render` copies `_metadata.yml` + `fgcz.scss` + `fgcz_header_quarto.html`
+next to the `.qmd`, which Quarto then applies automatically.)
 
-1. Add `fgczquartotemplate` to `Imports` in the consumer's `DESCRIPTION`.
-2. Replace ad-hoc `quarto_render()` calls with `fgczquartotemplate::fgcz_render()`.
-3. In the consumer, **git-ignore the staged copies** so the packaged assets
-   remain the single source of truth — add to the render directory's
-   `.gitignore`:
+---
 
-   ```
-   _metadata.yml
-   fgcz.scss
-   fgcz_header_quarto.html
-   ```
+## Which one?
 
-App-specific reports (e.g. `CountQC.qmd`, `ScSeurat.qmd`) stay in their own
-package; only the shared *styling* lives here.
+| | Way 1 — Extension | Way 2 — R helper |
+|---|---|---|
+| Install | `quarto add …` (once per project) | `install_github` (once) |
+| YAML | `format: fgczquartotemplate-html` | nothing |
+| Render | `quarto render` | `fgczquartotemplate::fgcz_render()` |
+| Use it when | CLI / non-R pipelines | rendering from R |
 
-## Installation
+Both produce the **same** report. They can coexist in one repo.
+
+---
+
+## R helper cheatsheet (Way 2)
 
 ```r
-# from a local checkout
-devtools::install("path/to/fgczquartotemplate")
+fgcz_render("report.qmd")               # stage assets + render (the usual one)
+fgcz_copy_assets("dir")                 # just stage the 3 files into dir
+fgcz_use_template("dir", "report.qmd")  # start a new report from the template
+fgcz_quarto_dir()                       # where the installed assets live
 ```
 
-## Requirements
+## Why two mechanisms exist (30-second version)
 
-- [Quarto](https://quarto.org/) on `PATH`
-- R package `quarto`
+Quarto can't reach into an installed R package to fetch styling — the files must
+sit next to the `.qmd` at render time. Two clean ways to get them there:
+
+- **Extension**: `quarto add` drops them into `_extensions/`; you opt in with `format:`.
+- **`_metadata.yml`**: a file with that exact name is auto-applied to every `.qmd`
+  in its directory (no `format:` line); the R helper stages it for you.
+
+## For maintainers
+
+- Edit `fgcz.scss` / `fgcz_header_quarto.html` in `inst/quarto/`, then run
+  `Rscript data-raw/sync_assets.R` to mirror them into `_extensions/`.
+- Keep `inst/quarto/_metadata.yml` and `_extensions/fgczquartotemplate/_extension.yml`
+  in step (same format options, one flat / one nested under `contributes`).
+- `Rscript data-raw/render_example.R` regenerates the live example report.
 
 ## License
 
-GPL-3 (matching `ezRun`).
+GPL (>= 3), matching `ezRun`.

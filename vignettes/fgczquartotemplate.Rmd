@@ -22,6 +22,35 @@ analysis packages (`ezRun`, `prolfqua`, ...) all produce reports with the same
 look and feel. A theme change becomes a single package bump instead of an edit
 in every downstream package.
 
+**See the layout live:**
+<https://prolfqua.github.io/fgczquartotemplate/example-report.html> — a full
+report rendered with the extension (tabsets, figure + callout rows, nesting,
+lightbox). pkgdown re-themes its own articles (it forces `theme: none` and its
+own template), so that standalone page — not this article — is the faithful
+demonstration of the FGCZ layout. This article explains how to *use* the
+templates.
+
+## Two ways to use it
+
+**Way 1 — Quarto extension** (plain `quarto render`, no R). Once per project:
+
+```sh
+quarto add prolfqua/fgczquartotemplate
+```
+
+then in the report header:
+
+````yaml
+---
+title: "My report"
+format: fgczquartotemplate-html
+---
+````
+
+**Way 2 — R helper** (stage the files from R, no `format:` line needed) — the
+subject of the rest of this article. Both routes produce the same report and
+can coexist in one repo.
+
 The assets live under `inst/quarto/`:
 
 ```{r list-assets}

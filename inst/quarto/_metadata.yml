@@ -9,7 +9,6 @@
 format:
   html:
     embed-resources: true
-    self-contained: true
     smooth-scroll: true
     page-layout: full
 

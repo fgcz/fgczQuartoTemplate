@@ -6,9 +6,8 @@ title: "`r params$reportTitle`"
 
 ```{r setup}
 #| include: false
-library(ezRun)
+library(ggplot2)
 library(DT)
-library(tidyverse)
 ```
 
 ::: {.panel-tabset}
@@ -93,9 +92,10 @@ underneath as usual.
 ## Table
 
 ```{r nested-table}
-ezRun::ezInteractiveTableRmd(
+DT::datatable(
   head(mtcars[, 1:6], 8),
-  title = "Demo table — first rows of mtcars"
+  caption = "Demo table — first rows of mtcars",
+  options = list(dom = "t")
 )
 ```
 

@@ -1,5 +1,10 @@
 ^LICENSE\.md$
 ^\.github$
+^_extensions$
+^data-raw$
+^example-report\.html$
+^example.*_files$
+^_quarto\.yml$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$

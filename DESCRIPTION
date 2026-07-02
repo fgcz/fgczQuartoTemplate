@@ -19,7 +19,11 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Imports: 
     quarto
-Suggests: 
+Suggests:
+    DT,
+    ggplot2,
     knitr,
-    rmarkdown
+    rmarkdown,
+    yaml
 VignetteBuilder: knitr
+Config/Needs/website: DT, ggplot2
