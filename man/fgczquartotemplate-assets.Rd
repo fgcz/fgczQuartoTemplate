@@ -16,8 +16,9 @@ because of its reserved name -- reports need no reference to it.}
 \item{\code{fgcz.scss}}{Theme overrides (tabset/card styling, figure rows).}
 \item{\code{fgcz_header_quarto.html}}{FGCZ header injected via
 \verb{include-in-header}.}
-\item{\code{fgcz-plot-finder.html}}{Right-edge search + download toolbar,
-injected via \code{include-after-body}.}
+\item{\code{fgcz-plot-finder.html}}{Right-edge search + download toolbar.
+Opt-in: staged next to every report but only injected (via
+\code{include-after-body}) when asked for, e.g. \code{fgcz_render(buttons = TRUE)}.}
 \item{\code{template.qmd}}{A generic starter report demonstrating the tabset,
 figure-with-callout, and nesting patterns.}
 }
@@ -25,8 +26,9 @@ figure-with-callout, and nesting patterns.}
 Because \verb{_metadata.yml} is applied by directory, a \code{.qmd} rendered with a
 plain \verb{quarto render} picks up the FGCZ styling with \strong{no package involved
 and no front-matter reference} -- as long as the styling files sit in the
-same directory. The \verb{_metadata.yml} references \code{fgcz.scss},
-\code{fgcz_header_quarto.html} and \code{fgcz-plot-finder.html} by bare filename, which
-Quarto resolves relative to the input \code{.qmd}, so they must travel together;
-see \code{\link[=fgcz_copy_assets]{fgcz_copy_assets()}} and \code{\link[=fgcz_render]{fgcz_render()}}.
+same directory. The \verb{_metadata.yml} references \code{fgcz.scss} and
+\code{fgcz_header_quarto.html} by bare filename, which Quarto resolves relative to
+the input \code{.qmd}, so they must travel together; see \code{\link[=fgcz_copy_assets]{fgcz_copy_assets()}} and
+\code{\link[=fgcz_render]{fgcz_render()}}. The toolbar (\code{fgcz-plot-finder.html}) is staged too but is
+opt-in -- enable it with \code{fgcz_render(buttons = TRUE)}.
 }

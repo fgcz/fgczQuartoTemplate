@@ -37,6 +37,13 @@ tmp <- tempfile("fgcz_example_")
 dir.create(file.path(tmp, "_extensions"), recursive = TRUE)
 file.copy(ext, file.path(tmp, "_extensions"), recursive = TRUE)
 file.copy(qmd, file.path(tmp, "example.qmd"), overwrite = TRUE)
+# The toolbar is opt-in (off by default), but the live demo showcases it, so
+# stage it next to the report and wire it in via include-after-body below.
+file.copy(
+  file.path(ext, "fgcz-plot-finder.html"),
+  file.path(tmp, "fgcz-plot-finder.html"),
+  overwrite = TRUE
+)
 
 oldwd <- setwd(tmp)
 on.exit(setwd(oldwd), add = TRUE)
@@ -58,6 +65,8 @@ status <- system2(
     "example-report.html",
     "-M",
     "lightbox:false",
+    "-M",
+    "include-after-body:fgcz-plot-finder.html",
     "-P",
     "reportTitle:FGCZ live layout example"
   ))

@@ -11,8 +11,9 @@
 #'   \item{`fgcz.scss`}{Theme overrides (tabset/card styling, figure rows).}
 #'   \item{`fgcz_header_quarto.html`}{FGCZ header injected via
 #'     `include-in-header`.}
-#'   \item{`fgcz-plot-finder.html`}{Right-edge search + download toolbar,
-#'     injected via `include-after-body`.}
+#'   \item{`fgcz-plot-finder.html`}{Right-edge search + download toolbar.
+#'     Opt-in: staged next to every report but only injected (via
+#'     `include-after-body`) when asked for, e.g. `fgcz_render(buttons = TRUE)`.}
 #'   \item{`template.qmd`}{A generic starter report demonstrating the tabset,
 #'     figure-with-callout, and nesting patterns.}
 #' }
@@ -20,10 +21,11 @@
 #' Because `_metadata.yml` is applied by directory, a `.qmd` rendered with a
 #' plain `quarto render` picks up the FGCZ styling with **no package involved
 #' and no front-matter reference** -- as long as the styling files sit in the
-#' same directory. The `_metadata.yml` references `fgcz.scss`,
-#' `fgcz_header_quarto.html` and `fgcz-plot-finder.html` by bare filename, which
-#' Quarto resolves relative to the input `.qmd`, so they must travel together;
-#' see [fgcz_copy_assets()] and [fgcz_render()].
+#' same directory. The `_metadata.yml` references `fgcz.scss` and
+#' `fgcz_header_quarto.html` by bare filename, which Quarto resolves relative to
+#' the input `.qmd`, so they must travel together; see [fgcz_copy_assets()] and
+#' [fgcz_render()]. The toolbar (`fgcz-plot-finder.html`) is staged too but is
+#' opt-in -- enable it with `fgcz_render(buttons = TRUE)`.
 #'
 #' @name fgczquartotemplate-assets
 NULL
@@ -32,9 +34,10 @@ NULL
 #'
 #' The files that every FGCZ report needs alongside it: the directory metadata
 #' (`_metadata.yml`), the SCSS theme, the HTML header, and the search + download
-#' toolbar (referenced from `_metadata.yml` by bare filename). `template.qmd` is
-#' deliberately excluded -- it is a starter you copy once, not an asset staged
-#' on every render.
+#' toolbar. The first three are wired in by `_metadata.yml`; the toolbar is
+#' staged too but stays opt-in (see [fgcz_render()]'s `buttons` argument).
+#' `template.qmd` is deliberately excluded -- it is a starter you copy once, not
+#' an asset staged on every render.
 #'
 #' @keywords internal
 .fgcz_style_assets <- c(
@@ -158,8 +161,14 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #' Quarto automatically, so the report stays fully portable.
 #'
 #' @param input Path to the `.qmd` to render.
+#' @param buttons Add the right-edge search + download toolbar
+#'   (`fgcz-plot-finder.html`) to the report. Defaults to `FALSE`; pass `TRUE`
+#'   to opt in. The toolbar ships with the package and is always staged next to
+#'   `input`, but is only wired in (via `include-after-body`) when you ask for
+#'   it here.
 #' @param ... Passed on to [quarto::quarto_render()] (e.g. `execute_params`,
-#'   `output_file`, `quarto_args`).
+#'   `output_file`, `quarto_args`). A `metadata` list passed here is honored;
+#'   `buttons = TRUE` merges `include-after-body` into it.
 #'
 #' @return The value of [quarto::quarto_render()], invisibly.
 #' @export
@@ -167,12 +176,29 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #' @examples
 #' \dontrun{
 #' fgcz_render("CountQC.qmd", execute_params = list(reportTitle = "CountQC"))
+#' fgcz_render("CountQC.qmd", buttons = TRUE) # with the Find/Save toolbar
 #' }
-fgcz_render <- function(input, ...) {
+fgcz_render <- function(input, buttons = FALSE, ...) {
+  if (!is.logical(buttons) || length(buttons) != 1L || is.na(buttons)) {
+    stop("`buttons` must be a single TRUE or FALSE.")
+  }
   if (!requireNamespace("quarto", quietly = TRUE)) {
     stop("Package 'quarto' is required to render reports.")
   }
   stopifnot(file.exists(input))
   fgcz_copy_assets(input)
-  invisible(quarto::quarto_render(input = input, ...))
+  dots <- list(...)
+  if (buttons) {
+    # The toolbar is opt-in: fgcz_copy_assets() staged it next to `input`; wire
+    # it in for this render via include-after-body, merged into any
+    # caller-supplied `metadata` so we do not clobber it.
+    toolbar <- normalizePath(
+      file.path(.fgcz_asset_target_dir(input), "fgcz-plot-finder.html"),
+      mustWork = TRUE
+    )
+    md <- if (is.null(dots$metadata)) list() else dots$metadata
+    md[["include-after-body"]] <- toolbar
+    dots$metadata <- md
+  }
+  invisible(do.call(quarto::quarto_render, c(list(input = input), dots)))
 }

@@ -53,10 +53,11 @@ no `quarto add`. Companion helpers: `fgcz_use_template()` starts a new report
 from the annotated starter, `fgcz_copy_assets()` just stages the files, and
 `fgcz_quarto_dir()` points at the installed assets.
 
-Either way you get the theme, the FGCZ header, and a right-edge **🔍 Find /
-📥 Save** toolbar for free — you never wire those up yourself (see the last
-section). Start from `inst/quarto/template.qmd` (via `fgcz_use_template()`),
-which demonstrates every layout pattern below in code.
+Either way you get the theme and the FGCZ header for free. The right-edge
+**🔍 Find / 📥 Save** toolbar is opt-in — turn it on with
+`fgcz_render(buttons = TRUE)` (or an `include-after-body:` line for the CLI
+routes); see the last section. Start from `inst/quarto/template.qmd` (via
+`fgcz_use_template()`), which demonstrates every layout pattern below in code.
 
 ## Tabs: keep them shallow
 
@@ -118,8 +119,8 @@ long page does not — split that across tabs instead.
 ## Interactive figures are the exception
 
 Default to **static** figures (`ggplot`). They are lighter, print cleanly, and —
-importantly — the 📥 Save toolbar can bundle them into a ZIP; interactive
-`plotly` / `ggplotly` charts cannot be downloaded that way.
+importantly — the 📥 Save toolbar (when enabled) can bundle them into a ZIP;
+interactive `plotly` / `ggplotly` charts cannot be downloaded that way.
 
 Reach for `ggplotly()` **only when interactivity genuinely improves
 readability**, for example:
@@ -130,12 +131,15 @@ readability**, for example:
 
 If a static figure reads fine, keep it static.
 
-## The Find / Save toolbar is automatic — don't build it
+## The Find / Save toolbar: opt-in, and don't hand-build it
 
-Every report gets a right-edge toolbar for free: **🔍 Find** (searchable list of
-every figure and table; clicking one opens the tab it lives in and scrolls to
-it) and **📥 Save** (tick-box download of the static plots as a single ZIP).
-Do not hand-add buttons or a table-of-figures — it is injected by the template.
+The template ships a right-edge toolbar — **🔍 Find** (searchable list of every
+figure and table; clicking one opens the tab it lives in and scrolls to it) and
+**📥 Save** (tick-box download of the static plots as a single ZIP). It is
+**off by default**; switch it on with `fgcz_render(buttons = TRUE)` (or an
+`include-after-body: …/fgcz-plot-finder.html` line for the extension / plain
+`quarto render` routes). When you want it, use that switch — never hand-add
+buttons or a table-of-figures; the template's version is complete and tested.
 
 Because the finder indexes figures and tables by their **caption** and their
 **tab breadcrumb**, the same two habits that make a report readable also make
@@ -148,7 +152,7 @@ tabs meaningful labels.
 - [ ] Each tab fits on a screen (scroll only for the same figure repeated per sample)
 - [ ] Figures small and gridded (`layout-ncol`), each with a `fig-cap`
 - [ ] Static figures unless interactivity is truly needed for readability
-- [ ] You did **not** hand-add the search/download toolbar
+- [ ] Toolbar via `buttons = TRUE` (or `include-after-body`) if wanted — never hand-built
 
 ## Pointers
 

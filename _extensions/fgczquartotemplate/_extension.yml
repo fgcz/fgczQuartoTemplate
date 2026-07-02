@@ -26,7 +26,9 @@ contributes:
         sidebar-width: 250px
         margin-width: 100px
       include-in-header: fgcz_header_quarto.html
-      include-after-body: fgcz-plot-finder.html
+      # Toolbar (fgcz-plot-finder.html) is opt-in; see inst/quarto/_metadata.yml.
+      # Enable per report with:
+      #   include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html
       fig-dpi: 300
       fig-align: left
       execute:

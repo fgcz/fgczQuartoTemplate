@@ -13,8 +13,9 @@ An object of class \code{character} of length 4.
 \description{
 The files that every FGCZ report needs alongside it: the directory metadata
 (\verb{_metadata.yml}), the SCSS theme, the HTML header, and the search + download
-toolbar (referenced from \verb{_metadata.yml} by bare filename). \code{template.qmd} is
-deliberately excluded -- it is a starter you copy once, not an asset staged
-on every render.
+toolbar. The first three are wired in by \verb{_metadata.yml}; the toolbar is
+staged too but stays opt-in (see \code{\link[=fgcz_render]{fgcz_render()}}'s \code{buttons} argument).
+\code{template.qmd} is deliberately excluded -- it is a starter you copy once, not
+an asset staged on every render.
 }
 \keyword{internal}

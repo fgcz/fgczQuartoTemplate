@@ -29,8 +29,9 @@ format:
     # FGCZ header
     include-in-header: fgcz_header_quarto.html
 
-    # FGCZ search + download toolbar (right-edge buttons)
-    include-after-body: fgcz-plot-finder.html
+    # The search + download toolbar (fgcz-plot-finder.html) is opt-in, not wired
+    # in here: enable it per report via fgczquartotemplate::fgcz_render(buttons =
+    # TRUE), or by adding `include-after-body: fgcz-plot-finder.html` yourself.
 
     # Figure defaults
     fig-dpi: 300

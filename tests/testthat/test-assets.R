@@ -35,3 +35,14 @@ test_that("fgcz_copy_assets rejects non-qmd file paths", {
 
   expect_snapshot(error = TRUE, fgcz_copy_assets(txt))
 })
+
+test_that("fgcz_render rejects a non-scalar-logical buttons", {
+  # The buttons check runs before the quarto / file-existence checks, so this
+  # needs neither quarto installed nor a real .qmd.
+  expect_error(fgcz_render("x.qmd", buttons = "yes"), "single TRUE or FALSE")
+  expect_error(
+    fgcz_render("x.qmd", buttons = c(TRUE, FALSE)),
+    "single TRUE or FALSE"
+  )
+  expect_error(fgcz_render("x.qmd", buttons = NA), "single TRUE or FALSE")
+})
