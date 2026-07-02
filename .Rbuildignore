@@ -2,6 +2,7 @@
 ^\.github$
 ^_extensions$
 ^data-raw$
+^skills$
 ^example-report\.html$
 ^example.*_files$
 ^_quarto\.yml$
