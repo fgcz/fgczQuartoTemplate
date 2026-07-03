@@ -58,7 +58,10 @@ demo_plot <- ggplot(demo_df, aes(wt, mpg)) +
 :::: {.fig-main}
 
 ```{r second-plot}
-#| fig-cap: "Fuel economy versus weight across the mtcars dataset."
+#| fig-cap: >-
+#|   Fuel economy as a function of vehicle weight in mtcars. Each point is one
+#|   car; the x-axis shows weight in 1000 lbs and the y-axis shows miles per
+#|   gallon.
 demo_plot
 ```
 
@@ -94,7 +97,10 @@ underneath as usual.
 ```{r nested-table}
 DT::datatable(
   head(mtcars[, 1:6], 8),
-  caption = "Demo table — first rows of mtcars",
+  caption = paste(
+    "First eight rows of mtcars vehicle measurements, including fuel economy,",
+    "cylinders, displacement, horsepower, rear axle ratio, and weight."
+  ),
   options = list(dom = "t")
 )
 ```
@@ -102,7 +108,9 @@ DT::datatable(
 ## Figure
 
 ```{r nested-figure}
-#| fig-cap: "Demo figure — fuel economy by cylinder count."
+#| fig-cap: >-
+#|   Fuel economy by cylinder count in mtcars. Boxplots summarize miles per
+#|   gallon for cars grouped by number of cylinders.
 ggplot(mtcars, aes(factor(cyl), mpg, fill = factor(cyl))) +
   geom_boxplot(show.legend = FALSE) +
   labs(x = "Cylinders", y = "Fuel economy (mpg)") +
@@ -129,7 +137,9 @@ ggplot(mtcars, aes(factor(cyl), mpg, fill = factor(cyl))) +
 ### Sepal
 
 ```{r tl-sepal}
-#| fig-cap: "Sepal width versus length in the iris dataset, by species."
+#| fig-cap: >-
+#|   Sepal width as a function of sepal length in iris. Each point is one
+#|   flower; colour encodes species and both axes are measured in centimetres.
 ggplot(iris, aes(Sepal.Length, Sepal.Width, colour = Species)) +
   geom_point(size = 2) +
   labs(x = "Sepal length (cm)", y = "Sepal width (cm)", colour = "Species") +
@@ -139,7 +149,9 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width, colour = Species)) +
 ### Petal
 
 ```{r tl-petal}
-#| fig-cap: "Petal width versus length in the iris dataset, by species."
+#| fig-cap: >-
+#|   Petal width as a function of petal length in iris. Each point is one
+#|   flower; colour encodes species and both axes are measured in centimetres.
 ggplot(iris, aes(Petal.Length, Petal.Width, colour = Species)) +
   geom_point(size = 2) +
   labs(x = "Petal length (cm)", y = "Petal width (cm)", colour = "Species") +
@@ -155,7 +167,9 @@ ggplot(iris, aes(Petal.Length, Petal.Width, colour = Species)) +
 ### Sepal length
 
 ```{r tl-sepal-hist}
-#| fig-cap: "Distribution of sepal length across species."
+#| fig-cap: >-
+#|   Distribution of sepal length by iris species. Overlaid histograms show
+#|   flower counts across 20 sepal-length bins in centimetres.
 ggplot(iris, aes(Sepal.Length, fill = Species)) +
   geom_histogram(bins = 20, alpha = 0.7, position = "identity") +
   labs(x = "Sepal length (cm)", y = "Count", fill = "Species") +
@@ -165,7 +179,9 @@ ggplot(iris, aes(Sepal.Length, fill = Species)) +
 ### Petal length
 
 ```{r tl-petal-hist}
-#| fig-cap: "Distribution of petal length across species."
+#| fig-cap: >-
+#|   Distribution of petal length by iris species. Overlaid histograms show
+#|   flower counts across 20 petal-length bins in centimetres.
 ggplot(iris, aes(Petal.Length, fill = Species)) +
   geom_histogram(bins = 20, alpha = 0.7, position = "identity") +
   labs(x = "Petal length (cm)", y = "Count", fill = "Species") +
@@ -192,7 +208,10 @@ ggplot(iris, aes(Petal.Length, fill = Species)) +
 ## Level 2 · A
 
 ```{r fl-l2a}
-#| fig-cap: "Level 2 — fuel economy versus weight (mtcars)."
+#| fig-cap: >-
+#|   Fuel economy as a function of vehicle weight in mtcars. Each point is one
+#|   car; the x-axis shows weight in 1000 lbs and the y-axis shows miles per
+#|   gallon.
 ggplot(mtcars, aes(wt, mpg)) +
   geom_point(size = 2, colour = "#1B4079") +
   labs(x = "Weight (1000 lbs)", y = "Fuel economy (mpg)") +
@@ -206,7 +225,9 @@ ggplot(mtcars, aes(wt, mpg)) +
 ### Level 3 · A
 
 ```{r fl-l3a}
-#| fig-cap: "Level 3 — fuel economy by cylinder count (mtcars)."
+#| fig-cap: >-
+#|   Fuel economy by cylinder count in mtcars. Boxplots summarize miles per
+#|   gallon for cars grouped by number of cylinders.
 ggplot(mtcars, aes(factor(cyl), mpg, fill = factor(cyl))) +
   geom_boxplot(show.legend = FALSE) +
   labs(x = "Cylinders", y = "Fuel economy (mpg)") +
@@ -220,7 +241,9 @@ ggplot(mtcars, aes(factor(cyl), mpg, fill = factor(cyl))) +
 #### Level 4 · A
 
 ```{r fl-l4a}
-#| fig-cap: "Level 4 — sepal dimensions by species (iris)."
+#| fig-cap: >-
+#|   Sepal width as a function of sepal length in iris. Each point is one
+#|   flower; colour encodes species and both axes are measured in centimetres.
 ggplot(iris, aes(Sepal.Length, Sepal.Width, colour = Species)) +
   geom_point(size = 2) +
   labs(x = "Sepal length (cm)", y = "Sepal width (cm)", colour = "Species") +
@@ -234,7 +257,9 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width, colour = Species)) +
 ##### Level 5 · A
 
 ```{r fl-l5a}
-#| fig-cap: "Level 5 — distribution of petal length across species (iris)."
+#| fig-cap: >-
+#|   Distribution of petal length by iris species. Overlaid histograms show
+#|   flower counts across 20 petal-length bins in centimetres.
 ggplot(iris, aes(Petal.Length, fill = Species)) +
   geom_histogram(bins = 20, alpha = 0.7, position = "identity") +
   labs(x = "Petal length (cm)", y = "Count", fill = "Species") +
@@ -244,7 +269,9 @@ ggplot(iris, aes(Petal.Length, fill = Species)) +
 ##### Level 5 · B
 
 ```{r fl-l5b}
-#| fig-cap: "Level 5 — petal dimensions by species (iris)."
+#| fig-cap: >-
+#|   Petal width as a function of petal length in iris. Each point is one
+#|   flower; colour encodes species and both axes are measured in centimetres.
 ggplot(iris, aes(Petal.Length, Petal.Width, colour = Species)) +
   geom_point(size = 2) +
   labs(x = "Petal length (cm)", y = "Petal width (cm)", colour = "Species") +
