@@ -389,15 +389,39 @@
     };
   }
 
+  function datatableWidget(el) {
+    if (!el) return null;
+    if (
+      el.classList &&
+      el.classList.contains('html-widget') &&
+      el.classList.contains('datatables')
+    ) {
+      return el;
+    }
+    return el.querySelector ? el.querySelector('div.html-widget.datatables') : null;
+  }
+
   function buildIndex() {
-    var items = [], seenImgs = new Set(), seenTables = new Set();
+    var items = [], seenImgs = new Set(), seenTables = new Set(), seenPlotly = new Set();
 
     // 1) Figures (Quarto crossref floats + any plain <figure>).
     document.querySelectorAll('figure').forEach(function (fig) {
+      if (fig.classList.contains('quarto-float-tbl')) return;
       var cap = fig.querySelector('figcaption');
       var img = fig.querySelector('img');
       if (img) seenImgs.add(img);
-      items.push({ type: 'fig', label: cap ? cap.textContent.trim() : null, el: fig });
+      var plotly = fig.querySelector('div.plotly.html-widget');
+      if (plotly) {
+        seenPlotly.add(plotly);
+        items.push({
+          type: 'fig',
+          interactive: true,
+          label: cap ? textOf(cap) : plotlyTitle(plotly),
+          el: fig
+        });
+        return;
+      }
+      items.push({ type: 'fig', label: cap ? textOf(cap) : null, el: fig });
     });
 
     // 2) Bare plot images (knitr output that has no fig-cap → no <figure>).
@@ -406,24 +430,61 @@
       items.push({ type: 'fig', label: null, el: img });
     });
 
-    // 3) Interactive plotly charts. They render as htmlwidget <div>s with no
-    //    <img> or <figure>, so sections 1-2 miss them entirely. Label from the
-    //    embedded widget JSON's layout.title; flag interactive so the bulk
-    //    download skips them (plotly exports via its own modebar camera button).
+    // 3) Interactive plotly charts. Plotly widgets inside Quarto figure floats
+    //    are indexed as their outer figure in pass 1 so their figcaption is
+    //    preserved. Bare plotly widgets are still findable here. Flag
+    //    interactive so the bulk download skips them (plotly exports via its
+    //    own modebar camera button).
     document.querySelectorAll('div.plotly.html-widget').forEach(function (w) {
+      if (seenPlotly.has(w)) return;
+      var fig = w.closest('figure.quarto-float-fig');
+      if (fig) {
+        var cap = fig.querySelector('figcaption');
+        seenPlotly.add(w);
+        items.push({
+          type: 'fig',
+          interactive: true,
+          label: cap ? textOf(cap) : plotlyTitle(w),
+          el: fig
+        });
+        return;
+      }
       items.push({ type: 'fig', interactive: true, el: w, label: plotlyTitle(w) });
     });
 
-    // 4) Interactive tables. DT / ezInteractiveTableRmd render as htmlwidgets
+    // 4) Quarto table floats. DT tables inside them are still table floats,
+    //    so index the outer float as a table and use the embedded widget JSON
+    //    for the thumbnail preview. This avoids showing them as generic figure
+    //    placeholders labelled only "Table 1".
+    document.querySelectorAll('figure.quarto-float-tbl').forEach(function (fig) {
+      var widget = datatableWidget(fig);
+      var info = datatableInfo(widget);
+      var cap = fig.querySelector('caption');
+      var figCap = fig.querySelector('figcaption');
+      seenTables.add(fig);
+      if (widget) seenTables.add(widget);
+      items.push({
+        type: 'tbl',
+        label: info.caption || (cap ? textOf(cap) : (figCap ? textOf(figCap) : null)),
+        preview: info.preview,
+        el: fig
+      });
+    });
+
+    // 5) Interactive tables. DT / ezInteractiveTableRmd render as htmlwidgets
     //    that initialise via JS AFTER page load, so target the htmlwidget
     //    CONTAINER (always in the DOM); its <caption> is filled by the time
     //    the panel is opened (we rebuild the index on every open).
     document.querySelectorAll('div.html-widget.datatables, .dt-container').forEach(function (wrap) {
-      var root = wrap.closest('div.html-widget.datatables') || wrap;
+      var widget = datatableWidget(wrap);
+      var root = wrap.closest('figure.quarto-float-tbl') ||
+        wrap.closest('div.html-widget.datatables') ||
+        wrap;
       if (seenTables.has(root)) return;
       seenTables.add(root);
+      if (widget) seenTables.add(widget);
       var cap = wrap.querySelector('caption') || root.querySelector('caption');
-      var info = datatableInfo(root);
+      var info = datatableInfo(widget || root);
       items.push({
         type: 'tbl',
         label: cap ? textOf(cap) : info.caption,
@@ -471,11 +532,18 @@
 
   var dlListEl, dlPanel, dlAllEl, dlGoEl, DL_INDEX = null;
 
+  function isInteractivePlotItem(it) {
+    if (it.interactive) return true;
+    if (!it.el) return false;
+    if (it.el.matches && it.el.matches('div.plotly.html-widget')) return true;
+    return Boolean(it.el.querySelector && it.el.querySelector('div.plotly.html-widget'));
+  }
+
   // Downloadable plots only: static rasters. Interactive (plotly) charts can't
   // be re-rendered to a file client-side — users export those via plotly's own
   // camera button — so they're excluded here despite being findable.
   function plotItems() {
-    return buildIndex().filter(function (it) { return it.type === 'fig' && !it.interactive; });
+    return buildIndex().filter(function (it) { return it.type === 'fig' && !isInteractivePlotItem(it); });
   }
 
   function renderDownloads() {

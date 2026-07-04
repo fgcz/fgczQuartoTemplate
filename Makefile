@@ -2,7 +2,7 @@
 
 PKG_NAME := $(shell awk '/^Package:/ {print $$2; exit}' DESCRIPTION)
 
-.PHONY: help document sync example test check site format clean
+.PHONY: help document sync example test check install site format clean
 
 help:
 	@echo "$(PKG_NAME) targets:"
@@ -11,6 +11,7 @@ help:
 	@echo "  make example   - sync, then render the live example report into pkgdown/assets/"
 	@echo "  make test      - run testthat tests"
 	@echo "  make check     - document + sync, then full R CMD check"
+	@echo "  make install   - document + sync, then install into the active R library"
 	@echo "  make site      - sync + render example, then build the pkgdown site locally"
 	@echo "  make format    - format R sources with air"
 	@echo "  make clean     - remove build artifacts"
@@ -33,6 +34,9 @@ test: document
 
 check: document sync
 	Rscript -e "devtools::check()"
+
+install: document sync
+	R CMD INSTALL .
 
 site: example
 	Rscript -e "pkgdown::build_site(install = TRUE)"

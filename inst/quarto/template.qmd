@@ -28,6 +28,26 @@ change the colour and icon; add `collapse="true"` to fold it shut by default.
 
 Main content of the tab then runs full-width underneath.
 
+```{r first-dt-table}
+DT::datatable(
+  head(iris, 10),
+  caption = paste(
+    "First ten rows of iris flower measurements, including sepal length,",
+    "sepal width, petal length, petal width, and species."
+  ),
+  filter = "bottom",
+  extensions = "Buttons",
+  rownames = FALSE,
+  class = "compact stripe",
+  options = list(
+    pageLength = 5,
+    scrollX = TRUE,
+    dom = "Blfrtip",
+    buttons = c("csv", "excel")
+  )
+)
+```
+
 # Second
 
 <!-- PATTERN 2 — OPTIONAL plot + side callout (flush, same height).
@@ -101,7 +121,16 @@ DT::datatable(
     "First eight rows of mtcars vehicle measurements, including fuel economy,",
     "cylinders, displacement, horsepower, rear axle ratio, and weight."
   ),
-  options = list(dom = "t")
+  filter = "bottom",
+  extensions = "Buttons",
+  rownames = FALSE,
+  class = "compact stripe",
+  options = list(
+    pageLength = 5,
+    scrollX = TRUE,
+    dom = "Blfrtip",
+    buttons = c("csv", "excel")
+  )
 )
 ```
 

@@ -1,5 +1,12 @@
 # fgczquartotemplate 0.0.0.9000
 
+* The opt-in toolbar's **🔍 Find** panel now uses Quarto figure captions for
+  Plotly htmlwidgets inside figure floats instead of adding duplicate
+  captionless Plotly cards.
+* The opt-in toolbar's **📥 Save** panel now excludes Plotly htmlwidgets inside
+  figure floats from the static-download list.
+* The opt-in toolbar's **🔍 Find** panel now renders DT tables as table
+  preview cards instead of generic figure placeholders.
 * The opt-in toolbar's **🔍 Find** button opens a graphical table of contents
   showing figures and tables, including content in inactive tabs; click one to
   jump to it. Results are grouped by their report location, and
