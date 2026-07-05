@@ -297,9 +297,27 @@
     return it.crumb.join(' › ');
   }
 
-  // Activate one tab (toggle classes within its own tabset only).
+  function showBootstrapTab(link) {
+    if (!(link && window.bootstrap && window.bootstrap.Tab)) return false;
+    var Tab = window.bootstrap.Tab;
+    var tab = Tab.getOrCreateInstance ? Tab.getOrCreateInstance(link) : new Tab(link);
+    tab.show();
+    return true;
+  }
+
+  function notifyHtmlWidgetsShown() {
+    if (window.jQuery) {
+      window.jQuery(document).trigger('shown.htmlwidgets');
+    } else if (window.dispatchEvent) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  }
+
+  // Activate one tab. Use Bootstrap's API when present so htmlwidgets receive
+  // the shown.bs.tab lifecycle event they use to resize hidden widgets.
   function activate(pane) {
     var link = pane.id ? linkForPane(pane.id) : null;
+    if (showBootstrapTab(link)) return;
     if (link) {
       var nav = link.closest('.nav-tabs') || link.closest('.nav');
       if (nav) nav.querySelectorAll('.nav-link').forEach(function (a) {
@@ -322,6 +340,7 @@
       pane = pane.parentElement ? pane.parentElement.closest('.tab-pane') : null;
     }
     chain.forEach(activate);
+    notifyHtmlWidgetsShown();
     closeAll();
     setTimeout(function () {            // let the tab switches lay out first
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });

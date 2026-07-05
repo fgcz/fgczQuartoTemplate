@@ -1,5 +1,7 @@
-# fgczquartotemplate 0.0.0.9000
+# fgczquartotemplate 0.0.0.9001
 
+* The opt-in toolbar's **🔍 Find** panel now opens tabs through Bootstrap's tab
+  API so htmlwidgets such as DT tables redraw when revealed from inactive tabs.
 * The opt-in toolbar's **🔍 Find** panel now renders Plotly htmlwidgets as
   thumbnail cards by rasterizing the embedded widget JSON in the browser.
 * The opt-in toolbar's **🔍 Find** panel now uses Quarto figure captions for
