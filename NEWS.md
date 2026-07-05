@@ -1,5 +1,7 @@
 # fgczquartotemplate 0.0.0.9000
 
+* The opt-in toolbar's **🔍 Find** panel now renders Plotly htmlwidgets as
+  thumbnail cards by rasterizing the embedded widget JSON in the browser.
 * The opt-in toolbar's **🔍 Find** panel now uses Quarto figure captions for
   Plotly htmlwidgets inside figure floats instead of adding duplicate
   captionless Plotly cards.

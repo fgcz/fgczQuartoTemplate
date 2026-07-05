@@ -401,6 +401,47 @@
     return el.querySelector ? el.querySelector('div.html-widget.datatables') : null;
   }
 
+  function plotlyWidget(el) {
+    if (!el) return null;
+    if (
+      el.classList &&
+      el.classList.contains('plotly') &&
+      el.classList.contains('html-widget')
+    ) {
+      return el;
+    }
+    return el.querySelector ? el.querySelector('div.plotly.html-widget') : null;
+  }
+
+  function plotlyCaption(widget) {
+    var n = widget ? widget.nextSibling : null;
+    while (n) {
+      if (n.nodeType === Node.TEXT_NODE && !n.textContent.trim()) {
+        n = n.nextSibling;
+        continue;
+      }
+      if (
+        n.nodeType === Node.ELEMENT_NODE &&
+        n.tagName &&
+        n.tagName.toLowerCase() === 'script'
+      ) {
+        n = n.nextSibling;
+        continue;
+      }
+      if (
+        n.nodeType === Node.ELEMENT_NODE &&
+        n.tagName &&
+        n.tagName.toLowerCase() === 'p' &&
+        n.parentElement &&
+        n.parentElement.classList.contains('cell-output-display')
+      ) {
+        return textOf(n);
+      }
+      return null;
+    }
+    return null;
+  }
+
   function buildIndex() {
     var items = [], seenImgs = new Set(), seenTables = new Set(), seenPlotly = new Set();
 
@@ -416,7 +457,7 @@
         items.push({
           type: 'fig',
           interactive: true,
-          label: cap ? textOf(cap) : plotlyTitle(plotly),
+          label: cap ? textOf(cap) : (plotlyCaption(plotly) || plotlyTitle(plotly)),
           el: fig
         });
         return;
@@ -444,12 +485,17 @@
         items.push({
           type: 'fig',
           interactive: true,
-          label: cap ? textOf(cap) : plotlyTitle(w),
+          label: cap ? textOf(cap) : (plotlyCaption(w) || plotlyTitle(w)),
           el: fig
         });
         return;
       }
-      items.push({ type: 'fig', interactive: true, el: w, label: plotlyTitle(w) });
+      items.push({
+        type: 'fig',
+        interactive: true,
+        el: w,
+        label: plotlyCaption(w) || plotlyTitle(w)
+      });
     });
 
     // 4) Quarto table floats. DT tables inside them are still table floats,
@@ -785,6 +831,125 @@
     return wrap;
   }
 
+  var plotlyThumbCache = typeof WeakMap === 'function' ? new WeakMap() : null;
+
+  function finitePositive(x) {
+    x = Number(x);
+    return isFinite(x) && x > 0 ? x : null;
+  }
+
+  function plotlyThumbSize(widget, x) {
+    var layout = x && x.layout ? x.layout : {};
+    var graph = widget.querySelector ? widget.querySelector('.js-plotly-plot') : null;
+    graph = graph || widget;
+    var full = graph._fullLayout || {};
+    var width = finitePositive(layout.width) ||
+      finitePositive(full.width) ||
+      finitePositive(widget.clientWidth) ||
+      finitePositive(widget.offsetWidth) ||
+      640;
+    var height = finitePositive(layout.height) ||
+      finitePositive(full.height) ||
+      finitePositive(widget.clientHeight) ||
+      finitePositive(widget.offsetHeight) ||
+      400;
+    return {
+      width: Math.max(320, Math.min(1200, Math.round(width))),
+      height: Math.max(220, Math.min(900, Math.round(height)))
+    };
+  }
+
+  function clonePlainObject(x) {
+    var out = {};
+    if (!x || typeof x !== 'object') return out;
+    Object.keys(x).forEach(function (k) { out[k] = x[k]; });
+    return out;
+  }
+
+  function setThumbImage(wrap, url, label) {
+    wrap.innerHTML = '';
+    wrap.classList.remove('placeholder');
+    wrap.classList.add('plotly');
+    var img = document.createElement('img');
+    img.src = url;
+    img.alt = label || 'interactive figure';
+    img.loading = 'lazy';
+    wrap.appendChild(img);
+  }
+
+  function plotlyThumbPromise(widget) {
+    if (!widget || !window.Plotly || !window.Plotly.newPlot || !window.Plotly.toImage) {
+      return null;
+    }
+    var cached = plotlyThumbCache ? plotlyThumbCache.get(widget) : null;
+    if (cached) return cached;
+
+    var x = htmlwidgetData(widget);
+    if (!x || !Array.isArray(x.data)) return null;
+    var size = plotlyThumbSize(widget, x);
+    var promise = new Promise(function (resolve, reject) {
+      var host = document.createElement('div');
+      host.style.position = 'fixed';
+      host.style.left = '-10000px';
+      host.style.top = '0';
+      host.style.width = size.width + 'px';
+      host.style.height = size.height + 'px';
+      host.style.opacity = '0';
+      host.style.pointerEvents = 'none';
+      document.body.appendChild(host);
+
+      var layout = clonePlainObject(x.layout);
+      layout.width = size.width;
+      layout.height = size.height;
+      layout.autosize = false;
+      var config = clonePlainObject(x.config);
+      config.staticPlot = true;
+      config.displayModeBar = false;
+      config.responsive = false;
+
+      window.Plotly.newPlot(host, x.data, layout, config)
+        .then(function () {
+          return window.Plotly.toImage(host, {
+            format: 'png',
+            width: size.width,
+            height: size.height,
+            scale: 1
+          });
+        })
+        .then(resolve)
+        .catch(reject)
+        .finally(function () {
+          if (window.Plotly && window.Plotly.purge) window.Plotly.purge(host);
+          host.remove();
+        });
+    });
+
+    if (plotlyThumbCache) {
+      plotlyThumbCache.set(widget, promise);
+      promise.then(function (url) {
+        plotlyThumbCache.set(widget, url);
+      }).catch(function () {
+        plotlyThumbCache.delete(widget);
+      });
+    }
+    return promise;
+  }
+
+  function renderPlotlyThumb(it, wrap) {
+    var widget = plotlyWidget(it.el);
+    if (!widget) return;
+    var cached = plotlyThumbCache ? plotlyThumbCache.get(widget) : null;
+    if (typeof cached === 'string') {
+      setThumbImage(wrap, cached, it.label);
+      return;
+    }
+    var promise = cached || plotlyThumbPromise(widget);
+    if (!promise || !promise.then) return;
+    promise.then(function (url) {
+      if (url) setThumbImage(wrap, url, it.label);
+    }).catch(function () {});
+  }
+
   function figureThumb(it, className) {
     var wrap = document.createElement('div');
     wrap.className = className;
@@ -805,12 +970,13 @@
     }
     wrap.className += ' placeholder';
     wrap.textContent = it.interactive ? '📈' : '🖼️';
+    if (it.interactive) renderPlotlyThumb(it, wrap);
     return wrap;
   }
 
   // A small thumbnail for a result: reuse embedded figure images, clone inline
-  // SVGs, or build a compact table preview. Interactive charts have no static
-  // raster, so show a placeholder glyph instead.
+  // SVGs, build a compact table preview, or ask Plotly to rasterize an
+  // interactive chart from its embedded htmlwidget JSON.
   function tocThumb(it) {
     if (it.type === 'tbl') return tableThumb(it);
     return figureThumb(it, 'fgcz-toc-thumb');

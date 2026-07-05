@@ -8,6 +8,7 @@ title: "`r params$reportTitle`"
 #| include: false
 library(ggplot2)
 library(DT)
+library(plotly)
 ```
 
 ::: {.panel-tabset}
@@ -215,6 +216,29 @@ ggplot(iris, aes(Petal.Length, fill = Species)) +
   geom_histogram(bins = 20, alpha = 0.7, position = "identity") +
   labs(x = "Petal length (cm)", y = "Count", fill = "Species") +
   theme_bw()
+```
+
+### Interactive density
+
+```{r tl-plotly-density}
+#| fig-cap: >-
+#|   Interactive density of sepal length by iris species. Each curve shows the
+#|   kernel density estimate for one species; hover over the Plotly chart to
+#|   inspect coordinates.
+density_plot <- ggplot(
+  iris,
+  aes(Sepal.Length, colour = Species, fill = Species)
+) +
+  geom_density(alpha = 0.2, linewidth = 0.8) +
+  labs(
+    x = "Sepal length (cm)",
+    y = "Density",
+    colour = "Species",
+    fill = "Species"
+  ) +
+  theme_bw()
+
+plotly::ggplotly(density_plot, tooltip = c("x", "y", "colour"))
 ```
 
 :::
