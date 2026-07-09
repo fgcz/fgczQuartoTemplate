@@ -5,7 +5,7 @@ reusable across `ezRun`, `prolfqua`, `prolfquapp`, …. Reports can opt in to a
 right-edge toolbar — **🔍 Find** any figure or table, browse them as a
 **🖼️ Figures** thumbnail gallery, or **📥 Save** the plots as a ZIP.
 
-**👉 [See a live example report](https://prolfqua.github.io/fgczquartotemplate/vignettes/example-report.html)** — the real layout, tabsets, figures, and the Find / Figures / Save toolbar.
+**👉 [See the documentation site](https://prolfqua.github.io/fgczquartotemplate/)** — including a live example report with the real layout, tabsets, figures, and the Find / Figures / Save toolbar.
 
 There are **two ways** to use it. Pick one.
 
