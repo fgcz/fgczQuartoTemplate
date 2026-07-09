@@ -1,5 +1,8 @@
-*.html
-*.R
+# Built vignette outputs live at the top level of vignettes/; anchor these so we
+# do NOT ignore the vendored extension assets under _extensions/ (e.g. its .html
+# header and toolbar), which must be committed for the vignette to build.
+/*.html
+/*.R
 /.quarto/
 **/*.quarto_ipynb
 *_files/
