@@ -11,7 +11,7 @@
 #'   \item{`fgcz.scss`}{Theme overrides (tabset/card styling, figure rows).}
 #'   \item{`fgcz_header_quarto.html`}{FGCZ header injected via
 #'     `include-in-header`.}
-#'   \item{`fgcz-plot-finder.html`}{Right-edge search + download toolbar.
+#'   \item{`fgcz-plot-finder.html`}{Top-right search + download toolbar.
 #'     Opt-in: staged next to every report but only injected (via
 #'     `include-after-body`) when asked for, e.g. `fgcz_render(buttons = TRUE)`.}
 #'   \item{`template.qmd`}{A generic starter report demonstrating the tabset,
@@ -161,7 +161,7 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #' Quarto automatically, so the report stays fully portable.
 #'
 #' @param input Path to the `.qmd` to render.
-#' @param buttons Add the right-edge search + download toolbar
+#' @param buttons Add the top-right search + download toolbar
 #'   (`fgcz-plot-finder.html`) to the report. Defaults to `FALSE`; pass `TRUE`
 #'   to opt in. The toolbar ships with the package and is always staged next to
 #'   `input`, but is only wired in (via `include-after-body`) when you ask for
@@ -176,7 +176,7 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #' @examples
 #' \dontrun{
 #' fgcz_render("CountQC.qmd", execute_params = list(reportTitle = "CountQC"))
-#' fgcz_render("CountQC.qmd", buttons = TRUE) # with the Find/Save toolbar
+#' fgcz_render("CountQC.qmd", buttons = TRUE) # with the Find/Download toolbar
 #' }
 fgcz_render <- function(input, buttons = FALSE, ...) {
   if (!is.logical(buttons) || length(buttons) != 1L || is.na(buttons)) {

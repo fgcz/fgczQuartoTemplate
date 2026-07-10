@@ -2,10 +2,10 @@
 
 One shared **FGCZ look-and-feel** for Quarto reports (theme + header + defaults),
 reusable across `ezRun`, `prolfqua`, `prolfquapp`, …. Reports can opt in to a
-right-edge toolbar — **🔍 Find** any figure or table, browse them as a
-**🖼️ Figures** thumbnail gallery, or **📥 Save** the plots as a ZIP.
+top-right toolbar — **🔍 Find** any figure or table in a graphical table of
+contents, or **📥 Download** the plots as a ZIP.
 
-**👉 [See the documentation site](https://prolfqua.github.io/fgczquartotemplate/)** — including a live example report with the real layout, tabsets, figures, and the Find / Figures / Save toolbar.
+**👉 [See the documentation site](https://prolfqua.github.io/fgczquartotemplate/)** — including a live example report with the real layout, tabsets, figures, and the Find / Download toolbar.
 
 There are **two ways** to use it. Pick one.
 
@@ -42,7 +42,7 @@ quarto render my_report.qmd
 
 Done. ✅
 
-**Optional — 🔍 Find / 🖼️ Figures / 📥 Save toolbar** (off by default). Switch it on per
+**Optional — 🔍 Find / 📥 Download toolbar** (off by default). Switch it on per
 report by adding one line to the header:
 
 ```yaml
@@ -73,7 +73,7 @@ title: "My report"
 
 ```r
 fgczquartotemplate::fgcz_render("my_report.qmd")                 # no toolbar
-fgczquartotemplate::fgcz_render("my_report.qmd", buttons = TRUE) # 🔍 Find / 🖼️ Figures / 📥 Save
+fgczquartotemplate::fgcz_render("my_report.qmd", buttons = TRUE) # 🔍 Find / 📥 Download
 ```
 
 Done. ✅ (`fgcz_render` copies `_metadata.yml`, `fgcz.scss`,
@@ -117,7 +117,7 @@ Both produce the **same** report. They can coexist in one repo.
 
 ```r
 fgcz_render("report.qmd")               # stage assets + render (the usual one)
-fgcz_render("report.qmd", buttons = TRUE) # ...plus the 🔍 Find / 🖼️ Figures / 📥 Save toolbar
+fgcz_render("report.qmd", buttons = TRUE) # ...plus the 🔍 Find / 📥 Download toolbar
 fgcz_copy_assets("report.qmd")          # stage assets next to that file
 fgcz_copy_assets("dir")                 # or stage assets into an existing dir
 fgcz_use_template("dir", "report.qmd")  # start a new report from the template
@@ -135,9 +135,9 @@ sit next to the `.qmd` at render time. Two clean ways to get them there:
 
 ## For maintainers
 
-- Edit `fgcz.scss` / `fgcz_header_quarto.html` in `inst/quarto/`, then run
-  `Rscript data-raw/sync_assets.R` to mirror them into `_extensions/` and
-  `vignettes/_extensions/`.
+- Edit `fgcz.scss`, `fgcz_header_quarto.html`, and `fgcz-plot-finder.html` in
+  `inst/quarto/`, then run `Rscript data-raw/sync_assets.R` to mirror them into
+  `_extensions/` and `vignettes/_extensions/`.
 - Keep `inst/quarto/_metadata.yml` and `_extensions/fgczquartotemplate/_extension.yml`
   in step (same format options, one flat / one nested under `contributes`).
 - The live example report is the `vignettes/example-report.qmd` vignette; the

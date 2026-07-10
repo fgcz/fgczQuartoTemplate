@@ -53,8 +53,8 @@ no `quarto add`. Companion helpers: `fgcz_use_template()` starts a new report
 from the annotated starter, `fgcz_copy_assets()` just stages the files, and
 `fgcz_quarto_dir()` points at the installed assets.
 
-Either way you get the theme and the FGCZ header for free. The right-edge
-**🔍 Find / 🖼️ Figures / 📥 Save** toolbar is opt-in — turn it on with
+Either way you get the theme and the FGCZ header for free. The top-right
+**🔍 Find / 📥 Download** toolbar is opt-in — turn it on with
 `fgcz_render(buttons = TRUE)` (or an `include-after-body:` line for the CLI
 routes); see the last section. Start from `inst/quarto/template.qmd` (via
 `fgcz_use_template()`), which demonstrates every layout pattern below in code.
@@ -193,7 +193,7 @@ that the figure is labelled correctly.
 ## Interactive figures are the exception
 
 Default to **static** figures (`ggplot`). They are lighter, print cleanly, and —
-importantly — the 📥 Save toolbar (when enabled) can bundle them into a ZIP;
+importantly — the 📥 Download toolbar (when enabled) can bundle them into a ZIP;
 interactive `plotly` / `ggplotly` charts cannot be downloaded that way.
 
 Reach for `ggplotly()` **only when interactivity genuinely improves
@@ -205,17 +205,40 @@ readability**, for example:
 
 If a static figure reads fine, keep it static.
 
-## The Find / Figures / Save toolbar: opt-in, and don't hand-build it
+## The Find / Download toolbar: opt-in, and don't hand-build it
 
-The template ships a right-edge toolbar with three tools — **🔍 Find**
-(searchable list of every figure and table; clicking one opens the tab it lives
-in and scrolls to it), **🖼️ Figures** (a graphical table of contents: a
-thumbnail per figure, click to jump to it), and **📥 Save** (tick-box download
-of the static plots as a single ZIP). It is **off by default**; switch it on
-with `fgcz_render(buttons = TRUE)` (or an `include-after-body:
+The template ships a top-right toolbar with two tools — **🔍 Find** (a
+searchable graphical table of contents for every figure and table; clicking one
+opens the tab it lives in and scrolls to it) and **📥 Download** (tick-box
+download of the static plots as a single ZIP). It is **off by default**; switch
+it on with `fgcz_render(buttons = TRUE)` (or an `include-after-body:
 …/fgcz-plot-finder.html` line for the extension / plain `quarto render` routes).
 When you want it, use that switch — never hand-add buttons, a table-of-figures,
 or a thumbnail gallery; the template's version is complete and tested.
+
+For B-Fabric / SUSHI reports, add report provenance in two places:
+
+- A visible report-information callout near the top with Workunit, Order,
+  Project, who generated the report, generation timestamp, software, and model
+  where applicable.
+- A final **Session Info** tab with the same metadata plus `sessionInfo()`.
+
+To let the Download ZIP filename include the Order and Workunit, expose the same
+metadata to the toolbar with a hidden marker before the toolbar include runs:
+
+```html
+<div id="fgcz-report-metadata" hidden
+  data-project-id="12345"
+  data-order-id="67890"
+  data-workunit-id="348267"
+  data-generated-by="sushi-user"
+  data-generated-at="2026-07-10 09:30:00 CEST"></div>
+```
+
+The toolbar also reads matching `<meta name="fgcz-order-id" …>` /
+`<meta name="fgcz-workunit-id" …>` tags and falls back to visible `Order:` /
+`Workunit:` text when present, but the hidden marker is the preferred,
+unambiguous contract.
 
 Because the finder indexes figures and tables by their **caption** and their
 **tab breadcrumb**, the same two habits that make a report readable also make
@@ -230,6 +253,7 @@ tabs meaningful labels.
 - [ ] Captions name the metric, axes/encoding, grouping, and key preprocessing
 - [ ] Static figures unless interactivity is truly needed for readability
 - [ ] Toolbar via `buttons = TRUE` (or `include-after-body`) if wanted — never hand-built
+- [ ] B-Fabric reports include an info callout, Session Info metadata, and `#fgcz-report-metadata`
 
 ## Pointers
 

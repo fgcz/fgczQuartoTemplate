@@ -16,7 +16,7 @@ because of its reserved name -- reports need no reference to it.}
 \item{\code{fgcz.scss}}{Theme overrides (tabset/card styling, figure rows).}
 \item{\code{fgcz_header_quarto.html}}{FGCZ header injected via
 \verb{include-in-header}.}
-\item{\code{fgcz-plot-finder.html}}{Right-edge search + download toolbar.
+\item{\code{fgcz-plot-finder.html}}{Top-right search + download toolbar.
 Opt-in: staged next to every report but only injected (via
 \code{include-after-body}) when asked for, e.g. \code{fgcz_render(buttons = TRUE)}.}
 \item{\code{template.qmd}}{A generic starter report demonstrating the tabset,

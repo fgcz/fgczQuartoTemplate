@@ -46,3 +46,19 @@ test_that("fgcz_render rejects a non-scalar-logical buttons", {
   )
   expect_error(fgcz_render("x.qmd", buttons = NA), "single TRUE or FALSE")
 })
+
+test_that("plot finder downloads use report metadata and current timestamps", {
+  toolbar <- paste(
+    readLines(fgcz_quarto_dir("fgcz-plot-finder.html"), warn = FALSE),
+    collapse = "\n"
+  )
+
+  expect_match(toolbar, "right: 1rem; top: 1rem", fixed = TRUE)
+  expect_match(toolbar, ">Download</button>", fixed = TRUE)
+  expect_match(toolbar, "fgcz-report-metadata", fixed = TRUE)
+  expect_match(toolbar, "'order_' + orderId", fixed = TRUE)
+  expect_match(toolbar, "'workunit_' + workunitId", fixed = TRUE)
+  expect_match(toolbar, "timestampForFilename(new Date())", fixed = TRUE)
+  expect_match(toolbar, "zipDosDateTime", fixed = TRUE)
+  expect_match(toolbar, "u16(stamp.time), u16(stamp.date)", fixed = TRUE)
+})

@@ -9,7 +9,7 @@ fgcz_render(input, buttons = FALSE, ...)
 \arguments{
 \item{input}{Path to the \code{.qmd} to render.}
 
-\item{buttons}{Add the right-edge search + download toolbar
+\item{buttons}{Add the top-right search + download toolbar
 (\code{fgcz-plot-finder.html}) to the report. Defaults to \code{FALSE}; pass \code{TRUE}
 to opt in. The toolbar ships with the package and is always staged next to
 \code{input}, but is only wired in (via \code{include-after-body}) when you ask for
@@ -31,6 +31,6 @@ Quarto automatically, so the report stays fully portable.
 \examples{
 \dontrun{
 fgcz_render("CountQC.qmd", execute_params = list(reportTitle = "CountQC"))
-fgcz_render("CountQC.qmd", buttons = TRUE) # with the Find/Save toolbar
+fgcz_render("CountQC.qmd", buttons = TRUE) # with the Find/Download toolbar
 }
 }

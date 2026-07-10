@@ -1,5 +1,9 @@
 # fgczquartotemplate 0.1.0
 
+* The opt-in toolbar now docks the **🔍 Find** and **📥 Download** buttons in
+  the top-right corner. Downloaded ZIP files now include a current timestamp,
+  encode Order/Workunit identifiers when report metadata is available, and write
+  current ZIP entry timestamps instead of the 1980 default.
 * The documentation website is now built with
   [altdoc](https://altdoc.etiennebacher.com/) (Quarto Website backend) instead of
   pkgdown. pkgdown mangles Quarto `panel-tabset`s (its `tweak_tabsets` step crashes
