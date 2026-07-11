@@ -1,6 +1,6 @@
 Package: fgczquartotemplate
 Title: FGCZ Quarto Report Templates and Shared Styling
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
     person("Peter", "Leary", role = "aut"),
     person("Jonas", "Grossmann", role = "aut"),

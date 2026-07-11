@@ -53,7 +53,7 @@ test_that("plot finder downloads use report metadata and current timestamps", {
     collapse = "\n"
   )
 
-  expect_match(toolbar, "right: 1rem; top: 1rem", fixed = TRUE)
+  expect_match(toolbar, "right: 1rem; top: max(7rem, 25vh)", fixed = TRUE)
   expect_match(toolbar, ">Download</button>", fixed = TRUE)
   expect_match(toolbar, "fgcz-report-metadata", fixed = TRUE)
   expect_match(toolbar, "'order_' + orderId", fixed = TRUE)

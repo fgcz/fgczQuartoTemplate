@@ -216,12 +216,14 @@ it on with `fgcz_render(buttons = TRUE)` (or an `include-after-body:
 When you want it, use that switch — never hand-add buttons, a table-of-figures,
 or a thumbnail gallery; the template's version is complete and tested.
 
-For B-Fabric / SUSHI reports, add report provenance in two places:
-
-- A visible report-information callout near the top with Workunit, Order,
-  Project, who generated the report, generation timestamp, software, and model
-  where applicable.
-- A final **Session Info** tab with the same metadata plus `sessionInfo()`.
+For B-Fabric / SUSHI reports, record report provenance **once**, in a final
+**Session Info** tab: a small two-column (field / value) table of Workunit,
+Order, Project, who generated the report, the generation timestamp, the
+quantification software, and the model where applicable, followed by
+`sessionInfo()`. Do **not** also repeat the same metadata in a report-information
+callout near the top — one Session Info tab is the single source of truth, and a
+duplicate header callout only pushes the actual report content down the page.
+Render the metadata as a table (e.g. `knitr::kable()`), not a bullet list.
 
 To let the Download ZIP filename include the Order and Workunit, expose the same
 metadata to the toolbar with a hidden marker before the toolbar include runs:
@@ -253,7 +255,7 @@ tabs meaningful labels.
 - [ ] Captions name the metric, axes/encoding, grouping, and key preprocessing
 - [ ] Static figures unless interactivity is truly needed for readability
 - [ ] Toolbar via `buttons = TRUE` (or `include-after-body`) if wanted — never hand-built
-- [ ] B-Fabric reports include an info callout, Session Info metadata, and `#fgcz-report-metadata`
+- [ ] B-Fabric reports record provenance once — a Session Info tab with a field/value table + `sessionInfo()` and a `#fgcz-report-metadata` marker, not a duplicate top callout
 
 ## Pointers
 
