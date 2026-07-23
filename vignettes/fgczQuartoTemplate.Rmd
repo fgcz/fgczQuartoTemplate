@@ -12,12 +12,12 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(fgczquartotemplate)
+library(fgczQuartoTemplate)
 ```
 
 ## What this package provides
 
-`fgczquartotemplate` ships one shared set of Quarto report assets so that FGCZ
+`fgczQuartoTemplate` ships one shared set of Quarto report assets so that FGCZ
 analysis packages (`ezRun`, `prolfqua`, ...) all produce reports with the same
 look and feel. A theme change becomes a single package bump instead of an edit
 in every downstream package.
@@ -51,7 +51,7 @@ then in the report header:
 ````yaml
 ---
 title: "My report"
-format: fgczquartotemplate-html
+format: fgczQuartoTemplate-html
 ---
 ````
 
@@ -154,8 +154,8 @@ With the Quarto extension route, opt into the toolbar with
 
 ````yaml
 format:
-  fgczquartotemplate-html:
-    include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html
+  fgczQuartoTemplate-html:
+    include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html
 fgcz-buttons: [search, download]
 ````
 
@@ -164,10 +164,10 @@ an unknown name stops the render with a validation error.
 
 ## Using it from a downstream package
 
-1. Add `fgczquartotemplate` to `Imports` (and, since it is distributed on
+1. Add `fgczQuartoTemplate` to `Imports` (and, since it is distributed on
    GitHub, `Remotes: fgcz/fgczQuartoTemplate`).
 2. Replace `quarto::quarto_render()` calls with
-   `fgczquartotemplate::fgcz_render()`.
+   `fgczQuartoTemplate::fgcz_render()`.
 3. Leave report front matter free of any styling reference — the staged
    `_metadata.yml` attaches automatically.
 4. Git-ignore the staged copies (`_metadata.yml`, `fgcz.scss`,

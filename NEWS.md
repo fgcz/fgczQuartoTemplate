@@ -1,4 +1,4 @@
-# fgczquartotemplate 0.2.0
+# fgczQuartoTemplate 0.2.0
 
 * Reports can select `"search"` and/or `"download"` toolbar controls through
   `fgcz_render(buttons = ...)` or a top-level `fgcz-buttons:` Quarto YAML key.
@@ -22,7 +22,7 @@
   on them), whereas altdoc renders vignettes natively through Quarto with the
   tabsets intact.
 * The FGCZ layout demo now ships as a rendered vignette
-  (`vignettes/example-report.qmd`), built with `format: fgczquartotemplate-html`
+  (`vignettes/example-report.qmd`), built with `format: fgczQuartoTemplate-html`
   from the vendored `vignettes/_extensions/`, and is shown on the documentation
   site with its nested tabsets preserved. Its title is now a static string so the
   documentation-site sidebar shows "FGCZ tabset layout example" instead of the
@@ -38,7 +38,7 @@
   (plus `sessionInfo()` and the `#fgcz-report-metadata` marker) — rather than
   duplicating the metadata in a top-of-page report-information callout.
 
-# fgczquartotemplate 0.1.0
+# fgczQuartoTemplate 0.1.0
 
 * The opt-in toolbar's **🔍 Find** panel now opens tabs through Bootstrap's tab
   API so htmlwidgets such as DT tables redraw when revealed from inactive tabs.

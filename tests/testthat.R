@@ -1,4 +1,4 @@
 library(testthat)
-library(fgczquartotemplate)
+library(fgczQuartoTemplate)
 
-test_check("fgczquartotemplate")
+test_check("fgczQuartoTemplate")

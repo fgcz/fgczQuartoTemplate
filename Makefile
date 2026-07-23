@@ -1,4 +1,4 @@
-# fgczquartotemplate development targets.
+# fgczQuartoTemplate development targets.
 #
 # Modelled on the canonical ecosystem template (makefiles/R-package.Makefile in
 # the prolfqua_fml root) so the standard target surface is identical to every
@@ -110,7 +110,7 @@ site: install
 
 vignette:
 ifndef V
-	$(error Usage: make vignette V=<vignette_name>, e.g. make vignette V=fgczquartotemplate)
+	$(error Usage: make vignette V=<vignette_name>, e.g. make vignette V=fgczQuartoTemplate)
 endif
 	Rscript -e "rmarkdown::render('vignettes/$(V).Rmd')"
 

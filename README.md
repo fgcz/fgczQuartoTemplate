@@ -1,4 +1,4 @@
-# fgczquartotemplate
+# fgczQuartoTemplate
 
 One shared **FGCZ look-and-feel** for Quarto reports (theme + header + defaults),
 reusable across `ezRun`, `prolfqua`, `prolfquapp`, …. Reports can opt in to a
@@ -21,8 +21,8 @@ Best when you render with the `quarto` CLI.
 quarto add fgcz/fgczQuartoTemplate
 ```
 
-This creates `_extensions/fgczquartotemplate/` in the project. Without that
-extension directory, `format: fgczquartotemplate-html` will fail because Quarto
+This creates `_extensions/fgczQuartoTemplate/` in the project. Without that
+extension directory, `format: fgczQuartoTemplate-html` will fail because Quarto
 cannot resolve the custom format.
 
 **Step 2.** In your report's YAML header:
@@ -30,7 +30,7 @@ cannot resolve the custom format.
 ```yaml
 ---
 title: "My report"
-format: fgczquartotemplate-html
+format: fgczQuartoTemplate-html
 ---
 ```
 
@@ -47,8 +47,8 @@ select its buttons in the report header:
 
 ```yaml
 format:
-  fgczquartotemplate-html:
-    include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html
+  fgczQuartoTemplate-html:
+    include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html
 fgcz-buttons: [search, download]
 ```
 
@@ -79,9 +79,9 @@ title: "My report"
 **Step 3.** Render with the one-call helper:
 
 ```r
-fgczquartotemplate::fgcz_render("my_report.qmd")                 # no toolbar
-fgczquartotemplate::fgcz_render("my_report.qmd", buttons = TRUE) # 🔍 Find / 📥 Download
-fgczquartotemplate::fgcz_render("my_report.qmd", buttons = "search") # 🔍 Find only
+fgczQuartoTemplate::fgcz_render("my_report.qmd")                 # no toolbar
+fgczQuartoTemplate::fgcz_render("my_report.qmd", buttons = TRUE) # 🔍 Find / 📥 Download
+fgczQuartoTemplate::fgcz_render("my_report.qmd", buttons = "search") # 🔍 Find only
 ```
 
 Done. ✅ (`fgcz_render` copies `_metadata.yml`, `fgcz.scss`,
@@ -95,7 +95,7 @@ yourself:
 
 ```r
 input <- "my_report.qmd"
-fgczquartotemplate::fgcz_copy_assets(input)
+fgczQuartoTemplate::fgcz_copy_assets(input)
 quarto::quarto_render(input)
 ```
 
@@ -103,8 +103,8 @@ quarto::quarto_render(input)
 directory. These two calls are equivalent:
 
 ```r
-fgczquartotemplate::fgcz_copy_assets(input)
-fgczquartotemplate::fgcz_copy_assets(dirname(normalizePath(input)))
+fgczQuartoTemplate::fgcz_copy_assets(input)
+fgczQuartoTemplate::fgcz_copy_assets(dirname(normalizePath(input)))
 ```
 
 ---
@@ -114,8 +114,8 @@ fgczquartotemplate::fgcz_copy_assets(dirname(normalizePath(input)))
 | | Way 1 — Extension | Way 2 — R helper |
 |---|---|---|
 | Install | `quarto add …` (once per project) | `install_github` (once) |
-| YAML | `format: fgczquartotemplate-html` | nothing |
-| Render | `quarto render` | `fgczquartotemplate::fgcz_render()` |
+| YAML | `format: fgczQuartoTemplate-html` | nothing |
+| Render | `quarto render` | `fgczQuartoTemplate::fgcz_render()` |
 | Use it when | CLI / non-R pipelines | rendering from R |
 
 Both produce the **same** report. They can coexist in one repo.
@@ -150,7 +150,7 @@ sit next to the `.qmd` at render time. Two clean ways to get them there:
   - `fgcz.scss`, `fgcz_header_quarto.html`, `fgcz-plot-finder.html`,
     `fgcz-buttons.lua` — byte-copied into `_extensions/` and
     `vignettes/_extensions/`.
-  - `_extensions/fgczquartotemplate/_extension.yml` (nested, Way 1) — **built**
+  - `_extensions/fgczQuartoTemplate/_extension.yml` (nested, Way 1) — **built**
     from `inst/quarto/_metadata.yml` (flat, Way 2); edit the format options in
     `_metadata.yml` only. `version` is stamped from `DESCRIPTION`.
   - `vignettes/example-report.qmd` — **built** from `inst/quarto/template.qmd`

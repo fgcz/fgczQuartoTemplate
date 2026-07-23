@@ -1,4 +1,4 @@
-Package: fgczquartotemplate
+Package: fgczQuartoTemplate
 Title: FGCZ Quarto Report Templates and Shared Styling
 Version: 0.2.0
 Authors@R: c(

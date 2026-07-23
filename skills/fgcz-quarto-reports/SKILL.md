@@ -2,12 +2,12 @@
 name: fgcz-quarto-reports
 description: >-
   Conventions for authoring FGCZ Quarto analysis reports with the
-  fgczquartotemplate package: required Overview-first and final two-subtab
+  fgczQuartoTemplate package: required Overview-first and final two-subtab
   Session Info layout, tab-depth rules, one-screen layout, small gridded figures
   with lightbox zoom, and when interactive (plotly/ggplotly) figures are worth
   it. Use this skill whenever writing, structuring, or reviewing a `.qmd` report
-  that uses the FGCZ template (fgczquartotemplate, `_metadata.yml`, or `format:
-  fgczquartotemplate-html`), deciding how to lay out tabs and figures in an FGCZ
+  that uses the FGCZ template (fgczQuartoTemplate, `_metadata.yml`, or `format:
+  fgczQuartoTemplate-html`), deciding how to lay out tabs and figures in an FGCZ
   / SUSHI report, or turning an analysis (ezRun, prolfqua, prolfquapp, DIA-NN,
   single-cell) into an FGCZ-styled HTML report — even if the user never names the
   template explicitly.
@@ -37,7 +37,7 @@ quarto add fgcz/fgczQuartoTemplate
 ```yaml
 ---
 title: "My report"
-format: fgczquartotemplate-html
+format: fgczQuartoTemplate-html
 ---
 ```
 Render with plain `quarto render my_report.qmd`.
@@ -46,7 +46,7 @@ Render with plain `quarto render my_report.qmd`.
 Install once (`remotes::install_github("fgcz/fgczQuartoTemplate")`), keep the
 report header free of any `format:` line, and render with:
 ```r
-fgczquartotemplate::fgcz_render("my_report.qmd")
+fgczQuartoTemplate::fgcz_render("my_report.qmd")
 ```
 It stages `_metadata.yml` (plus the theme, header, and toolbar files) next to the
 `.qmd`, and Quarto applies `_metadata.yml` automatically — no `format:` line and
@@ -339,4 +339,4 @@ tabs meaningful labels.
 
 - `README.md` — installing / wiring the template (the two usage models)
 - `inst/quarto/template.qmd` — worked examples of every pattern above
-- `_metadata.yml` / `_extensions/fgczquartotemplate/_extension.yml` — the format options
+- `_metadata.yml` / `_extensions/fgczQuartoTemplate/_extension.yml` — the format options

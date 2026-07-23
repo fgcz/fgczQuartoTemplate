@@ -3,7 +3,7 @@
 ## Regenerate with:  Rscript data-raw/sync_assets.R
 ## Source of truth:  inst/quarto/_metadata.yml (flat) → nested here.
 ## Installed with:   quarto add fgcz/fgczQuartoTemplate  (README: Way 1)
-## Reports declare:  format: fgczquartotemplate-html
+## Reports declare:  format: fgczQuartoTemplate-html
 ## `version` is stamped from DESCRIPTION.
 ## ─────────────────────────────────────────────────────────────
 title: FGCZ Quarto Template
@@ -30,7 +30,7 @@ contributes:
       # fgcz-buttons.lua reads an optional top-level `fgcz-buttons:`
       # selection and passes it to the toolbar. The toolbar itself
       # (fgcz-plot-finder.html) is opt-in: add per report
-      #   include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html
+      #   include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html
       filters:
         - fgcz-buttons.lua
       execute:

@@ -32,7 +32,7 @@
 #' opt-in -- enable both buttons with `fgcz_render(buttons = TRUE)`, or select
 #' buttons by name.
 #'
-#' @name fgczquartotemplate-assets
+#' @name fgczQuartoTemplate-assets
 NULL
 
 #' The names of the shared styling assets
@@ -65,7 +65,7 @@ NULL
 #' fgcz_quarto_dir()
 #' fgcz_quarto_dir("template.qmd")
 fgcz_quarto_dir <- function(...) {
-  system.file("quarto", ..., package = "fgczquartotemplate", mustWork = TRUE)
+  system.file("quarto", ..., package = "fgczQuartoTemplate", mustWork = TRUE)
 }
 
 #' Copy the shared report assets next to a `.qmd`

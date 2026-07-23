@@ -68,7 +68,7 @@ test_that("fgcz_copy_assets rejects non-qmd file paths", {
 })
 
 test_that("toolbar button selections preserve logical compatibility", {
-  validate <- fgczquartotemplate:::.fgcz_validate_buttons
+  validate <- fgczQuartoTemplate:::.fgcz_validate_buttons
 
   expect_identical(validate(NULL), character(0))
   expect_identical(validate(FALSE), character(0))
@@ -83,7 +83,7 @@ test_that("toolbar button selections preserve logical compatibility", {
 })
 
 test_that("toolbar button selections reject invalid values", {
-  validate <- fgczquartotemplate:::.fgcz_validate_buttons
+  validate <- fgczQuartoTemplate:::.fgcz_validate_buttons
 
   expect_snapshot(error = TRUE, validate(NA))
   expect_snapshot(error = TRUE, validate(c(TRUE, FALSE)))
@@ -96,7 +96,7 @@ test_that("staged toolbar receives the selected button names", {
   tmp <- tempfile(fileext = ".html")
   writeLines('var buttons = "__FGCZ_BUTTONS__";', tmp)
 
-  fgczquartotemplate:::.fgcz_set_toolbar_buttons(
+  fgczQuartoTemplate:::.fgcz_set_toolbar_buttons(
     tmp,
     c("search", "download")
   )

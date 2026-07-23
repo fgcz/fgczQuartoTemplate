@@ -2,7 +2,7 @@
 ##
 ## The template ships through two channels (see README "Way 1 / Way 2"):
 ##   - Way 1, the Quarto extension (`quarto add ...`): reads
-##     _extensions/fgczquartotemplate/ from the repo root.
+##     _extensions/fgczQuartoTemplate/ from the repo root.
 ##   - Way 2, the R helper (`fgcz_render()`): stages inst/quarto/ next to a report.
 ## Quarto cannot read assets out of an installed R package, so both trees must be
 ## committed. To avoid hand-editing the same thing twice, ONLY inst/quarto/ is
@@ -22,7 +22,7 @@
 ##
 ##   Rscript data-raw/sync_assets.R
 
-dest_dir <- file.path("_extensions", "fgczquartotemplate")
+dest_dir <- file.path("_extensions", "fgczQuartoTemplate")
 stopifnot(dir.exists(dest_dir), dir.exists(file.path("inst", "quarto")))
 
 ## Byte-compare two files in full (no size cap).
@@ -104,7 +104,7 @@ build_extension_yml <- function(meta_lines, version) {
     "## Regenerate with:  Rscript data-raw/sync_assets.R",
     "## Source of truth:  inst/quarto/_metadata.yml (flat) → nested here.",
     "## Installed with:   quarto add fgcz/fgczQuartoTemplate  (README: Way 1)",
-    "## Reports declare:  format: fgczquartotemplate-html",
+    "## Reports declare:  format: fgczQuartoTemplate-html",
     "## `version` is stamped from DESCRIPTION.",
     "## ─────────────────────────────────────────────────────────────",
     "title: FGCZ Quarto Template",
@@ -118,7 +118,7 @@ build_extension_yml <- function(meta_lines, version) {
     "      # fgcz-buttons.lua reads an optional top-level `fgcz-buttons:`",
     "      # selection and passes it to the toolbar. The toolbar itself",
     "      # (fgcz-plot-finder.html) is opt-in: add per report",
-    "      #   include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html",
+    "      #   include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html",
     "      filters:",
     "        - fgcz-buttons.lua",
     folded
@@ -134,9 +134,9 @@ writeLines(
 
 ## (3) Mirror the finished extension into vignettes/ -------------------------
 ## The packaged demo vignette (vignettes/example-report.qmd) renders with
-## `format: fgczquartotemplate-html`, so it needs the extension next to it at
+## `format: fgczQuartoTemplate-html`, so it needs the extension next to it at
 ## R CMD build time. This mirrors the already-synced _extensions/ tree verbatim.
-vig_ext <- file.path("vignettes", "_extensions", "fgczquartotemplate")
+vig_ext <- file.path("vignettes", "_extensions", "fgczQuartoTemplate")
 dir.create(vig_ext, recursive = TRUE, showWarnings = FALSE)
 ext_files <- list.files(dest_dir, full.names = TRUE)
 ok3 <- file.copy(ext_files, vig_ext, overwrite = TRUE)
@@ -164,7 +164,7 @@ if (!same_bytes(overview_src, overview_vignette)) {
 ## (4) Build vignettes/example-report.qmd from template.qmd -------------------
 ## The two reports differ ONLY in their YAML header: template.qmd carries a
 ## `params`/`title` header for `fgcz_render()`, the vignette carries the
-## `format: fgczquartotemplate-html` + `fgcz-buttons:` + VignetteEngine header.
+## `format: fgczQuartoTemplate-html` + `fgcz-buttons:` + VignetteEngine header.
 ## The ~450-line body is identical. We copy template.qmd's body verbatim and
 ## swap in the vignette header, so the docs-site example is provably the
 ## template and the CI diff-gate protects the shared body for free.
@@ -172,8 +172,8 @@ vignette_header <- c(
   "---",
   'title: "FGCZ tabset layout example"',
   "format:",
-  "  fgczquartotemplate-html:",
-  "    include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html",
+  "  fgczQuartoTemplate-html:",
+  "    include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html",
   "fgcz-buttons: [search, download]",
   "vignette: >",
   "  %\\VignetteIndexEntry{Example FGCZ tabset report}",

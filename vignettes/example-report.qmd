@@ -1,8 +1,8 @@
 ---
 title: "FGCZ tabset layout example"
 format:
-  fgczquartotemplate-html:
-    include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html
+  fgczQuartoTemplate-html:
+    include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html
 fgcz-buttons: [search, download]
 vignette: >
   %\VignetteIndexEntry{Example FGCZ tabset report}
@@ -18,7 +18,7 @@ library(plotly)
 
 generated_at <- format(Sys.time(), "%Y-%m-%d %H:%M:%S %Z")
 report_package_version <- as.character(
-  utils::packageVersion("fgczquartotemplate")
+  utils::packageVersion("fgczQuartoTemplate")
 )
 ```
 
@@ -417,7 +417,7 @@ cat(
   ' data-project-id="example-project"',
   ' data-order-id="example-order"',
   ' data-workunit-id="example-workunit"',
-  ' data-generated-by="fgczquartotemplate"',
+  ' data-generated-by="fgczQuartoTemplate"',
   sprintf(' data-generated-at="%s"></div>', generated_at)
 )
 ```
@@ -440,12 +440,12 @@ knitr::kable(
       "Example project",
       "Example order",
       "Example workunit",
-      "fgczquartotemplate example vignette",
+      "fgczQuartoTemplate example vignette",
       generated_at,
       "datasets::iris and datasets::mtcars (bundled with R)",
       R.version.string,
       "Not applicable (layout demonstration)",
-      paste("fgczquartotemplate", report_package_version)
+      paste("fgczQuartoTemplate", report_package_version)
     ),
     check.names = FALSE
   ),
