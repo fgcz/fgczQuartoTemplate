@@ -3,7 +3,8 @@
 One shared **FGCZ look-and-feel** for Quarto reports (theme + header + defaults),
 reusable across `ezRun`, `prolfqua`, `prolfquapp`, …. Reports can opt in to a
 top-right toolbar — **🔍 Find** any figure or table in a graphical table of
-contents, or **📥 Download** the plots as a ZIP.
+contents, or **📥 Download** the plots, the `.qmd` source and a standalone
+copy of the page as a ZIP.
 
 **👉 [See the documentation site](https://fgcz.github.io/fgczQuartoTemplate/)** — including a live example report with the real layout, tabsets, figures, and the Find / Download toolbar.
 
@@ -56,6 +57,19 @@ Use `fgcz-buttons: search` or `fgcz-buttons: download` for one button. Omit
 `fgcz-buttons` to show both when the toolbar is included. Unknown names stop the
 render instead of silently hiding controls.
 
+**Optional — tab colour and numbering** (both off by default). Two independent
+switches in the report header:
+
+```yaml
+fgcz-colour: true   # per-nesting-level tab palette (deep blue → indigo)
+fgcz-number: true   # hierarchical tab numbers: 1, 1.1, 1.1.1 …
+```
+
+`fgcz-colour` replaces the uniform grey folder tabs with one hue per nesting
+level, so depth reads as colour. `fgcz-number` prefixes every tab label with its
+position, counting across sibling tabsets at the same depth; with the toolbar on,
+the numbers show up in the Find panel's breadcrumbs too.
+
 ---
 
 ## Way 2 — R helper (stage files, then render)
@@ -82,6 +96,7 @@ title: "My report"
 fgczquartotemplate::fgcz_render("my_report.qmd")                 # no toolbar
 fgczquartotemplate::fgcz_render("my_report.qmd", buttons = TRUE) # 🔍 Find / 📥 Download
 fgczquartotemplate::fgcz_render("my_report.qmd", buttons = "search") # 🔍 Find only
+fgczquartotemplate::fgcz_render("my_report.qmd", colour = TRUE, number = TRUE) # coloured + numbered tabs
 ```
 
 Done. ✅ (`fgcz_render` copies `_metadata.yml`, `fgcz.scss`,
@@ -128,6 +143,8 @@ Both produce the **same** report. They can coexist in one repo.
 fgcz_render("report.qmd")               # stage assets + render (the usual one)
 fgcz_render("report.qmd", buttons = TRUE) # ...plus the 🔍 Find / 📥 Download toolbar
 fgcz_render("report.qmd", buttons = "download") # ...or just 📥 Download
+fgcz_render("report.qmd", colour = TRUE)  # per-level tab colours
+fgcz_render("report.qmd", number = TRUE)  # tab numbers 1, 1.1, 1.1.1 …
 fgcz_copy_assets("report.qmd")          # stage assets next to that file
 fgcz_copy_assets("dir")                 # or stage assets into an existing dir
 fgcz_use_template("dir", "report.qmd")  # start a new report from the template

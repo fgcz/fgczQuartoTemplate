@@ -4,7 +4,7 @@
 \alias{fgcz_render}
 \title{Render an FGCZ Quarto report}
 \usage{
-fgcz_render(input, buttons = FALSE, ...)
+fgcz_render(input, buttons = FALSE, colour = FALSE, number = FALSE, ...)
 }
 \arguments{
 \item{input}{Path to the \code{.qmd} to render.}
@@ -15,9 +15,16 @@ compatibility. Alternatively, pass \code{"search"} for Find, \code{"download"} f
 Download, or \code{c("search", "download")} for both. \code{FALSE}, \code{NULL}, and
 \code{character(0)} disable the toolbar.}
 
+\item{colour}{Use the per-nesting-level tab colour palette (deep blue →
+indigo) instead of the default uniform folder tabs. Defaults to \code{FALSE}.}
+
+\item{number}{Prefix every tab label with its hierarchical number (\code{1},
+\code{1.1}, \verb{1.1.1} …). Defaults to \code{FALSE}.}
+
 \item{...}{Passed on to \code{\link[quarto:quarto_render]{quarto::quarto_render()}} (e.g. \code{execute_params},
 \code{output_file}, \code{quarto_args}). A \code{metadata} list passed here is honored;
-enabling buttons merges \code{include-after-body} into it.}
+enabling buttons merges \code{include-after-body} into it, and enabling \code{colour}
+or \code{number} merges the matching \code{fgcz-colour} / \code{fgcz-number} keys.}
 }
 \value{
 The value of \code{\link[quarto:quarto_render]{quarto::quarto_render()}}, invisibly.
@@ -33,5 +40,6 @@ Quarto automatically, so the report stays fully portable.
 fgcz_render("CountQC.qmd", execute_params = list(reportTitle = "CountQC"))
 fgcz_render("CountQC.qmd", buttons = TRUE) # with the Find/Download toolbar
 fgcz_render("CountQC.qmd", buttons = "search") # Find only
+fgcz_render("CountQC.qmd", colour = TRUE, number = TRUE) # coloured, numbered
 }
 }

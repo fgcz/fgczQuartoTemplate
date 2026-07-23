@@ -58,8 +58,9 @@ Either way you get the theme and the FGCZ header for free. The top-right
 **🔍 Find / 📥 Download** toolbar is opt-in — turn on both controls with
 `fgcz_render(buttons = TRUE)`, or select `"search"` and/or `"download"` by
 name. For the CLI route, add an `include-after-body:` line and optionally a
-top-level `fgcz-buttons:` selection; see the last section. Start from
-`inst/quarto/template.qmd` (via
+top-level `fgcz-buttons:` selection; see the last section. Tab colouring and
+numbering are likewise opt-in — see "Optional tab colour and numbering" below.
+Start from `inst/quarto/template.qmd` (via
 `fgcz_use_template()`), which demonstrates every layout pattern below in code.
 
 ## Required analysis-report layout
@@ -267,12 +268,46 @@ readability**, for example:
 
 If a static figure reads fine, keep it static.
 
+## Optional tab colour and numbering
+
+Two independent switches, both **off by default**, that change how tabsets read.
+Neither is needed for a correct report — reach for them when a report is deeply
+nested enough that depth is hard to track.
+
+- **`colour`** replaces the uniform grey folder tabs with one hue per nesting
+  level (deep blue → cyan → sky → teal → indigo), so depth reads as colour. Tab
+  geometry is unchanged; only colour is overridden.
+- **`number`** prefixes every tab label with its hierarchical position — `1`,
+  `1.1`, `1.1.1` … — counting across sibling tabsets at the same depth, so two
+  separate top-level tabsets read `1, 2` then `3, 4`. With the toolbar enabled
+  the numbers also appear in the Find panel's breadcrumbs.
+
+From R, pass them to the renderer:
+
+```r
+fgcz_render("report.qmd", colour = TRUE, number = TRUE)
+```
+
+With the extension, set them as top-level YAML keys:
+
+```yaml
+fgcz-colour: true
+fgcz-number: true
+```
+
+Note numbering covers *every* top-level tab, so with the required layout
+Overview becomes `1` and Session Info the last number. Don't hand-roll either
+effect with your own CSS or a numbering chunk; both ship with the template and
+stay inert until asked for.
+
 ## The Find / Download toolbar: opt-in, and don't hand-build it
 
 The template ships a dynamic top-right toolbar with two tools — **🔍 Find** (a
 searchable graphical table of contents for every figure and table; clicking one
 opens the tab it lives in and scrolls to it) and **📥 Download** (tick-box
-download of the static plots as a single ZIP). It is **off by default**. With R,
+download of the static plots, plus two whole-report extras — the `.qmd` source
+and a standalone `.html` copy — bundled into a single ZIP). It is **off by
+default**. With R,
 use `fgcz_render(buttons = TRUE)` for both, `buttons = "search"` for Find, or
 `buttons = "download"` for Download; `FALSE` remains valid. With the extension,
 add an `include-after-body: …/fgcz-plot-finder.html` line and select controls
@@ -281,10 +316,10 @@ with `fgcz-buttons: search`, `fgcz-buttons: download`, or
 hand-add buttons, a table-of-figures, or a thumbnail gallery; the template's
 version is complete and tested.
 
-The controls are icon-only at rest to stay compact. Their Find/Download labels
-expand on mouse hover and keyboard focus, and each icon also has an accessible
-tooltip and label. The toolbar follows the bottom of the FGCZ banner while the
-banner is visible, then remains pinned with an equal gap from the top and right.
+The controls are icon-only, with no visible text label, to stay compact. Each
+icon carries an accessible tooltip and label instead. The toolbar follows the
+bottom of the FGCZ banner while the banner is visible, then remains pinned with
+an equal gap from the top and right.
 
 Every analysis-report vignette records report provenance **once**, in the
 mandatory final **Session Info** tab and its exactly two subtabs:

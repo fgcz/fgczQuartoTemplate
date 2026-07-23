@@ -1,3 +1,14 @@
+# fgczquartotemplate (development version)
+
+* Two optional tab features, both off by default and independent of each other:
+  `fgcz-colour: true` applies a per-nesting-level palette (deep blue → indigo)
+  instead of the uniform folder tabs, and `fgcz-number: true` prefixes every tab
+  label with its hierarchical number (`1`, `1.1`, `1.1.1` …), counting across
+  sibling tabsets at the same depth. Set them as top-level YAML keys with the
+  Quarto extension, or as `fgcz_render(colour = TRUE, number = TRUE)` from R.
+  Both restore behaviour from the older `fgczReportTemplates` package. Reports
+  that ignore them are unchanged.
+
 # fgczquartotemplate 0.2.0
 
 * Reports can select `"search"` and/or `"download"` toolbar controls through

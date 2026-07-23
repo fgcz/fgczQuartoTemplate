@@ -184,9 +184,14 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #'   compatibility. Alternatively, pass `"search"` for Find, `"download"` for
 #'   Download, or `c("search", "download")` for both. `FALSE`, `NULL`, and
 #'   `character(0)` disable the toolbar.
+#' @param colour Use the per-nesting-level tab colour palette (deep blue →
+#'   indigo) instead of the default uniform folder tabs. Defaults to `FALSE`.
+#' @param number Prefix every tab label with its hierarchical number (`1`,
+#'   `1.1`, `1.1.1` …). Defaults to `FALSE`.
 #' @param ... Passed on to [quarto::quarto_render()] (e.g. `execute_params`,
 #'   `output_file`, `quarto_args`). A `metadata` list passed here is honored;
-#'   enabling buttons merges `include-after-body` into it.
+#'   enabling buttons merges `include-after-body` into it, and enabling `colour`
+#'   or `number` merges the matching `fgcz-colour` / `fgcz-number` keys.
 #'
 #' @return The value of [quarto::quarto_render()], invisibly.
 #' @export
@@ -196,19 +201,47 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #' fgcz_render("CountQC.qmd", execute_params = list(reportTitle = "CountQC"))
 #' fgcz_render("CountQC.qmd", buttons = TRUE) # with the Find/Download toolbar
 #' fgcz_render("CountQC.qmd", buttons = "search") # Find only
+#' fgcz_render("CountQC.qmd", colour = TRUE, number = TRUE) # coloured, numbered
 #' }
-fgcz_render <- function(input, buttons = FALSE, ...) {
+fgcz_render <- function(input, buttons = FALSE, colour = FALSE, number = FALSE, ...) {
   buttons <- .fgcz_validate_buttons(buttons)
+  flags <- .fgcz_validate_flags(colour = colour, number = number)
   if (!requireNamespace("quarto", quietly = TRUE)) {
     stop("Package 'quarto' is required to render reports.")
   }
   stopifnot(file.exists(input))
-  # Re-stages a pristine fgcz-plot-finder.html every render. Load-bearing: the
-  # default overwrite = TRUE restores the `__FGCZ_BUTTONS__` placeholder that
-  # .fgcz_set_toolbar_buttons() consumes below, so a second render with a
-  # different `buttons` selection is not stuck with the first render's choice.
+  # Re-stages pristine copies of fgcz-plot-finder.html and fgcz_header_quarto.html
+  # every render. Load-bearing: the default overwrite = TRUE restores the
+  # `__FGCZ_BUTTONS__` and `__FGCZ_FLAGS__` placeholders that the patchers below
+  # consume, so a second render with a different selection is not stuck with the
+  # first render's choice.
   fgcz_copy_assets(input)
   dots <- list(...)
+  if (length(flags)) {
+    # Two routes to the same classes, because two kinds of report reach the
+    # header differently:
+    #   - A plain report includes the STAGED header (the staged _metadata.yml
+    #     names it by bare filename), so patching that copy is enough.
+    #   - A report using the Quarto extension takes its header from
+    #     _extensions/, where the patch cannot reach — but fgcz-buttons.lua is
+    #     active there and reads these same keys off the metadata.
+    # Announcing both is deliberate: the unused one is inert (a plain report has
+    # no filter to read the metadata; an extension report ignores the staged
+    # copy), and because each route only ADDS classes they union cleanly with no
+    # precedence rule. Note we must NOT also override `include-in-header` here —
+    # Quarto merges that key rather than replacing it, which would include the
+    # whole header, banner and all, a second time.
+    header <- normalizePath(
+      file.path(.fgcz_asset_target_dir(input), "fgcz_header_quarto.html"),
+      mustWork = TRUE
+    )
+    .fgcz_set_header_flags(header, flags)
+    md <- if (is.null(dots$metadata)) list() else dots$metadata
+    for (flag in flags) {
+      md[[flag]] <- TRUE
+    }
+    dots$metadata <- md
+  }
   if (length(buttons)) {
     # The toolbar is opt-in: fgcz_copy_assets() staged it next to `input`.
     # Patch the staged copy so its JS shows only the selected buttons, then wire
@@ -284,6 +317,50 @@ fgcz_render <- function(input, buttons = FALSE, ...) {
   html <- sub(
     "__FGCZ_BUTTONS__",
     paste(buttons, collapse = " "),
+    html,
+    fixed = TRUE
+  )
+  writeLines(html, path, sep = "", useBytes = TRUE)
+  invisible(path)
+}
+
+# Render-time feature toggles, mapped to the class each one adds to <html>.
+# Named in the order the classes are written into the staged header; the same
+# two names are what fgcz-buttons.lua reads from a report's front matter.
+.fgcz_valid_flags <- c(colour = "fgcz-colour", number = "fgcz-number")
+
+# Validate the feature toggles and return the classes to apply, in canonical
+# order. Arguments are passed by name (`colour = `, `number = `) so the error
+# message can point at the offending one.
+.fgcz_validate_flags <- function(...) {
+  given <- list(...)
+  for (name in names(given)) {
+    value <- given[[name]]
+    if (!is.logical(value) || length(value) != 1L || is.na(value)) {
+      stop("`", name, "` must be a single TRUE or FALSE.", call. = FALSE)
+    }
+  }
+  enabled <- names(given)[vapply(given, isTRUE, logical(1))]
+  unname(.fgcz_valid_flags[names(.fgcz_valid_flags) %in% enabled])
+}
+
+# Replace the feature-flag placeholder in a staged header. As with the toolbar,
+# the packaged source must contain it exactly once so configuration cannot
+# silently fail -- note the header's own JS deliberately splits the token across
+# a concatenation when testing for it, so that check is not counted here.
+.fgcz_set_header_flags <- function(path, flags) {
+  html <- readChar(path, file.info(path)$size, useBytes = TRUE)
+  Encoding(html) <- "UTF-8"
+  matches <- gregexpr("__FGCZ_FLAGS__", html, fixed = TRUE)[[1]]
+  if (identical(matches, -1L) || length(matches) != 1L) {
+    stop(
+      "The staged header must contain exactly one feature-flag placeholder.",
+      call. = FALSE
+    )
+  }
+  html <- sub(
+    "__FGCZ_FLAGS__",
+    paste(flags, collapse = " "),
     html,
     fixed = TRUE
   )
