@@ -270,7 +270,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">fgcz_render(input, buttons = FALSE, ...)
+<pre><code class="language-R">fgcz_render(input, buttons = FALSE, colour = FALSE, number = FALSE, ...)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -294,10 +294,26 @@ Which top-right toolbar buttons (<code>fgcz-plot-finder.html</code>) to add. Def
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="colour">colour</code>
+</td>
+<td>
+Use the per-nesting-level tab colour palette (deep blue → indigo) instead of the default uniform folder tabs. Defaults to <code>FALSE</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="number">number</code>
+</td>
+<td>
+Prefix every tab label with its hierarchical number (<code>1</code>, <code>1.1</code>, <code style="white-space: pre;">1.1.1</code> …). Defaults to <code>FALSE</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="...">…</code>
 </td>
 <td>
-Passed on to <code>quarto::quarto_render()</code> (e.g.&nbsp;<code>execute_params</code>, <code>output_file</code>, <code>quarto_args</code>). A <code>metadata</code> list passed here is honored; enabling buttons merges <code>include-after-body</code> into it.
+Passed on to <code>quarto::quarto_render()</code> (e.g.&nbsp;<code>execute_params</code>, <code>output_file</code>, <code>quarto_args</code>). A <code>metadata</code> list passed here is honored; enabling buttons merges <code>include-after-body</code> into it, and enabling <code>colour</code> or <code>number</code> merges the matching <code>fgcz-colour</code> / <code>fgcz-number</code> keys.
 </td>
 </tr>
 </tbody></table>
@@ -313,7 +329,8 @@ Passed on to <code>quarto::quarto_render()</code> (e.g.&nbsp;<code>execute_param
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"CountQC.qmd"</span>, <span class="at">execute_params =</span> <span class="fu">list</span>(<span class="at">reportTitle =</span> <span class="st">"CountQC"</span>))</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"CountQC.qmd"</span>, <span class="at">buttons =</span> <span class="cn">TRUE</span>) <span class="co"># with the Find/Download toolbar</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"CountQC.qmd"</span>, <span class="at">buttons =</span> <span class="st">"search"</span>) <span class="co"># Find only</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"CountQC.qmd"</span>, <span class="at">buttons =</span> <span class="st">"search"</span>) <span class="co"># Find only</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"CountQC.qmd"</span>, <span class="at">colour =</span> <span class="cn">TRUE</span>, <span class="at">number =</span> <span class="cn">TRUE</span>) <span class="co"># coloured, numbered</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 
