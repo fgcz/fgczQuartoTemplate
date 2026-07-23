@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>news – fgczquartotemplate</title>
+<title>news – fgczQuartoTemplate</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7db87aff3d14028862e8d47add95a991.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d88d70f6c7df7b9e20df5ff689ffded0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -82,7 +82,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">fgczquartotemplate</span>
+    <span class="navbar-title">fgczQuartoTemplate</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -92,7 +92,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/fgcz/fgczQuartoTemplate"> <i class="bi bi-github" role="img" aria-label="fgczquartotemplate GitHub">
+    <a class="nav-link" href="https://github.com/fgcz/fgczQuartoTemplate"> <i class="bi bi-github" role="img" aria-label="fgczQuartoTemplate GitHub">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -148,7 +148,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/fgczquartotemplate.html" class="sidebar-item-text sidebar-link">
+  <a href="./vignettes/fgczQuartoTemplate.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Using the FGCZ Quarto report templates</span></a>
   </div>
 </li>
@@ -189,8 +189,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/fgczquartotemplate-assets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">fgczquartotemplate-assets</span></a>
+  <a href="./man/fgczQuartoTemplate-assets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">fgczQuartoTemplate-assets</span></a>
   </div>
 </li>
       </ul>
@@ -228,20 +228,20 @@ ul.task-list li input[type="checkbox"] {
 
 
 <section id="fgczquartotemplate-0.2.0" class="level1">
-<h1>fgczquartotemplate 0.2.0</h1>
+<h1>fgczQuartoTemplate 0.2.0</h1>
 <ul>
 <li>Reports can select <code>"search"</code> and/or <code>"download"</code> toolbar controls through <code>fgcz_render(buttons = ...)</code> or a top-level <code>fgcz-buttons:</code> Quarto YAML key. Existing <code>TRUE</code>/<code>FALSE</code> R calls remain compatible, and unknown names now fail clearly instead of silently hiding controls. The toolbar uses a dynamic horizontal top-right position with compact icons whose text labels expand on hover or keyboard focus (<a href="https://github.com/fgcz/fgczQuartoTemplate/issues/2">#2</a>).</li>
 <li>The documentation site now publishes the <code>fgcz-quarto-reports</code> authoring skill as a readable guide and links it from the package usage vignette.</li>
 <li>The starter and example report now demonstrate the required compact Overview with a visual abstract, introduction, and high-level input summary, followed by a final Session Info tab containing separate Report provenance and R session info subtabs. <code>fgcz_use_template()</code> also copies the visual abstract beside the new report.</li>
 <li>Downloaded ZIP files now include a current timestamp, encode Order/Workunit identifiers when report metadata is available, and write current ZIP entry timestamps instead of the 1980 default.</li>
 <li>The documentation website is now built with <a href="https://altdoc.etiennebacher.com/">altdoc</a> (Quarto Website backend) instead of pkgdown. pkgdown mangles Quarto <code>panel-tabset</code>s (its <code>tweak_tabsets</code> step crashes on them), whereas altdoc renders vignettes natively through Quarto with the tabsets intact.</li>
-<li>The FGCZ layout demo now ships as a rendered vignette (<code>vignettes/example-report.qmd</code>), built with <code>format: fgczquartotemplate-html</code> from the vendored <code>vignettes/_extensions/</code>, and is shown on the documentation site with its nested tabsets preserved. Its title is now a static string so the documentation-site sidebar shows “FGCZ tabset layout example” instead of the raw <code>`r params$reportTitle`</code> code (the Quarto website navigation harvests the literal YAML title without executing inline code; a param-driven title still works for standalone reports rendered from <code>inst/quarto/template.qmd</code>).</li>
+<li>The FGCZ layout demo now ships as a rendered vignette (<code>vignettes/example-report.qmd</code>), built with <code>format: fgczQuartoTemplate-html</code> from the vendored <code>vignettes/_extensions/</code>, and is shown on the documentation site with its nested tabsets preserved. Its title is now a static string so the documentation-site sidebar shows “FGCZ tabset layout example” instead of the raw <code>`r params$reportTitle`</code> code (the Quarto website navigation harvests the literal YAML title without executing inline code; a param-driven title still works for standalone reports rendered from <code>inst/quarto/template.qmd</code>).</li>
 <li>The <code>fgcz-quarto-reports</code> skill’s caption guidance now includes a concrete before/after example: a negative (decorative, unsearchable) figure caption contrasted with a positive one that names the statistics, panels, axes, and diagnostic reading.</li>
 <li>The <code>fgcz-quarto-reports</code> skill now recommends recording B-Fabric / SUSHI report provenance <strong>once</strong> — a field/value table in a final Session Info tab (plus <code>sessionInfo()</code> and the <code>#fgcz-report-metadata</code> marker) — rather than duplicating the metadata in a top-of-page report-information callout.</li>
 </ul>
 </section>
 <section id="fgczquartotemplate-0.1.0" class="level1">
-<h1>fgczquartotemplate 0.1.0</h1>
+<h1>fgczQuartoTemplate 0.1.0</h1>
 <ul>
 <li>The opt-in toolbar’s <strong>🔍 Find</strong> panel now opens tabs through Bootstrap’s tab API so htmlwidgets such as DT tables redraw when revealed from inactive tabs.</li>
 <li>The opt-in toolbar’s <strong>🔍 Find</strong> panel now renders Plotly htmlwidgets as thumbnail cards by rasterizing the embedded widget JSON in the browser.</li>

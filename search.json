@@ -1,32 +1,101 @@
 [
   {
-    "objectID": "man/fgcz_render.html",
-    "href": "man/fgcz_render.html",
-    "title": "fgczquartotemplate",
-    "section": "",
-    "text": "Stages the shared styling assets next to input (via fgcz_copy_assets()) and then renders it with quarto::quarto_render(). The .qmd needs no styling front matter at all: the staged _metadata.yml is picked up by Quarto automatically, so the report stays fully portable.\n\n\n\nfgcz_render(input, buttons = FALSE, ...)\n\n\n\n\n\n\n\ninput\n\n\nPath to the .qmd to render.\n\n\n\n\nbuttons\n\n\nWhich top-right toolbar buttons (fgcz-plot-finder.html) to add. Defaults to FALSE; TRUE enables both buttons for backward compatibility. Alternatively, pass “search” for Find, “download” for Download, or c(“search”, “download”) for both. FALSE, NULL, and character(0) disable the toolbar.\n\n\n\n\n…\n\n\nPassed on to quarto::quarto_render() (e.g. execute_params, output_file, quarto_args). A metadata list passed here is honored; enabling buttons merges include-after-body into it.\n\n\n\n\n\n\nThe value of quarto::quarto_render(), invisibly.\n\n\n\n\nlibrary(\"fgczquartotemplate\")\n\nfgcz_render(\"CountQC.qmd\", execute_params = list(reportTitle = \"CountQC\"))\nfgcz_render(\"CountQC.qmd\", buttons = TRUE) # with the Find/Download toolbar\nfgcz_render(\"CountQC.qmd\", buttons = \"search\") # Find only",
+    "objectID": "vignettes/example-report.html#at-a-glance",
+    "href": "vignettes/example-report.html#at-a-glance",
+    "title": "FGCZ tabset layout example",
+    "section": "At a glance",
+    "text": "At a glance\n\n\n\nHigh-level summary of the example report.\n\n\nSummary\nValue\n\n\n\n\nInput\nBuilt-in iris and mtcars data\n\n\nScale\n150 flowers and 32 cars\n\n\nOutputs\nTables, static and interactive figures, and nested tabs\n\n\nGoal\nA compact, searchable, self-contained analysis report",
     "crumbs": [
-      "Reference",
-      "fgcz_render"
+      "Articles",
+      "FGCZ tabset layout example"
     ]
   },
   {
-    "objectID": "man/fgcz_render.html#render-an-fgcz-quarto-report",
-    "href": "man/fgcz_render.html#render-an-fgcz-quarto-report",
-    "title": "fgczquartotemplate",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "fgczQuartoTemplate",
     "section": "",
-    "text": "Stages the shared styling assets next to input (via fgcz_copy_assets()) and then renders it with quarto::quarto_render(). The .qmd needs no styling front matter at all: the staged _metadata.yml is picked up by Quarto automatically, so the report stays fully portable.\n\n\n\nfgcz_render(input, buttons = FALSE, ...)\n\n\n\n\n\n\n\ninput\n\n\nPath to the .qmd to render.\n\n\n\n\nbuttons\n\n\nWhich top-right toolbar buttons (fgcz-plot-finder.html) to add. Defaults to FALSE; TRUE enables both buttons for backward compatibility. Alternatively, pass “search” for Find, “download” for Download, or c(“search”, “download”) for both. FALSE, NULL, and character(0) disable the toolbar.\n\n\n\n\n…\n\n\nPassed on to quarto::quarto_render() (e.g. execute_params, output_file, quarto_args). A metadata list passed here is honored; enabling buttons merges include-after-body into it.\n\n\n\n\n\n\nThe value of quarto::quarto_render(), invisibly.\n\n\n\n\nlibrary(\"fgczquartotemplate\")\n\nfgcz_render(\"CountQC.qmd\", execute_params = list(reportTitle = \"CountQC\"))\nfgcz_render(\"CountQC.qmd\", buttons = TRUE) # with the Find/Download toolbar\nfgcz_render(\"CountQC.qmd\", buttons = \"search\") # Find only",
+    "text": "One shared FGCZ look-and-feel for Quarto reports (theme + header + defaults), reusable across ezRun, prolfqua, prolfquapp, …. Reports can opt in to a top-right toolbar — 🔍 Find any figure or table in a graphical table of contents, or 📥 Download the plots as a ZIP.\n👉 See the documentation site — including a live example report with the real layout, tabsets, figures, and the Find / Download toolbar.\nThere are two ways to use it. Pick one.\n\n\n\nBest when you render with the quarto CLI.\nStep 1. In your project, once:\nquarto add fgcz/fgczQuartoTemplate\nThis creates _extensions/fgczQuartoTemplate/ in the project. Without that extension directory, format: fgczQuartoTemplate-html will fail because Quarto cannot resolve the custom format.\nStep 2. In your report’s YAML header:\n---\ntitle: \"My report\"\nformat: fgczQuartoTemplate-html\n---\nStep 3. Render:\nquarto render my_report.qmd\nDone. ✅\nOptional — 🔍 Find / 📥 Download toolbar (off by default). Switch it on and select its buttons in the report header:\nformat:\n  fgczQuartoTemplate-html:\n    include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html\nfgcz-buttons: [search, download]\nUse fgcz-buttons: search or fgcz-buttons: download for one button. Omit fgcz-buttons to show both when the toolbar is included. Unknown names stop the render instead of silently hiding controls.\n\n\n\n\nBest when you render from R (e.g. inside a package). No format: line, no quarto add.\nStep 1. Install:\nremotes::install_github(\"fgcz/fgczQuartoTemplate\")\nStep 2. Your report’s YAML header — just this, nothing FGCZ-specific:\n---\ntitle: \"My report\"\n---\nStep 3. Render with the one-call helper:\nfgczQuartoTemplate::fgcz_render(\"my_report.qmd\")                 # no toolbar\nfgczQuartoTemplate::fgcz_render(\"my_report.qmd\", buttons = TRUE) # 🔍 Find / 📥 Download\nfgczQuartoTemplate::fgcz_render(\"my_report.qmd\", buttons = \"search\") # 🔍 Find only\nDone. ✅ (fgcz_render copies _metadata.yml, fgcz.scss, fgcz_header_quarto.html, and fgcz-plot-finder.html next to the .qmd, then calls quarto::quarto_render(). The toolbar is staged either way but only wired in when enabled. TRUE and FALSE remain supported; button names allow finer selection.)\nIf you want to separate these two steps, copy the assets first and render yourself:\ninput &lt;- \"my_report.qmd\"\nfgczQuartoTemplate::fgcz_copy_assets(input)\nquarto::quarto_render(input)\nfgcz_copy_assets() accepts either the .qmd path above, or an existing directory. These two calls are equivalent:\nfgczQuartoTemplate::fgcz_copy_assets(input)\nfgczQuartoTemplate::fgcz_copy_assets(dirname(normalizePath(input)))\n\n\n\n\n\n\n\n\n\n\n\n\n\nWay 1 — Extension\nWay 2 — R helper\n\n\n\n\nInstall\nquarto add … (once per project)\ninstall_github (once)\n\n\nYAML\nformat: fgczQuartoTemplate-html\nnothing\n\n\nRender\nquarto render\nfgczQuartoTemplate::fgcz_render()\n\n\nUse it when\nCLI / non-R pipelines\nrendering from R\n\n\n\nBoth produce the same report. They can coexist in one repo.\n\n\n\n\nfgcz_render(\"report.qmd\")               # stage assets + render (the usual one)\nfgcz_render(\"report.qmd\", buttons = TRUE) # ...plus the 🔍 Find / 📥 Download toolbar\nfgcz_render(\"report.qmd\", buttons = \"download\") # ...or just 📥 Download\nfgcz_copy_assets(\"report.qmd\")          # stage assets next to that file\nfgcz_copy_assets(\"dir\")                 # or stage assets into an existing dir\nfgcz_use_template(\"dir\", \"report.qmd\")  # start a new report from the template\nfgcz_quarto_dir()                       # where the installed assets live\n\n\n\nQuarto can’t reach into an installed R package to fetch styling — the files must sit next to the .qmd at render time. Two clean ways to get them there:\n\nExtension: quarto add drops them into _extensions/; you opt in with format:.\n_metadata.yml: a file with that exact name is auto-applied to every .qmd in its directory (no format: line); the R helper stages it for you.\n\n\n\n\n\ninst/quarto/ is the only place you hand-edit. Everything else is generated from it by Rscript data-raw/sync_assets.R (or make sync):\n\nfgcz.scss, fgcz_header_quarto.html, fgcz-plot-finder.html, fgcz-buttons.lua — byte-copied into _extensions/ and vignettes/_extensions/.\n_extensions/fgczQuartoTemplate/_extension.yml (nested, Way 1) — built from inst/quarto/_metadata.yml (flat, Way 2); edit the format options in _metadata.yml only. version is stamped from DESCRIPTION.\nvignettes/example-report.qmd — built from inst/quarto/template.qmd (same body, vignette header swapped in); edit the report in template.qmd.\n\nInstall the hook once per clone: make hooks (or git config core.hooksPath .githooks). It runs the sync and re-stages the generated files on every commit, so editing inst/quarto/ is enough. CI (.github/workflows/altdoc.yml) re-runs the sync and fails on any drift as a backstop.\nThe live example report is the vignettes/example-report.qmd vignette; the documentation site (built with altdoc — make site) renders it through Quarto with its tabsets intact.\n\n\n\n\nGPL (&gt;= 3), matching ezRun.",
     "crumbs": [
-      "Reference",
-      "fgcz_render"
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#way-1-quarto-extension-plain-quarto-render-no-r",
+    "href": "index.html#way-1-quarto-extension-plain-quarto-render-no-r",
+    "title": "fgczQuartoTemplate",
+    "section": "",
+    "text": "Best when you render with the quarto CLI.\nStep 1. In your project, once:\nquarto add fgcz/fgczQuartoTemplate\nThis creates _extensions/fgczQuartoTemplate/ in the project. Without that extension directory, format: fgczQuartoTemplate-html will fail because Quarto cannot resolve the custom format.\nStep 2. In your report’s YAML header:\n---\ntitle: \"My report\"\nformat: fgczQuartoTemplate-html\n---\nStep 3. Render:\nquarto render my_report.qmd\nDone. ✅\nOptional — 🔍 Find / 📥 Download toolbar (off by default). Switch it on and select its buttons in the report header:\nformat:\n  fgczQuartoTemplate-html:\n    include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html\nfgcz-buttons: [search, download]\nUse fgcz-buttons: search or fgcz-buttons: download for one button. Omit fgcz-buttons to show both when the toolbar is included. Unknown names stop the render instead of silently hiding controls.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#way-2-r-helper-stage-files-then-render",
+    "href": "index.html#way-2-r-helper-stage-files-then-render",
+    "title": "fgczQuartoTemplate",
+    "section": "",
+    "text": "Best when you render from R (e.g. inside a package). No format: line, no quarto add.\nStep 1. Install:\nremotes::install_github(\"fgcz/fgczQuartoTemplate\")\nStep 2. Your report’s YAML header — just this, nothing FGCZ-specific:\n---\ntitle: \"My report\"\n---\nStep 3. Render with the one-call helper:\nfgczQuartoTemplate::fgcz_render(\"my_report.qmd\")                 # no toolbar\nfgczQuartoTemplate::fgcz_render(\"my_report.qmd\", buttons = TRUE) # 🔍 Find / 📥 Download\nfgczQuartoTemplate::fgcz_render(\"my_report.qmd\", buttons = \"search\") # 🔍 Find only\nDone. ✅ (fgcz_render copies _metadata.yml, fgcz.scss, fgcz_header_quarto.html, and fgcz-plot-finder.html next to the .qmd, then calls quarto::quarto_render(). The toolbar is staged either way but only wired in when enabled. TRUE and FALSE remain supported; button names allow finer selection.)\nIf you want to separate these two steps, copy the assets first and render yourself:\ninput &lt;- \"my_report.qmd\"\nfgczQuartoTemplate::fgcz_copy_assets(input)\nquarto::quarto_render(input)\nfgcz_copy_assets() accepts either the .qmd path above, or an existing directory. These two calls are equivalent:\nfgczQuartoTemplate::fgcz_copy_assets(input)\nfgczQuartoTemplate::fgcz_copy_assets(dirname(normalizePath(input)))",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#which-one",
+    "href": "index.html#which-one",
+    "title": "fgczQuartoTemplate",
+    "section": "",
+    "text": "Way 1 — Extension\nWay 2 — R helper\n\n\n\n\nInstall\nquarto add … (once per project)\ninstall_github (once)\n\n\nYAML\nformat: fgczQuartoTemplate-html\nnothing\n\n\nRender\nquarto render\nfgczQuartoTemplate::fgcz_render()\n\n\nUse it when\nCLI / non-R pipelines\nrendering from R\n\n\n\nBoth produce the same report. They can coexist in one repo.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#r-helper-cheatsheet-way-2",
+    "href": "index.html#r-helper-cheatsheet-way-2",
+    "title": "fgczQuartoTemplate",
+    "section": "",
+    "text": "fgcz_render(\"report.qmd\")               # stage assets + render (the usual one)\nfgcz_render(\"report.qmd\", buttons = TRUE) # ...plus the 🔍 Find / 📥 Download toolbar\nfgcz_render(\"report.qmd\", buttons = \"download\") # ...or just 📥 Download\nfgcz_copy_assets(\"report.qmd\")          # stage assets next to that file\nfgcz_copy_assets(\"dir\")                 # or stage assets into an existing dir\nfgcz_use_template(\"dir\", \"report.qmd\")  # start a new report from the template\nfgcz_quarto_dir()                       # where the installed assets live",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#why-two-mechanisms-exist-30-second-version",
+    "href": "index.html#why-two-mechanisms-exist-30-second-version",
+    "title": "fgczQuartoTemplate",
+    "section": "",
+    "text": "Quarto can’t reach into an installed R package to fetch styling — the files must sit next to the .qmd at render time. Two clean ways to get them there:\n\nExtension: quarto add drops them into _extensions/; you opt in with format:.\n_metadata.yml: a file with that exact name is auto-applied to every .qmd in its directory (no format: line); the R helper stages it for you.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#for-maintainers",
+    "href": "index.html#for-maintainers",
+    "title": "fgczQuartoTemplate",
+    "section": "",
+    "text": "inst/quarto/ is the only place you hand-edit. Everything else is generated from it by Rscript data-raw/sync_assets.R (or make sync):\n\nfgcz.scss, fgcz_header_quarto.html, fgcz-plot-finder.html, fgcz-buttons.lua — byte-copied into _extensions/ and vignettes/_extensions/.\n_extensions/fgczQuartoTemplate/_extension.yml (nested, Way 1) — built from inst/quarto/_metadata.yml (flat, Way 2); edit the format options in _metadata.yml only. version is stamped from DESCRIPTION.\nvignettes/example-report.qmd — built from inst/quarto/template.qmd (same body, vignette header swapped in); edit the report in template.qmd.\n\nInstall the hook once per clone: make hooks (or git config core.hooksPath .githooks). It runs the sync and re-stages the generated files on every commit, so editing inst/quarto/ is enough. CI (.github/workflows/altdoc.yml) re-runs the sync and fails on any drift as a backstop.\nThe live example report is the vignettes/example-report.qmd vignette; the documentation site (built with altdoc — make site) renders it through Quarto with its tabsets intact.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#license",
+    "href": "index.html#license",
+    "title": "fgczQuartoTemplate",
+    "section": "",
+    "text": "GPL (&gt;= 3), matching ezRun.",
+    "crumbs": [
+      "Home"
     ]
   },
   {
     "objectID": "man/fgcz_quarto_dir.html",
     "href": "man/fgcz_quarto_dir.html",
-    "title": "fgczquartotemplate",
+    "title": "fgczQuartoTemplate",
     "section": "",
-    "text": "Path to the installed Quarto assets\n\n\n\nfgcz_quarto_dir(...)\n\n\n\n\n\n\n\n…\n\n\nCharacter path components appended to the asset directory, e.g. fgcz_quarto_dir(“template.qmd”).\n\n\n\n\n\n\nAn absolute path to the package’s inst/quarto directory (or a file within it).\n\n\n\n\nlibrary(\"fgczquartotemplate\")\n\nfgcz_quarto_dir()\n\n[1] \"/home/runner/work/_temp/Library/fgczquartotemplate/quarto\"\n\nfgcz_quarto_dir(\"template.qmd\")\n\n[1] \"/home/runner/work/_temp/Library/fgczquartotemplate/quarto/template.qmd\"",
+    "text": "Path to the installed Quarto assets\n\n\n\nfgcz_quarto_dir(...)\n\n\n\n\n\n\n\n…\n\n\nCharacter path components appended to the asset directory, e.g. fgcz_quarto_dir(“template.qmd”).\n\n\n\n\n\n\nAn absolute path to the package’s inst/quarto directory (or a file within it).\n\n\n\n\nlibrary(\"fgczQuartoTemplate\")\n\nfgcz_quarto_dir()\n\n[1] \"/home/runner/work/_temp/Library/fgczQuartoTemplate/quarto\"\n\nfgcz_quarto_dir(\"template.qmd\")\n\n[1] \"/home/runner/work/_temp/Library/fgczQuartoTemplate/quarto/template.qmd\"",
     "crumbs": [
       "Reference",
       "fgcz_quarto_dir"
@@ -35,9 +104,9 @@
   {
     "objectID": "man/fgcz_quarto_dir.html#path-to-the-installed-quarto-assets",
     "href": "man/fgcz_quarto_dir.html#path-to-the-installed-quarto-assets",
-    "title": "fgczquartotemplate",
+    "title": "fgczQuartoTemplate",
     "section": "",
-    "text": "Path to the installed Quarto assets\n\n\n\nfgcz_quarto_dir(...)\n\n\n\n\n\n\n\n…\n\n\nCharacter path components appended to the asset directory, e.g. fgcz_quarto_dir(“template.qmd”).\n\n\n\n\n\n\nAn absolute path to the package’s inst/quarto directory (or a file within it).\n\n\n\n\nlibrary(\"fgczquartotemplate\")\n\nfgcz_quarto_dir()\n\n[1] \"/home/runner/work/_temp/Library/fgczquartotemplate/quarto\"\n\nfgcz_quarto_dir(\"template.qmd\")\n\n[1] \"/home/runner/work/_temp/Library/fgczquartotemplate/quarto/template.qmd\"",
+    "text": "Path to the installed Quarto assets\n\n\n\nfgcz_quarto_dir(...)\n\n\n\n\n\n\n\n…\n\n\nCharacter path components appended to the asset directory, e.g. fgcz_quarto_dir(“template.qmd”).\n\n\n\n\n\n\nAn absolute path to the package’s inst/quarto directory (or a file within it).\n\n\n\n\nlibrary(\"fgczQuartoTemplate\")\n\nfgcz_quarto_dir()\n\n[1] \"/home/runner/work/_temp/Library/fgczQuartoTemplate/quarto\"\n\nfgcz_quarto_dir(\"template.qmd\")\n\n[1] \"/home/runner/work/_temp/Library/fgczQuartoTemplate/quarto/template.qmd\"",
     "crumbs": [
       "Reference",
       "fgcz_quarto_dir"
@@ -46,9 +115,9 @@
   {
     "objectID": "man/fgcz_use_template.html",
     "href": "man/fgcz_use_template.html",
-    "title": "fgczquartotemplate",
+    "title": "fgczQuartoTemplate",
     "section": "",
-    "text": "Copies template.qmd (a generic FGCZ report skeleton) and its fgcz-report-overview.svg visual abstract into dir, together with the styling assets they need. Use this to bootstrap a new report.\n\n\n\nfgcz_use_template(dir, to = \"template.qmd\", overwrite = FALSE)\n\n\n\n\n\n\n\ndir\n\n\nDestination directory. Created if it does not exist.\n\n\n\n\nto\n\n\nFilename for the copied template within dir.\n\n\n\n\noverwrite\n\n\nOverwrite an existing file of the same name.\n\n\n\n\n\n\nPath to the copied template, invisibly.\n\n\n\n\nlibrary(\"fgczquartotemplate\")\n\nfgcz_use_template(\"my_report\", to = \"my_report.qmd\")",
+    "text": "Copies template.qmd (a generic FGCZ report skeleton) and its fgcz-report-overview.svg visual abstract into dir, together with the styling assets they need. Use this to bootstrap a new report.\n\n\n\nfgcz_use_template(dir, to = \"template.qmd\", overwrite = FALSE)\n\n\n\n\n\n\n\ndir\n\n\nDestination directory. Created if it does not exist.\n\n\n\n\nto\n\n\nFilename for the copied template within dir.\n\n\n\n\noverwrite\n\n\nOverwrite an existing file of the same name.\n\n\n\n\n\n\nPath to the copied template, invisibly.\n\n\n\n\nlibrary(\"fgczQuartoTemplate\")\n\nfgcz_use_template(\"my_report\", to = \"my_report.qmd\")",
     "crumbs": [
       "Reference",
       "fgcz_use_template"
@@ -57,12 +126,34 @@
   {
     "objectID": "man/fgcz_use_template.html#copy-the-starter-template-into-a-directory",
     "href": "man/fgcz_use_template.html#copy-the-starter-template-into-a-directory",
-    "title": "fgczquartotemplate",
+    "title": "fgczQuartoTemplate",
     "section": "",
-    "text": "Copies template.qmd (a generic FGCZ report skeleton) and its fgcz-report-overview.svg visual abstract into dir, together with the styling assets they need. Use this to bootstrap a new report.\n\n\n\nfgcz_use_template(dir, to = \"template.qmd\", overwrite = FALSE)\n\n\n\n\n\n\n\ndir\n\n\nDestination directory. Created if it does not exist.\n\n\n\n\nto\n\n\nFilename for the copied template within dir.\n\n\n\n\noverwrite\n\n\nOverwrite an existing file of the same name.\n\n\n\n\n\n\nPath to the copied template, invisibly.\n\n\n\n\nlibrary(\"fgczquartotemplate\")\n\nfgcz_use_template(\"my_report\", to = \"my_report.qmd\")",
+    "text": "Copies template.qmd (a generic FGCZ report skeleton) and its fgcz-report-overview.svg visual abstract into dir, together with the styling assets they need. Use this to bootstrap a new report.\n\n\n\nfgcz_use_template(dir, to = \"template.qmd\", overwrite = FALSE)\n\n\n\n\n\n\n\ndir\n\n\nDestination directory. Created if it does not exist.\n\n\n\n\nto\n\n\nFilename for the copied template within dir.\n\n\n\n\noverwrite\n\n\nOverwrite an existing file of the same name.\n\n\n\n\n\n\nPath to the copied template, invisibly.\n\n\n\n\nlibrary(\"fgczQuartoTemplate\")\n\nfgcz_use_template(\"my_report\", to = \"my_report.qmd\")",
     "crumbs": [
       "Reference",
       "fgcz_use_template"
+    ]
+  },
+  {
+    "objectID": "man/fgcz_copy_assets.html",
+    "href": "man/fgcz_copy_assets.html",
+    "title": "fgczQuartoTemplate",
+    "section": "",
+    "text": "Copies the shared styling files (_metadata.yml, fgcz.scss, fgcz_header_quarto.html, fgcz-plot-finder.html) from the installed package next to a report. path may be either an existing directory, or an existing .qmd file whose containing directory should receive the assets. Because _metadata.yml is directory metadata, any .qmd in the target directory then renders with the FGCZ styling automatically. The toolbar is staged but remains opt-in. Call this before rendering, or use fgcz_render(), which calls it for you.\n\n\n\nfgcz_copy_assets(path, overwrite = TRUE)\n\n\n\n\n\n\n\npath\n\n\nAn existing directory to stage the assets into, or a path to the .qmd itself (assets go into its containing directory).\n\n\n\n\noverwrite\n\n\nOverwrite existing copies in the target directory. Defaults to TRUE so the packaged assets stay the single source of truth.\n\n\n\n\n\n\nCharacter vector of the copied file paths, invisibly.\n\n\n\n\nlibrary(\"fgczQuartoTemplate\")\n\nfgcz_copy_assets(\"path/to/report/dir\")\nfgcz_copy_assets(\"path/to/report.qmd\")",
+    "crumbs": [
+      "Reference",
+      "fgcz_copy_assets"
+    ]
+  },
+  {
+    "objectID": "man/fgcz_copy_assets.html#copy-the-shared-report-assets-next-to-a-.qmd",
+    "href": "man/fgcz_copy_assets.html#copy-the-shared-report-assets-next-to-a-.qmd",
+    "title": "fgczQuartoTemplate",
+    "section": "",
+    "text": "Copies the shared styling files (_metadata.yml, fgcz.scss, fgcz_header_quarto.html, fgcz-plot-finder.html) from the installed package next to a report. path may be either an existing directory, or an existing .qmd file whose containing directory should receive the assets. Because _metadata.yml is directory metadata, any .qmd in the target directory then renders with the FGCZ styling automatically. The toolbar is staged but remains opt-in. Call this before rendering, or use fgcz_render(), which calls it for you.\n\n\n\nfgcz_copy_assets(path, overwrite = TRUE)\n\n\n\n\n\n\n\npath\n\n\nAn existing directory to stage the assets into, or a path to the .qmd itself (assets go into its containing directory).\n\n\n\n\noverwrite\n\n\nOverwrite existing copies in the target directory. Defaults to TRUE so the packaged assets stay the single source of truth.\n\n\n\n\n\n\nCharacter vector of the copied file paths, invisibly.\n\n\n\n\nlibrary(\"fgczQuartoTemplate\")\n\nfgcz_copy_assets(\"path/to/report/dir\")\nfgcz_copy_assets(\"path/to/report.qmd\")",
+    "crumbs": [
+      "Reference",
+      "fgcz_copy_assets"
     ]
   },
   {
@@ -80,7 +171,7 @@
     "href": "fgcz-quarto-reports.html#using-the-template-two-ways-pick-one",
     "title": "FGCZ Quarto reports authoring guide",
     "section": "Using the template: two ways (pick one)",
-    "text": "Using the template: two ways (pick one)\nThe package ships the same FGCZ styling through two channels — both produce an identical report, so choose by how you render. Full setup details live in the package README.md; this is the short version.\nWay 1 — Quarto extension (render with the quarto CLI, no R). Install once per project, then opt in from the header:\nquarto add fgcz/fgczQuartoTemplate\n---\ntitle: \"My report\"\nformat: fgczquartotemplate-html\n---\nRender with plain quarto render my_report.qmd.\nWay 2 — R helper (render from R, e.g. inside a package like prolfquapp). Install once (remotes::install_github(\"fgcz/fgczQuartoTemplate\")), keep the report header free of any format: line, and render with:\nfgczquartotemplate::fgcz_render(\"my_report.qmd\")\nIt stages _metadata.yml (plus the theme, header, and toolbar files) next to the .qmd, and Quarto applies _metadata.yml automatically — no format: line and no quarto add. Companion helpers: fgcz_use_template() starts a new report from the annotated starter, fgcz_copy_assets() just stages the files, and fgcz_quarto_dir() points at the installed assets.\nEither way you get the theme and the FGCZ header for free. The top-right 🔍 Find / 📥 Download toolbar is opt-in — turn on both controls with fgcz_render(buttons = TRUE), or select \"search\" and/or \"download\" by name. For the CLI route, add an include-after-body: line and optionally a top-level fgcz-buttons: selection; see the last section. Start from inst/quarto/template.qmd (via fgcz_use_template()), which demonstrates every layout pattern below in code.",
+    "text": "Using the template: two ways (pick one)\nThe package ships the same FGCZ styling through two channels — both produce an identical report, so choose by how you render. Full setup details live in the package README.md; this is the short version.\nWay 1 — Quarto extension (render with the quarto CLI, no R). Install once per project, then opt in from the header:\nquarto add fgcz/fgczQuartoTemplate\n---\ntitle: \"My report\"\nformat: fgczQuartoTemplate-html\n---\nRender with plain quarto render my_report.qmd.\nWay 2 — R helper (render from R, e.g. inside a package like prolfquapp). Install once (remotes::install_github(\"fgcz/fgczQuartoTemplate\")), keep the report header free of any format: line, and render with:\nfgczQuartoTemplate::fgcz_render(\"my_report.qmd\")\nIt stages _metadata.yml (plus the theme, header, and toolbar files) next to the .qmd, and Quarto applies _metadata.yml automatically — no format: line and no quarto add. Companion helpers: fgcz_use_template() starts a new report from the annotated starter, fgcz_copy_assets() just stages the files, and fgcz_quarto_dir() points at the installed assets.\nEither way you get the theme and the FGCZ header for free. The top-right 🔍 Find / 📥 Download toolbar is opt-in — turn on both controls with fgcz_render(buttons = TRUE), or select \"search\" and/or \"download\" by name. For the CLI route, add an include-after-body: line and optionally a top-level fgcz-buttons: selection; see the last section. Start from inst/quarto/template.qmd (via fgcz_use_template()), which demonstrates every layout pattern below in code.",
     "crumbs": [
       "Report authoring guide"
     ]
@@ -170,219 +261,9 @@
     "href": "fgcz-quarto-reports.html#pointers",
     "title": "FGCZ Quarto reports authoring guide",
     "section": "Pointers",
-    "text": "Pointers\n\nREADME.md — installing / wiring the template (the two usage models)\ninst/quarto/template.qmd — worked examples of every pattern above\n_metadata.yml / _extensions/fgczquartotemplate/_extension.yml — the format options",
+    "text": "Pointers\n\nREADME.md — installing / wiring the template (the two usage models)\ninst/quarto/template.qmd — worked examples of every pattern above\n_metadata.yml / _extensions/fgczQuartoTemplate/_extension.yml — the format options",
     "crumbs": [
       "Report authoring guide"
-    ]
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "fgczquartotemplate",
-    "section": "",
-    "text": "One shared FGCZ look-and-feel for Quarto reports (theme + header + defaults), reusable across ezRun, prolfqua, prolfquapp, …. Reports can opt in to a top-right toolbar — 🔍 Find any figure or table in a graphical table of contents, or 📥 Download the plots as a ZIP.\n👉 See the documentation site — including a live example report with the real layout, tabsets, figures, and the Find / Download toolbar.\nThere are two ways to use it. Pick one.\n\n\n\nBest when you render with the quarto CLI.\nStep 1. In your project, once:\nquarto add fgcz/fgczQuartoTemplate\nThis creates _extensions/fgczquartotemplate/ in the project. Without that extension directory, format: fgczquartotemplate-html will fail because Quarto cannot resolve the custom format.\nStep 2. In your report’s YAML header:\n---\ntitle: \"My report\"\nformat: fgczquartotemplate-html\n---\nStep 3. Render:\nquarto render my_report.qmd\nDone. ✅\nOptional — 🔍 Find / 📥 Download toolbar (off by default). Switch it on and select its buttons in the report header:\nformat:\n  fgczquartotemplate-html:\n    include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html\nfgcz-buttons: [search, download]\nUse fgcz-buttons: search or fgcz-buttons: download for one button. Omit fgcz-buttons to show both when the toolbar is included. Unknown names stop the render instead of silently hiding controls.\n\n\n\n\nBest when you render from R (e.g. inside a package). No format: line, no quarto add.\nStep 1. Install:\nremotes::install_github(\"fgcz/fgczQuartoTemplate\")\nStep 2. Your report’s YAML header — just this, nothing FGCZ-specific:\n---\ntitle: \"My report\"\n---\nStep 3. Render with the one-call helper:\nfgczquartotemplate::fgcz_render(\"my_report.qmd\")                 # no toolbar\nfgczquartotemplate::fgcz_render(\"my_report.qmd\", buttons = TRUE) # 🔍 Find / 📥 Download\nfgczquartotemplate::fgcz_render(\"my_report.qmd\", buttons = \"search\") # 🔍 Find only\nDone. ✅ (fgcz_render copies _metadata.yml, fgcz.scss, fgcz_header_quarto.html, and fgcz-plot-finder.html next to the .qmd, then calls quarto::quarto_render(). The toolbar is staged either way but only wired in when enabled. TRUE and FALSE remain supported; button names allow finer selection.)\nIf you want to separate these two steps, copy the assets first and render yourself:\ninput &lt;- \"my_report.qmd\"\nfgczquartotemplate::fgcz_copy_assets(input)\nquarto::quarto_render(input)\nfgcz_copy_assets() accepts either the .qmd path above, or an existing directory. These two calls are equivalent:\nfgczquartotemplate::fgcz_copy_assets(input)\nfgczquartotemplate::fgcz_copy_assets(dirname(normalizePath(input)))\n\n\n\n\n\n\n\n\n\n\n\n\n\nWay 1 — Extension\nWay 2 — R helper\n\n\n\n\nInstall\nquarto add … (once per project)\ninstall_github (once)\n\n\nYAML\nformat: fgczquartotemplate-html\nnothing\n\n\nRender\nquarto render\nfgczquartotemplate::fgcz_render()\n\n\nUse it when\nCLI / non-R pipelines\nrendering from R\n\n\n\nBoth produce the same report. They can coexist in one repo.\n\n\n\n\nfgcz_render(\"report.qmd\")               # stage assets + render (the usual one)\nfgcz_render(\"report.qmd\", buttons = TRUE) # ...plus the 🔍 Find / 📥 Download toolbar\nfgcz_render(\"report.qmd\", buttons = \"download\") # ...or just 📥 Download\nfgcz_copy_assets(\"report.qmd\")          # stage assets next to that file\nfgcz_copy_assets(\"dir\")                 # or stage assets into an existing dir\nfgcz_use_template(\"dir\", \"report.qmd\")  # start a new report from the template\nfgcz_quarto_dir()                       # where the installed assets live\n\n\n\nQuarto can’t reach into an installed R package to fetch styling — the files must sit next to the .qmd at render time. Two clean ways to get them there:\n\nExtension: quarto add drops them into _extensions/; you opt in with format:.\n_metadata.yml: a file with that exact name is auto-applied to every .qmd in its directory (no format: line); the R helper stages it for you.\n\n\n\n\n\ninst/quarto/ is the only place you hand-edit. Everything else is generated from it by Rscript data-raw/sync_assets.R (or make sync):\n\nfgcz.scss, fgcz_header_quarto.html, fgcz-plot-finder.html, fgcz-buttons.lua — byte-copied into _extensions/ and vignettes/_extensions/.\n_extensions/fgczquartotemplate/_extension.yml (nested, Way 1) — built from inst/quarto/_metadata.yml (flat, Way 2); edit the format options in _metadata.yml only. version is stamped from DESCRIPTION.\nvignettes/example-report.qmd — built from inst/quarto/template.qmd (same body, vignette header swapped in); edit the report in template.qmd.\n\nInstall the hook once per clone: make hooks (or git config core.hooksPath .githooks). It runs the sync and re-stages the generated files on every commit, so editing inst/quarto/ is enough. CI (.github/workflows/altdoc.yml) re-runs the sync and fails on any drift as a backstop.\nThe live example report is the vignettes/example-report.qmd vignette; the documentation site (built with altdoc — make site) renders it through Quarto with its tabsets intact.\n\n\n\n\nGPL (&gt;= 3), matching ezRun.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#way-1-quarto-extension-plain-quarto-render-no-r",
-    "href": "index.html#way-1-quarto-extension-plain-quarto-render-no-r",
-    "title": "fgczquartotemplate",
-    "section": "",
-    "text": "Best when you render with the quarto CLI.\nStep 1. In your project, once:\nquarto add fgcz/fgczQuartoTemplate\nThis creates _extensions/fgczquartotemplate/ in the project. Without that extension directory, format: fgczquartotemplate-html will fail because Quarto cannot resolve the custom format.\nStep 2. In your report’s YAML header:\n---\ntitle: \"My report\"\nformat: fgczquartotemplate-html\n---\nStep 3. Render:\nquarto render my_report.qmd\nDone. ✅\nOptional — 🔍 Find / 📥 Download toolbar (off by default). Switch it on and select its buttons in the report header:\nformat:\n  fgczquartotemplate-html:\n    include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html\nfgcz-buttons: [search, download]\nUse fgcz-buttons: search or fgcz-buttons: download for one button. Omit fgcz-buttons to show both when the toolbar is included. Unknown names stop the render instead of silently hiding controls.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#way-2-r-helper-stage-files-then-render",
-    "href": "index.html#way-2-r-helper-stage-files-then-render",
-    "title": "fgczquartotemplate",
-    "section": "",
-    "text": "Best when you render from R (e.g. inside a package). No format: line, no quarto add.\nStep 1. Install:\nremotes::install_github(\"fgcz/fgczQuartoTemplate\")\nStep 2. Your report’s YAML header — just this, nothing FGCZ-specific:\n---\ntitle: \"My report\"\n---\nStep 3. Render with the one-call helper:\nfgczquartotemplate::fgcz_render(\"my_report.qmd\")                 # no toolbar\nfgczquartotemplate::fgcz_render(\"my_report.qmd\", buttons = TRUE) # 🔍 Find / 📥 Download\nfgczquartotemplate::fgcz_render(\"my_report.qmd\", buttons = \"search\") # 🔍 Find only\nDone. ✅ (fgcz_render copies _metadata.yml, fgcz.scss, fgcz_header_quarto.html, and fgcz-plot-finder.html next to the .qmd, then calls quarto::quarto_render(). The toolbar is staged either way but only wired in when enabled. TRUE and FALSE remain supported; button names allow finer selection.)\nIf you want to separate these two steps, copy the assets first and render yourself:\ninput &lt;- \"my_report.qmd\"\nfgczquartotemplate::fgcz_copy_assets(input)\nquarto::quarto_render(input)\nfgcz_copy_assets() accepts either the .qmd path above, or an existing directory. These two calls are equivalent:\nfgczquartotemplate::fgcz_copy_assets(input)\nfgczquartotemplate::fgcz_copy_assets(dirname(normalizePath(input)))",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#which-one",
-    "href": "index.html#which-one",
-    "title": "fgczquartotemplate",
-    "section": "",
-    "text": "Way 1 — Extension\nWay 2 — R helper\n\n\n\n\nInstall\nquarto add … (once per project)\ninstall_github (once)\n\n\nYAML\nformat: fgczquartotemplate-html\nnothing\n\n\nRender\nquarto render\nfgczquartotemplate::fgcz_render()\n\n\nUse it when\nCLI / non-R pipelines\nrendering from R\n\n\n\nBoth produce the same report. They can coexist in one repo.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#r-helper-cheatsheet-way-2",
-    "href": "index.html#r-helper-cheatsheet-way-2",
-    "title": "fgczquartotemplate",
-    "section": "",
-    "text": "fgcz_render(\"report.qmd\")               # stage assets + render (the usual one)\nfgcz_render(\"report.qmd\", buttons = TRUE) # ...plus the 🔍 Find / 📥 Download toolbar\nfgcz_render(\"report.qmd\", buttons = \"download\") # ...or just 📥 Download\nfgcz_copy_assets(\"report.qmd\")          # stage assets next to that file\nfgcz_copy_assets(\"dir\")                 # or stage assets into an existing dir\nfgcz_use_template(\"dir\", \"report.qmd\")  # start a new report from the template\nfgcz_quarto_dir()                       # where the installed assets live",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#why-two-mechanisms-exist-30-second-version",
-    "href": "index.html#why-two-mechanisms-exist-30-second-version",
-    "title": "fgczquartotemplate",
-    "section": "",
-    "text": "Quarto can’t reach into an installed R package to fetch styling — the files must sit next to the .qmd at render time. Two clean ways to get them there:\n\nExtension: quarto add drops them into _extensions/; you opt in with format:.\n_metadata.yml: a file with that exact name is auto-applied to every .qmd in its directory (no format: line); the R helper stages it for you.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#for-maintainers",
-    "href": "index.html#for-maintainers",
-    "title": "fgczquartotemplate",
-    "section": "",
-    "text": "inst/quarto/ is the only place you hand-edit. Everything else is generated from it by Rscript data-raw/sync_assets.R (or make sync):\n\nfgcz.scss, fgcz_header_quarto.html, fgcz-plot-finder.html, fgcz-buttons.lua — byte-copied into _extensions/ and vignettes/_extensions/.\n_extensions/fgczquartotemplate/_extension.yml (nested, Way 1) — built from inst/quarto/_metadata.yml (flat, Way 2); edit the format options in _metadata.yml only. version is stamped from DESCRIPTION.\nvignettes/example-report.qmd — built from inst/quarto/template.qmd (same body, vignette header swapped in); edit the report in template.qmd.\n\nInstall the hook once per clone: make hooks (or git config core.hooksPath .githooks). It runs the sync and re-stages the generated files on every commit, so editing inst/quarto/ is enough. CI (.github/workflows/altdoc.yml) re-runs the sync and fails on any drift as a backstop.\nThe live example report is the vignettes/example-report.qmd vignette; the documentation site (built with altdoc — make site) renders it through Quarto with its tabsets intact.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#license",
-    "href": "index.html#license",
-    "title": "fgczquartotemplate",
-    "section": "",
-    "text": "GPL (&gt;= 3), matching ezRun.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "vignettes/example-report.html#at-a-glance",
-    "href": "vignettes/example-report.html#at-a-glance",
-    "title": "FGCZ tabset layout example",
-    "section": "At a glance",
-    "text": "At a glance\n\n\n\nHigh-level summary of the example report.\n\n\nSummary\nValue\n\n\n\n\nInput\nBuilt-in iris and mtcars data\n\n\nScale\n150 flowers and 32 cars\n\n\nOutputs\nTables, static and interactive figures, and nested tabs\n\n\nGoal\nA compact, searchable, self-contained analysis report",
-    "crumbs": [
-      "Articles",
-      "FGCZ tabset layout example"
-    ]
-  },
-  {
-    "objectID": "CITATION.html",
-    "href": "CITATION.html",
-    "title": "Citation",
-    "section": "",
-    "text": "Citation\nTo cite package ‘fgczquartotemplate’ in publications use:\n\nLeary P, Grossmann J, Noé F, Wolski W (????). fgczquartotemplate: FGCZ Quarto Report Templates and Shared Styling. R package version 0.2.0, https://github.com/fgcz/fgczQuartoTemplate.",
-    "crumbs": [
-      "Citation"
-    ]
-  },
-  {
-    "objectID": "vignettes/fgczquartotemplate.html",
-    "href": "vignettes/fgczquartotemplate.html",
-    "title": "Using the FGCZ Quarto report templates",
-    "section": "",
-    "text": "fgczquartotemplate ships one shared set of Quarto report assets so that FGCZ analysis packages (ezRun, prolfqua, …) all produce reports with the same look and feel. A theme change becomes a single package bump instead of an edit in every downstream package.\nSee the layout live: https://fgcz.github.io/fgczQuartoTemplate/vignettes/example-report.html — a full report rendered with the extension (tabsets, figure + callout rows, nesting, lightbox). The documentation site is built with altdoc, which renders that report through Quarto, so the FGCZ layout and its panel-tabsets appear exactly as they do locally (pkgdown, by contrast, mangles Quarto tabsets). This article explains how to use the templates.\nAuthor reports consistently: read the FGCZ Quarto reports authoring guide, which altdoc publishes directly from the skill source file. It defines the required Overview and Session Info structure, tab-depth rules, figure layout, caption guidance, and provenance conventions.",
-    "crumbs": [
-      "Articles",
-      "Using the FGCZ Quarto report templates"
-    ]
-  },
-  {
-    "objectID": "vignettes/fgczquartotemplate.html#what-this-package-provides",
-    "href": "vignettes/fgczquartotemplate.html#what-this-package-provides",
-    "title": "Using the FGCZ Quarto report templates",
-    "section": "",
-    "text": "fgczquartotemplate ships one shared set of Quarto report assets so that FGCZ analysis packages (ezRun, prolfqua, …) all produce reports with the same look and feel. A theme change becomes a single package bump instead of an edit in every downstream package.\nSee the layout live: https://fgcz.github.io/fgczQuartoTemplate/vignettes/example-report.html — a full report rendered with the extension (tabsets, figure + callout rows, nesting, lightbox). The documentation site is built with altdoc, which renders that report through Quarto, so the FGCZ layout and its panel-tabsets appear exactly as they do locally (pkgdown, by contrast, mangles Quarto tabsets). This article explains how to use the templates.\nAuthor reports consistently: read the FGCZ Quarto reports authoring guide, which altdoc publishes directly from the skill source file. It defines the required Overview and Session Info structure, tab-depth rules, figure layout, caption guidance, and provenance conventions.",
-    "crumbs": [
-      "Articles",
-      "Using the FGCZ Quarto report templates"
-    ]
-  },
-  {
-    "objectID": "vignettes/fgczquartotemplate.html#two-ways-to-use-it",
-    "href": "vignettes/fgczquartotemplate.html#two-ways-to-use-it",
-    "title": "Using the FGCZ Quarto report templates",
-    "section": "Two ways to use it",
-    "text": "Two ways to use it\nWay 1 — Quarto extension (plain quarto render, no R). Once per project:\nquarto add fgcz/fgczQuartoTemplate\nthen in the report header:\n---\ntitle: \"My report\"\nformat: fgczquartotemplate-html\n---\nWay 2 — R helper (stage the files from R, no format: line needed) — the subject of the rest of this article. Both routes produce the same report and can coexist in one repo.\nThe assets live under inst/quarto/:\n\nlist.files(fgcz_quarto_dir())\n#&gt; [1] \"_metadata.yml\"            \"fgcz_header_quarto.html\" \n#&gt; [3] \"fgcz-buttons.lua\"         \"fgcz-plot-finder.html\"   \n#&gt; [5] \"fgcz-report-overview.svg\" \"fgcz.scss\"               \n#&gt; [7] \"template.qmd\"\n\n\n\n\n\n\n\n\nFile\nRole\n\n\n\n\n_metadata.yml\nShared format defaults, applied automatically to every .qmd in the directory.\n\n\nfgcz.scss\nTheme overrides — tabset/card styling, figure rows.\n\n\nfgcz_header_quarto.html\nFGCZ header, injected via include-in-header.\n\n\nfgcz-plot-finder.html\nOpt-in Find and Download toolbar.\n\n\nfgcz-buttons.lua\nValidates and applies toolbar selections for the Quarto extension.\n\n\nfgcz-report-overview.svg\nVisual abstract copied with the starter report.\n\n\ntemplate.qmd\nGeneric starter report demonstrating the layout patterns.",
-    "crumbs": [
-      "Articles",
-      "Using the FGCZ Quarto report templates"
-    ]
-  },
-  {
-    "objectID": "vignettes/fgczquartotemplate.html#why-the-assets-must-sit-next-to-the-report",
-    "href": "vignettes/fgczquartotemplate.html#why-the-assets-must-sit-next-to-the-report",
-    "title": "Using the FGCZ Quarto report templates",
-    "section": "Why the assets must sit next to the report",
-    "text": "Why the assets must sit next to the report\nQuarto applies a file named _metadata.yml automatically to every .qmd in its directory (and subdirectories) — that is how the styling attaches without any front-matter reference. The file in turn names fgcz.scss and fgcz_header_quarto.html by bare filename:\n\nwriteLines(head(readLines(fgcz_quarto_dir(\"_metadata.yml\")), 30))\n#&gt; ## ─────────────────────────────────────────────────────────────\n#&gt; ## FGCZ Shared Report Defaults\n#&gt; ## Quarto applies this file automatically to every .qmd in this\n#&gt; ## directory (and subdirectories) because it is named _metadata.yml.\n#&gt; ## Individual reports need NO reference to it in their front matter.\n#&gt; ## Keep fgcz.scss and fgcz_header_quarto.html next to it.\n#&gt; ## ─────────────────────────────────────────────────────────────\n#&gt; \n#&gt; format:\n#&gt;   html:\n#&gt;     embed-resources: true\n#&gt;     self-contained: true\n#&gt;     smooth-scroll: true\n#&gt;     page-layout: full\n#&gt; \n#&gt;     # Code\n#&gt;     code-fold: true\n#&gt;     code-tools: true\n#&gt; \n#&gt;     # Theme — flatly base + FGCZ overrides (tabset card styling for now)\n#&gt;     theme: [spacelab, fgcz.scss]\n#&gt; \n#&gt;     # Grid sizing\n#&gt;     grid:\n#&gt;       body-width: 1800px\n#&gt;       sidebar-width: 250px\n#&gt;       margin-width: 100px\n#&gt; \n#&gt;     # FGCZ header\n#&gt;     include-in-header: fgcz_header_quarto.html\n\nQuarto resolves those names relative to the directory of the input .qmd, not relative to the YAML that mentions them. So all three files must physically sit next to the report at render time. That is exactly what fgcz_copy_assets() and fgcz_render() take care of.",
-    "crumbs": [
-      "Articles",
-      "Using the FGCZ Quarto report templates"
-    ]
-  },
-  {
-    "objectID": "vignettes/fgczquartotemplate.html#the-portable-report-header",
-    "href": "vignettes/fgczquartotemplate.html#the-portable-report-header",
-    "title": "Using the FGCZ Quarto report templates",
-    "section": "The portable report header",
-    "text": "The portable report header\nBecause _metadata.yml attaches by directory, a report carries no FGCZ-specific front matter at all — just its own params and title:\n---\nparams:\n  reportTitle: \"CountQC\"\ntitle: \"`r params$reportTitle`\"\n---\nRendered with a bare quarto render CountQC.qmd, it still picks up the full styling — the package need not even be installed, as long as the three assets are in the directory.",
-    "crumbs": [
-      "Articles",
-      "Using the FGCZ Quarto report templates"
-    ]
-  },
-  {
-    "objectID": "vignettes/fgczquartotemplate.html#staging-the-assets",
-    "href": "vignettes/fgczquartotemplate.html#staging-the-assets",
-    "title": "Using the FGCZ Quarto report templates",
-    "section": "Staging the assets",
-    "text": "Staging the assets\nfgcz_copy_assets() copies the three styling files into a directory. Here we stage them into a temporary directory and confirm they landed:\n\ndir &lt;- file.path(tempdir(), \"demo-report\")\ndir.create(dir, showWarnings = FALSE)\n\nstaged &lt;- fgcz_copy_assets(dir)\nbasename(staged)\n#&gt; [1] \"_metadata.yml\"           \"fgcz.scss\"              \n#&gt; [3] \"fgcz_header_quarto.html\" \"fgcz-plot-finder.html\"\nfile.exists(staged)\n#&gt; [1] TRUE TRUE TRUE TRUE",
-    "crumbs": [
-      "Articles",
-      "Using the FGCZ Quarto report templates"
-    ]
-  },
-  {
-    "objectID": "vignettes/fgczquartotemplate.html#bootstrapping-a-new-report",
-    "href": "vignettes/fgczquartotemplate.html#bootstrapping-a-new-report",
-    "title": "Using the FGCZ Quarto report templates",
-    "section": "Bootstrapping a new report",
-    "text": "Bootstrapping a new report\nfgcz_use_template() copies the starter template.qmd into a directory together with the styling assets it needs, so you have a runnable report in one call:\n\nqmd &lt;- fgcz_use_template(file.path(tempdir(), \"new-report\"),\n                         to = \"my_report.qmd\",\n                         overwrite = TRUE)\nlist.files(dirname(qmd))\n#&gt; [1] \"_metadata.yml\"            \"fgcz_header_quarto.html\" \n#&gt; [3] \"fgcz-plot-finder.html\"    \"fgcz-report-overview.svg\"\n#&gt; [5] \"fgcz.scss\"                \"my_report.qmd\"",
-    "crumbs": [
-      "Articles",
-      "Using the FGCZ Quarto report templates"
-    ]
-  },
-  {
-    "objectID": "vignettes/fgczquartotemplate.html#rendering",
-    "href": "vignettes/fgczquartotemplate.html#rendering",
-    "title": "Using the FGCZ Quarto report templates",
-    "section": "Rendering",
-    "text": "Rendering\nfgcz_render() stages the assets and then calls quarto::quarto_render(). It needs the Quarto CLI, so the call below is shown but not run in this vignette:\n\nfgcz_render(qmd, execute_params = list(reportTitle = \"My analysis\"))\nfgcz_render(qmd, buttons = TRUE) # both toolbar buttons; FALSE remains the default\nfgcz_render(qmd, buttons = \"search\") # Find only; \"download\" selects Download\n\nThat is the single call downstream packages use in place of a bare quarto::quarto_render().\nWith the Quarto extension route, opt into the toolbar with include-after-body and select controls using a top-level fgcz-buttons: key:\nformat:\n  fgczquartotemplate-html:\n    include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html\nfgcz-buttons: [search, download]\nUse a single name for one button. Omitting fgcz-buttons shows both controls; an unknown name stops the render with a validation error.",
-    "crumbs": [
-      "Articles",
-      "Using the FGCZ Quarto report templates"
-    ]
-  },
-  {
-    "objectID": "vignettes/fgczquartotemplate.html#using-it-from-a-downstream-package",
-    "href": "vignettes/fgczquartotemplate.html#using-it-from-a-downstream-package",
-    "title": "Using the FGCZ Quarto report templates",
-    "section": "Using it from a downstream package",
-    "text": "Using it from a downstream package\n\nAdd fgczquartotemplate to Imports (and, since it is distributed on GitHub, Remotes: fgcz/fgczQuartoTemplate).\nReplace quarto::quarto_render() calls with fgczquartotemplate::fgcz_render().\nLeave report front matter free of any styling reference — the staged _metadata.yml attaches automatically.\nGit-ignore the staged copies (_metadata.yml, fgcz.scss, fgcz_header_quarto.html, and fgcz-plot-finder.html) in the render directory so the packaged assets remain the single source of truth.",
-    "crumbs": [
-      "Articles",
-      "Using the FGCZ Quarto report templates"
-    ]
-  },
-  {
-    "objectID": "NEWS.html",
-    "href": "NEWS.html",
-    "title": "fgczquartotemplate 0.2.0",
-    "section": "",
-    "text": "fgczquartotemplate 0.2.0\n\nReports can select \"search\" and/or \"download\" toolbar controls through fgcz_render(buttons = ...) or a top-level fgcz-buttons: Quarto YAML key. Existing TRUE/FALSE R calls remain compatible, and unknown names now fail clearly instead of silently hiding controls. The toolbar uses a dynamic horizontal top-right position with compact icons whose text labels expand on hover or keyboard focus (#2).\nThe documentation site now publishes the fgcz-quarto-reports authoring skill as a readable guide and links it from the package usage vignette.\nThe starter and example report now demonstrate the required compact Overview with a visual abstract, introduction, and high-level input summary, followed by a final Session Info tab containing separate Report provenance and R session info subtabs. fgcz_use_template() also copies the visual abstract beside the new report.\nDownloaded ZIP files now include a current timestamp, encode Order/Workunit identifiers when report metadata is available, and write current ZIP entry timestamps instead of the 1980 default.\nThe documentation website is now built with altdoc (Quarto Website backend) instead of pkgdown. pkgdown mangles Quarto panel-tabsets (its tweak_tabsets step crashes on them), whereas altdoc renders vignettes natively through Quarto with the tabsets intact.\nThe FGCZ layout demo now ships as a rendered vignette (vignettes/example-report.qmd), built with format: fgczquartotemplate-html from the vendored vignettes/_extensions/, and is shown on the documentation site with its nested tabsets preserved. Its title is now a static string so the documentation-site sidebar shows “FGCZ tabset layout example” instead of the raw `r params$reportTitle` code (the Quarto website navigation harvests the literal YAML title without executing inline code; a param-driven title still works for standalone reports rendered from inst/quarto/template.qmd).\nThe fgcz-quarto-reports skill’s caption guidance now includes a concrete before/after example: a negative (decorative, unsearchable) figure caption contrasted with a positive one that names the statistics, panels, axes, and diagnostic reading.\nThe fgcz-quarto-reports skill now recommends recording B-Fabric / SUSHI report provenance once — a field/value table in a final Session Info tab (plus sessionInfo() and the #fgcz-report-metadata marker) — rather than duplicating the metadata in a top-of-page report-information callout.\n\n\n\nfgczquartotemplate 0.1.0\n\nThe opt-in toolbar’s 🔍 Find panel now opens tabs through Bootstrap’s tab API so htmlwidgets such as DT tables redraw when revealed from inactive tabs.\nThe opt-in toolbar’s 🔍 Find panel now renders Plotly htmlwidgets as thumbnail cards by rasterizing the embedded widget JSON in the browser.\nThe opt-in toolbar’s 🔍 Find panel now uses Quarto figure captions for Plotly htmlwidgets inside figure floats instead of adding duplicate captionless Plotly cards.\nThe opt-in toolbar’s 📥 Save panel now excludes Plotly htmlwidgets inside figure floats from the static-download list.\nThe opt-in toolbar’s 🔍 Find panel now renders DT tables as table preview cards instead of generic figure placeholders.\nThe opt-in toolbar’s 🔍 Find button opens a graphical table of contents showing figures and tables, including content in inactive tabs; click one to jump to it. Results are grouped by their report location, and section/subsection/tab titles are included in filtering. Figure thumbnails reuse the report’s embedded images, so they work offline. The 📥 Save panel also shows thumbnails for downloadable plots.\nThe search + download toolbar is now opt-in. fgcz_render() gains a buttons argument (default FALSE); pass buttons = TRUE to add the right-edge 🔍 Find / 📥 Save toolbar. It is no longer wired into _metadata.yml or the Quarto extension by default; the extension and plain quarto render routes opt in with an include-after-body: line.\nfgcz_copy_assets() accepts either an existing directory or a .qmd file path.",
-    "crumbs": [
-      "News"
     ]
   },
   {
@@ -426,47 +307,166 @@
     ]
   },
   {
-    "objectID": "man/fgczquartotemplate-assets.html",
-    "href": "man/fgczquartotemplate-assets.html",
-    "title": "fgczquartotemplate",
+    "objectID": "CITATION.html",
+    "href": "CITATION.html",
+    "title": "Citation",
+    "section": "",
+    "text": "Citation\nTo cite package ‘fgczQuartoTemplate’ in publications use:\n\nLeary P, Grossmann J, Noé F, Wolski W (????). fgczQuartoTemplate: FGCZ Quarto Report Templates and Shared Styling. R package version 0.2.0, https://github.com/fgcz/fgczQuartoTemplate.",
+    "crumbs": [
+      "Citation"
+    ]
+  },
+  {
+    "objectID": "man/fgcz_render.html",
+    "href": "man/fgcz_render.html",
+    "title": "fgczQuartoTemplate",
+    "section": "",
+    "text": "Stages the shared styling assets next to input (via fgcz_copy_assets()) and then renders it with quarto::quarto_render(). The .qmd needs no styling front matter at all: the staged _metadata.yml is picked up by Quarto automatically, so the report stays fully portable.\n\n\n\nfgcz_render(input, buttons = FALSE, ...)\n\n\n\n\n\n\n\ninput\n\n\nPath to the .qmd to render.\n\n\n\n\nbuttons\n\n\nWhich top-right toolbar buttons (fgcz-plot-finder.html) to add. Defaults to FALSE; TRUE enables both buttons for backward compatibility. Alternatively, pass “search” for Find, “download” for Download, or c(“search”, “download”) for both. FALSE, NULL, and character(0) disable the toolbar.\n\n\n\n\n…\n\n\nPassed on to quarto::quarto_render() (e.g. execute_params, output_file, quarto_args). A metadata list passed here is honored; enabling buttons merges include-after-body into it.\n\n\n\n\n\n\nThe value of quarto::quarto_render(), invisibly.\n\n\n\n\nlibrary(\"fgczQuartoTemplate\")\n\nfgcz_render(\"CountQC.qmd\", execute_params = list(reportTitle = \"CountQC\"))\nfgcz_render(\"CountQC.qmd\", buttons = TRUE) # with the Find/Download toolbar\nfgcz_render(\"CountQC.qmd\", buttons = \"search\") # Find only",
+    "crumbs": [
+      "Reference",
+      "fgcz_render"
+    ]
+  },
+  {
+    "objectID": "man/fgcz_render.html#render-an-fgcz-quarto-report",
+    "href": "man/fgcz_render.html#render-an-fgcz-quarto-report",
+    "title": "fgczQuartoTemplate",
+    "section": "",
+    "text": "Stages the shared styling assets next to input (via fgcz_copy_assets()) and then renders it with quarto::quarto_render(). The .qmd needs no styling front matter at all: the staged _metadata.yml is picked up by Quarto automatically, so the report stays fully portable.\n\n\n\nfgcz_render(input, buttons = FALSE, ...)\n\n\n\n\n\n\n\ninput\n\n\nPath to the .qmd to render.\n\n\n\n\nbuttons\n\n\nWhich top-right toolbar buttons (fgcz-plot-finder.html) to add. Defaults to FALSE; TRUE enables both buttons for backward compatibility. Alternatively, pass “search” for Find, “download” for Download, or c(“search”, “download”) for both. FALSE, NULL, and character(0) disable the toolbar.\n\n\n\n\n…\n\n\nPassed on to quarto::quarto_render() (e.g. execute_params, output_file, quarto_args). A metadata list passed here is honored; enabling buttons merges include-after-body into it.\n\n\n\n\n\n\nThe value of quarto::quarto_render(), invisibly.\n\n\n\n\nlibrary(\"fgczQuartoTemplate\")\n\nfgcz_render(\"CountQC.qmd\", execute_params = list(reportTitle = \"CountQC\"))\nfgcz_render(\"CountQC.qmd\", buttons = TRUE) # with the Find/Download toolbar\nfgcz_render(\"CountQC.qmd\", buttons = \"search\") # Find only",
+    "crumbs": [
+      "Reference",
+      "fgcz_render"
+    ]
+  },
+  {
+    "objectID": "man/fgczQuartoTemplate-assets.html",
+    "href": "man/fgczQuartoTemplate-assets.html",
+    "title": "fgczQuartoTemplate",
     "section": "",
     "text": "The package ships a common set of Quarto report assets under inst/quarto/ so that FGCZ analysis packages (ezRun, prolfqua, …) share one look and feel:\n\n\n\n\n\n_metadata.yml\n\n\nShared format defaults. Quarto applies this file automatically to every .qmd in its directory (and subdirectories) because of its reserved name – reports need no reference to it.\n\n\nfgcz.scss\n\n\nTheme overrides (tabset/card styling, figure rows).\n\n\nfgcz_header_quarto.html\n\n\nFGCZ header injected via include-in-header.\n\n\nfgcz-plot-finder.html\n\n\nTop-right search + download toolbar. Opt-in: staged next to every report but only injected (via include-after-body) when asked for, e.g. fgcz_render(buttons = “search”).\n\n\nfgcz-buttons.lua\n\n\nQuarto extension filter that validates and applies a report’s optional fgcz-buttons: YAML selection.\n\n\ntemplate.qmd\n\n\nA generic starter report demonstrating the tabset, figure-with-callout, and nesting patterns. It is copied with fgcz-report-overview.svg, the starter’s visual abstract.\n\n\nBecause _metadata.yml is applied by directory, a .qmd rendered with a plain quarto render picks up the FGCZ styling with no package involved and no front-matter reference – as long as the styling files sit in the same directory. The _metadata.yml references fgcz.scss and fgcz_header_quarto.html by bare filename, which Quarto resolves relative to the input .qmd, so they must travel together; see fgcz_copy_assets() and fgcz_render(). The toolbar (fgcz-plot-finder.html) is staged too but is opt-in – enable both buttons with fgcz_render(buttons = TRUE), or select buttons by name.",
     "crumbs": [
       "Reference",
-      "fgczquartotemplate-assets"
+      "fgczQuartoTemplate-assets"
     ]
   },
   {
-    "objectID": "man/fgczquartotemplate-assets.html#shared-fgcz-quarto-report-assets",
-    "href": "man/fgczquartotemplate-assets.html#shared-fgcz-quarto-report-assets",
-    "title": "fgczquartotemplate",
+    "objectID": "man/fgczQuartoTemplate-assets.html#shared-fgcz-quarto-report-assets",
+    "href": "man/fgczQuartoTemplate-assets.html#shared-fgcz-quarto-report-assets",
+    "title": "fgczQuartoTemplate",
     "section": "",
     "text": "The package ships a common set of Quarto report assets under inst/quarto/ so that FGCZ analysis packages (ezRun, prolfqua, …) share one look and feel:\n\n\n\n\n\n_metadata.yml\n\n\nShared format defaults. Quarto applies this file automatically to every .qmd in its directory (and subdirectories) because of its reserved name – reports need no reference to it.\n\n\nfgcz.scss\n\n\nTheme overrides (tabset/card styling, figure rows).\n\n\nfgcz_header_quarto.html\n\n\nFGCZ header injected via include-in-header.\n\n\nfgcz-plot-finder.html\n\n\nTop-right search + download toolbar. Opt-in: staged next to every report but only injected (via include-after-body) when asked for, e.g. fgcz_render(buttons = “search”).\n\n\nfgcz-buttons.lua\n\n\nQuarto extension filter that validates and applies a report’s optional fgcz-buttons: YAML selection.\n\n\ntemplate.qmd\n\n\nA generic starter report demonstrating the tabset, figure-with-callout, and nesting patterns. It is copied with fgcz-report-overview.svg, the starter’s visual abstract.\n\n\nBecause _metadata.yml is applied by directory, a .qmd rendered with a plain quarto render picks up the FGCZ styling with no package involved and no front-matter reference – as long as the styling files sit in the same directory. The _metadata.yml references fgcz.scss and fgcz_header_quarto.html by bare filename, which Quarto resolves relative to the input .qmd, so they must travel together; see fgcz_copy_assets() and fgcz_render(). The toolbar (fgcz-plot-finder.html) is staged too but is opt-in – enable both buttons with fgcz_render(buttons = TRUE), or select buttons by name.",
     "crumbs": [
       "Reference",
-      "fgczquartotemplate-assets"
+      "fgczQuartoTemplate-assets"
     ]
   },
   {
-    "objectID": "man/fgcz_copy_assets.html",
-    "href": "man/fgcz_copy_assets.html",
-    "title": "fgczquartotemplate",
+    "objectID": "NEWS.html",
+    "href": "NEWS.html",
+    "title": "fgczQuartoTemplate 0.2.0",
     "section": "",
-    "text": "Copies the shared styling files (_metadata.yml, fgcz.scss, fgcz_header_quarto.html, fgcz-plot-finder.html) from the installed package next to a report. path may be either an existing directory, or an existing .qmd file whose containing directory should receive the assets. Because _metadata.yml is directory metadata, any .qmd in the target directory then renders with the FGCZ styling automatically. The toolbar is staged but remains opt-in. Call this before rendering, or use fgcz_render(), which calls it for you.\n\n\n\nfgcz_copy_assets(path, overwrite = TRUE)\n\n\n\n\n\n\n\npath\n\n\nAn existing directory to stage the assets into, or a path to the .qmd itself (assets go into its containing directory).\n\n\n\n\noverwrite\n\n\nOverwrite existing copies in the target directory. Defaults to TRUE so the packaged assets stay the single source of truth.\n\n\n\n\n\n\nCharacter vector of the copied file paths, invisibly.\n\n\n\n\nlibrary(\"fgczquartotemplate\")\n\nfgcz_copy_assets(\"path/to/report/dir\")\nfgcz_copy_assets(\"path/to/report.qmd\")",
+    "text": "fgczQuartoTemplate 0.2.0\n\nReports can select \"search\" and/or \"download\" toolbar controls through fgcz_render(buttons = ...) or a top-level fgcz-buttons: Quarto YAML key. Existing TRUE/FALSE R calls remain compatible, and unknown names now fail clearly instead of silently hiding controls. The toolbar uses a dynamic horizontal top-right position with compact icons whose text labels expand on hover or keyboard focus (#2).\nThe documentation site now publishes the fgcz-quarto-reports authoring skill as a readable guide and links it from the package usage vignette.\nThe starter and example report now demonstrate the required compact Overview with a visual abstract, introduction, and high-level input summary, followed by a final Session Info tab containing separate Report provenance and R session info subtabs. fgcz_use_template() also copies the visual abstract beside the new report.\nDownloaded ZIP files now include a current timestamp, encode Order/Workunit identifiers when report metadata is available, and write current ZIP entry timestamps instead of the 1980 default.\nThe documentation website is now built with altdoc (Quarto Website backend) instead of pkgdown. pkgdown mangles Quarto panel-tabsets (its tweak_tabsets step crashes on them), whereas altdoc renders vignettes natively through Quarto with the tabsets intact.\nThe FGCZ layout demo now ships as a rendered vignette (vignettes/example-report.qmd), built with format: fgczQuartoTemplate-html from the vendored vignettes/_extensions/, and is shown on the documentation site with its nested tabsets preserved. Its title is now a static string so the documentation-site sidebar shows “FGCZ tabset layout example” instead of the raw `r params$reportTitle` code (the Quarto website navigation harvests the literal YAML title without executing inline code; a param-driven title still works for standalone reports rendered from inst/quarto/template.qmd).\nThe fgcz-quarto-reports skill’s caption guidance now includes a concrete before/after example: a negative (decorative, unsearchable) figure caption contrasted with a positive one that names the statistics, panels, axes, and diagnostic reading.\nThe fgcz-quarto-reports skill now recommends recording B-Fabric / SUSHI report provenance once — a field/value table in a final Session Info tab (plus sessionInfo() and the #fgcz-report-metadata marker) — rather than duplicating the metadata in a top-of-page report-information callout.\n\n\n\nfgczQuartoTemplate 0.1.0\n\nThe opt-in toolbar’s 🔍 Find panel now opens tabs through Bootstrap’s tab API so htmlwidgets such as DT tables redraw when revealed from inactive tabs.\nThe opt-in toolbar’s 🔍 Find panel now renders Plotly htmlwidgets as thumbnail cards by rasterizing the embedded widget JSON in the browser.\nThe opt-in toolbar’s 🔍 Find panel now uses Quarto figure captions for Plotly htmlwidgets inside figure floats instead of adding duplicate captionless Plotly cards.\nThe opt-in toolbar’s 📥 Save panel now excludes Plotly htmlwidgets inside figure floats from the static-download list.\nThe opt-in toolbar’s 🔍 Find panel now renders DT tables as table preview cards instead of generic figure placeholders.\nThe opt-in toolbar’s 🔍 Find button opens a graphical table of contents showing figures and tables, including content in inactive tabs; click one to jump to it. Results are grouped by their report location, and section/subsection/tab titles are included in filtering. Figure thumbnails reuse the report’s embedded images, so they work offline. The 📥 Save panel also shows thumbnails for downloadable plots.\nThe search + download toolbar is now opt-in. fgcz_render() gains a buttons argument (default FALSE); pass buttons = TRUE to add the right-edge 🔍 Find / 📥 Save toolbar. It is no longer wired into _metadata.yml or the Quarto extension by default; the extension and plain quarto render routes opt in with an include-after-body: line.\nfgcz_copy_assets() accepts either an existing directory or a .qmd file path.",
     "crumbs": [
-      "Reference",
-      "fgcz_copy_assets"
+      "News"
     ]
   },
   {
-    "objectID": "man/fgcz_copy_assets.html#copy-the-shared-report-assets-next-to-a-.qmd",
-    "href": "man/fgcz_copy_assets.html#copy-the-shared-report-assets-next-to-a-.qmd",
-    "title": "fgczquartotemplate",
+    "objectID": "vignettes/fgczQuartoTemplate.html",
+    "href": "vignettes/fgczQuartoTemplate.html",
+    "title": "Using the FGCZ Quarto report templates",
     "section": "",
-    "text": "Copies the shared styling files (_metadata.yml, fgcz.scss, fgcz_header_quarto.html, fgcz-plot-finder.html) from the installed package next to a report. path may be either an existing directory, or an existing .qmd file whose containing directory should receive the assets. Because _metadata.yml is directory metadata, any .qmd in the target directory then renders with the FGCZ styling automatically. The toolbar is staged but remains opt-in. Call this before rendering, or use fgcz_render(), which calls it for you.\n\n\n\nfgcz_copy_assets(path, overwrite = TRUE)\n\n\n\n\n\n\n\npath\n\n\nAn existing directory to stage the assets into, or a path to the .qmd itself (assets go into its containing directory).\n\n\n\n\noverwrite\n\n\nOverwrite existing copies in the target directory. Defaults to TRUE so the packaged assets stay the single source of truth.\n\n\n\n\n\n\nCharacter vector of the copied file paths, invisibly.\n\n\n\n\nlibrary(\"fgczquartotemplate\")\n\nfgcz_copy_assets(\"path/to/report/dir\")\nfgcz_copy_assets(\"path/to/report.qmd\")",
+    "text": "fgczQuartoTemplate ships one shared set of Quarto report assets so that FGCZ analysis packages (ezRun, prolfqua, …) all produce reports with the same look and feel. A theme change becomes a single package bump instead of an edit in every downstream package.\nSee the layout live: https://fgcz.github.io/fgczQuartoTemplate/vignettes/example-report.html — a full report rendered with the extension (tabsets, figure + callout rows, nesting, lightbox). The documentation site is built with altdoc, which renders that report through Quarto, so the FGCZ layout and its panel-tabsets appear exactly as they do locally (pkgdown, by contrast, mangles Quarto tabsets). This article explains how to use the templates.\nAuthor reports consistently: read the FGCZ Quarto reports authoring guide, which altdoc publishes directly from the skill source file. It defines the required Overview and Session Info structure, tab-depth rules, figure layout, caption guidance, and provenance conventions.",
     "crumbs": [
-      "Reference",
-      "fgcz_copy_assets"
+      "Articles",
+      "Using the FGCZ Quarto report templates"
+    ]
+  },
+  {
+    "objectID": "vignettes/fgczQuartoTemplate.html#what-this-package-provides",
+    "href": "vignettes/fgczQuartoTemplate.html#what-this-package-provides",
+    "title": "Using the FGCZ Quarto report templates",
+    "section": "",
+    "text": "fgczQuartoTemplate ships one shared set of Quarto report assets so that FGCZ analysis packages (ezRun, prolfqua, …) all produce reports with the same look and feel. A theme change becomes a single package bump instead of an edit in every downstream package.\nSee the layout live: https://fgcz.github.io/fgczQuartoTemplate/vignettes/example-report.html — a full report rendered with the extension (tabsets, figure + callout rows, nesting, lightbox). The documentation site is built with altdoc, which renders that report through Quarto, so the FGCZ layout and its panel-tabsets appear exactly as they do locally (pkgdown, by contrast, mangles Quarto tabsets). This article explains how to use the templates.\nAuthor reports consistently: read the FGCZ Quarto reports authoring guide, which altdoc publishes directly from the skill source file. It defines the required Overview and Session Info structure, tab-depth rules, figure layout, caption guidance, and provenance conventions.",
+    "crumbs": [
+      "Articles",
+      "Using the FGCZ Quarto report templates"
+    ]
+  },
+  {
+    "objectID": "vignettes/fgczQuartoTemplate.html#two-ways-to-use-it",
+    "href": "vignettes/fgczQuartoTemplate.html#two-ways-to-use-it",
+    "title": "Using the FGCZ Quarto report templates",
+    "section": "Two ways to use it",
+    "text": "Two ways to use it\nWay 1 — Quarto extension (plain quarto render, no R). Once per project:\nquarto add fgcz/fgczQuartoTemplate\nthen in the report header:\n---\ntitle: \"My report\"\nformat: fgczQuartoTemplate-html\n---\nWay 2 — R helper (stage the files from R, no format: line needed) — the subject of the rest of this article. Both routes produce the same report and can coexist in one repo.\nThe assets live under inst/quarto/:\n\nlist.files(fgcz_quarto_dir())\n#&gt; [1] \"_metadata.yml\"            \"fgcz_header_quarto.html\" \n#&gt; [3] \"fgcz-buttons.lua\"         \"fgcz-plot-finder.html\"   \n#&gt; [5] \"fgcz-report-overview.svg\" \"fgcz.scss\"               \n#&gt; [7] \"template.qmd\"\n\n\n\n\n\n\n\n\nFile\nRole\n\n\n\n\n_metadata.yml\nShared format defaults, applied automatically to every .qmd in the directory.\n\n\nfgcz.scss\nTheme overrides — tabset/card styling, figure rows.\n\n\nfgcz_header_quarto.html\nFGCZ header, injected via include-in-header.\n\n\nfgcz-plot-finder.html\nOpt-in Find and Download toolbar.\n\n\nfgcz-buttons.lua\nValidates and applies toolbar selections for the Quarto extension.\n\n\nfgcz-report-overview.svg\nVisual abstract copied with the starter report.\n\n\ntemplate.qmd\nGeneric starter report demonstrating the layout patterns.",
+    "crumbs": [
+      "Articles",
+      "Using the FGCZ Quarto report templates"
+    ]
+  },
+  {
+    "objectID": "vignettes/fgczQuartoTemplate.html#why-the-assets-must-sit-next-to-the-report",
+    "href": "vignettes/fgczQuartoTemplate.html#why-the-assets-must-sit-next-to-the-report",
+    "title": "Using the FGCZ Quarto report templates",
+    "section": "Why the assets must sit next to the report",
+    "text": "Why the assets must sit next to the report\nQuarto applies a file named _metadata.yml automatically to every .qmd in its directory (and subdirectories) — that is how the styling attaches without any front-matter reference. The file in turn names fgcz.scss and fgcz_header_quarto.html by bare filename:\n\nwriteLines(head(readLines(fgcz_quarto_dir(\"_metadata.yml\")), 30))\n#&gt; ## ─────────────────────────────────────────────────────────────\n#&gt; ## FGCZ Shared Report Defaults\n#&gt; ## Quarto applies this file automatically to every .qmd in this\n#&gt; ## directory (and subdirectories) because it is named _metadata.yml.\n#&gt; ## Individual reports need NO reference to it in their front matter.\n#&gt; ## Keep fgcz.scss and fgcz_header_quarto.html next to it.\n#&gt; ## ─────────────────────────────────────────────────────────────\n#&gt; \n#&gt; format:\n#&gt;   html:\n#&gt;     embed-resources: true\n#&gt;     self-contained: true\n#&gt;     smooth-scroll: true\n#&gt;     page-layout: full\n#&gt; \n#&gt;     # Code\n#&gt;     code-fold: true\n#&gt;     code-tools: true\n#&gt; \n#&gt;     # Theme — flatly base + FGCZ overrides (tabset card styling for now)\n#&gt;     theme: [spacelab, fgcz.scss]\n#&gt; \n#&gt;     # Grid sizing\n#&gt;     grid:\n#&gt;       body-width: 1800px\n#&gt;       sidebar-width: 250px\n#&gt;       margin-width: 100px\n#&gt; \n#&gt;     # FGCZ header\n#&gt;     include-in-header: fgcz_header_quarto.html\n\nQuarto resolves those names relative to the directory of the input .qmd, not relative to the YAML that mentions them. So all three files must physically sit next to the report at render time. That is exactly what fgcz_copy_assets() and fgcz_render() take care of.",
+    "crumbs": [
+      "Articles",
+      "Using the FGCZ Quarto report templates"
+    ]
+  },
+  {
+    "objectID": "vignettes/fgczQuartoTemplate.html#the-portable-report-header",
+    "href": "vignettes/fgczQuartoTemplate.html#the-portable-report-header",
+    "title": "Using the FGCZ Quarto report templates",
+    "section": "The portable report header",
+    "text": "The portable report header\nBecause _metadata.yml attaches by directory, a report carries no FGCZ-specific front matter at all — just its own params and title:\n---\nparams:\n  reportTitle: \"CountQC\"\ntitle: \"`r params$reportTitle`\"\n---\nRendered with a bare quarto render CountQC.qmd, it still picks up the full styling — the package need not even be installed, as long as the three assets are in the directory.",
+    "crumbs": [
+      "Articles",
+      "Using the FGCZ Quarto report templates"
+    ]
+  },
+  {
+    "objectID": "vignettes/fgczQuartoTemplate.html#staging-the-assets",
+    "href": "vignettes/fgczQuartoTemplate.html#staging-the-assets",
+    "title": "Using the FGCZ Quarto report templates",
+    "section": "Staging the assets",
+    "text": "Staging the assets\nfgcz_copy_assets() copies the three styling files into a directory. Here we stage them into a temporary directory and confirm they landed:\n\ndir &lt;- file.path(tempdir(), \"demo-report\")\ndir.create(dir, showWarnings = FALSE)\n\nstaged &lt;- fgcz_copy_assets(dir)\nbasename(staged)\n#&gt; [1] \"_metadata.yml\"           \"fgcz.scss\"              \n#&gt; [3] \"fgcz_header_quarto.html\" \"fgcz-plot-finder.html\"\nfile.exists(staged)\n#&gt; [1] TRUE TRUE TRUE TRUE",
+    "crumbs": [
+      "Articles",
+      "Using the FGCZ Quarto report templates"
+    ]
+  },
+  {
+    "objectID": "vignettes/fgczQuartoTemplate.html#bootstrapping-a-new-report",
+    "href": "vignettes/fgczQuartoTemplate.html#bootstrapping-a-new-report",
+    "title": "Using the FGCZ Quarto report templates",
+    "section": "Bootstrapping a new report",
+    "text": "Bootstrapping a new report\nfgcz_use_template() copies the starter template.qmd into a directory together with the styling assets it needs, so you have a runnable report in one call:\n\nqmd &lt;- fgcz_use_template(file.path(tempdir(), \"new-report\"),\n                         to = \"my_report.qmd\",\n                         overwrite = TRUE)\nlist.files(dirname(qmd))\n#&gt; [1] \"_metadata.yml\"            \"fgcz_header_quarto.html\" \n#&gt; [3] \"fgcz-plot-finder.html\"    \"fgcz-report-overview.svg\"\n#&gt; [5] \"fgcz.scss\"                \"my_report.qmd\"",
+    "crumbs": [
+      "Articles",
+      "Using the FGCZ Quarto report templates"
+    ]
+  },
+  {
+    "objectID": "vignettes/fgczQuartoTemplate.html#rendering",
+    "href": "vignettes/fgczQuartoTemplate.html#rendering",
+    "title": "Using the FGCZ Quarto report templates",
+    "section": "Rendering",
+    "text": "Rendering\nfgcz_render() stages the assets and then calls quarto::quarto_render(). It needs the Quarto CLI, so the call below is shown but not run in this vignette:\n\nfgcz_render(qmd, execute_params = list(reportTitle = \"My analysis\"))\nfgcz_render(qmd, buttons = TRUE) # both toolbar buttons; FALSE remains the default\nfgcz_render(qmd, buttons = \"search\") # Find only; \"download\" selects Download\n\nThat is the single call downstream packages use in place of a bare quarto::quarto_render().\nWith the Quarto extension route, opt into the toolbar with include-after-body and select controls using a top-level fgcz-buttons: key:\nformat:\n  fgczQuartoTemplate-html:\n    include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html\nfgcz-buttons: [search, download]\nUse a single name for one button. Omitting fgcz-buttons shows both controls; an unknown name stops the render with a validation error.",
+    "crumbs": [
+      "Articles",
+      "Using the FGCZ Quarto report templates"
+    ]
+  },
+  {
+    "objectID": "vignettes/fgczQuartoTemplate.html#using-it-from-a-downstream-package",
+    "href": "vignettes/fgczQuartoTemplate.html#using-it-from-a-downstream-package",
+    "title": "Using the FGCZ Quarto report templates",
+    "section": "Using it from a downstream package",
+    "text": "Using it from a downstream package\n\nAdd fgczQuartoTemplate to Imports (and, since it is distributed on GitHub, Remotes: fgcz/fgczQuartoTemplate).\nReplace quarto::quarto_render() calls with fgczQuartoTemplate::fgcz_render().\nLeave report front matter free of any styling reference — the staged _metadata.yml attaches automatically.\nGit-ignore the staged copies (_metadata.yml, fgcz.scss, fgcz_header_quarto.html, and fgcz-plot-finder.html) in the render directory so the packaged assets remain the single source of truth.",
+    "crumbs": [
+      "Articles",
+      "Using the FGCZ Quarto report templates"
     ]
   }
 ]

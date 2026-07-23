@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>fgcz_render – fgczquartotemplate</title>
+<title>fgcz_render – fgczQuartoTemplate</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -77,7 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-7db87aff3d14028862e8d47add95a991.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d88d70f6c7df7b9e20df5ff689ffded0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">fgczquartotemplate</span>
+    <span class="navbar-title">fgczQuartoTemplate</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -127,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/fgcz/fgczQuartoTemplate"> <i class="bi bi-github" role="img" aria-label="fgczquartotemplate GitHub">
+    <a class="nav-link" href="https://github.com/fgcz/fgczQuartoTemplate"> <i class="bi bi-github" role="img" aria-label="fgczQuartoTemplate GitHub">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -183,7 +183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/fgczquartotemplate.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/fgczQuartoTemplate.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Using the FGCZ Quarto report templates</span></a>
   </div>
 </li>
@@ -224,8 +224,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/fgczquartotemplate-assets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">fgczquartotemplate-assets</span></a>
+  <a href="../man/fgczQuartoTemplate-assets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">fgczQuartoTemplate-assets</span></a>
   </div>
 </li>
       </ul>
@@ -309,7 +309,7 @@ Passed on to <code>quarto::quarto_render()</code> (e.g.&nbsp;<code>execute_param
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"fgczquartotemplate"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"fgczQuartoTemplate"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"CountQC.qmd"</span>, <span class="at">execute_params =</span> <span class="fu">list</span>(<span class="at">reportTitle =</span> <span class="st">"CountQC"</span>))</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"CountQC.qmd"</span>, <span class="at">buttons =</span> <span class="cn">TRUE</span>) <span class="co"># with the Find/Download toolbar</span></span>

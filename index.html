@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>fgczquartotemplate</title>
+<title>fgczQuartoTemplate</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -77,7 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7db87aff3d14028862e8d47add95a991.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d88d70f6c7df7b9e20df5ff689ffded0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">fgczquartotemplate</span>
+    <span class="navbar-title">fgczQuartoTemplate</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -127,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/fgcz/fgczQuartoTemplate"> <i class="bi bi-github" role="img" aria-label="fgczquartotemplate GitHub">
+    <a class="nav-link" href="https://github.com/fgcz/fgczQuartoTemplate"> <i class="bi bi-github" role="img" aria-label="fgczQuartoTemplate GitHub">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -183,7 +183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/fgczquartotemplate.html" class="sidebar-item-text sidebar-link">
+  <a href="./vignettes/fgczQuartoTemplate.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Using the FGCZ Quarto report templates</span></a>
   </div>
 </li>
@@ -224,8 +224,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/fgczquartotemplate-assets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">fgczquartotemplate-assets</span></a>
+  <a href="./man/fgczQuartoTemplate-assets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">fgczQuartoTemplate-assets</span></a>
   </div>
 </li>
       </ul>
@@ -263,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <section id="fgczquartotemplate" class="level1">
-<h1>fgczquartotemplate</h1>
+<h1>fgczQuartoTemplate</h1>
 <p>One shared <strong>FGCZ look-and-feel</strong> for Quarto reports (theme + header + defaults), reusable across <code>ezRun</code>, <code>prolfqua</code>, <code>prolfquapp</code>, …. Reports can opt in to a top-right toolbar — <strong>🔍 Find</strong> any figure or table in a graphical table of contents, or <strong>📥 Download</strong> the plots as a ZIP.</p>
 <p><strong>👉 <a href="https://fgcz.github.io/fgczQuartoTemplate/">See the documentation site</a></strong> — including a live example report with the real layout, tabsets, figures, and the Find / Download toolbar.</p>
 <p>There are <strong>two ways</strong> to use it. Pick one.</p>
@@ -273,19 +273,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Best when you render with the <code>quarto</code> CLI.</p>
 <p><strong>Step 1.</strong> In your project, once:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> add fgcz/fgczQuartoTemplate</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This creates <code>_extensions/fgczquartotemplate/</code> in the project. Without that extension directory, <code>format: fgczquartotemplate-html</code> will fail because Quarto cannot resolve the custom format.</p>
+<p>This creates <code>_extensions/fgczQuartoTemplate/</code> in the project. Without that extension directory, <code>format: fgczQuartoTemplate-html</code> will fail because Quarto cannot resolve the custom format.</p>
 <p><strong>Step 2.</strong> In your report’s YAML header:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">"My report"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span><span class="at"> fgczquartotemplate-html</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span><span class="at"> fgczQuartoTemplate-html</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Step 3.</strong> Render:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render my_report.qmd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Done. ✅</p>
 <p><strong>Optional — 🔍 Find / 📥 Download toolbar</strong> (off by default). Switch it on and select its buttons in the report header:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">fgczquartotemplate-html</span><span class="kw">:</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">include-after-body</span><span class="kw">:</span><span class="at"> _extensions/fgczquartotemplate/fgcz-plot-finder.html</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">fgczQuartoTemplate-html</span><span class="kw">:</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">include-after-body</span><span class="kw">:</span><span class="at"> _extensions/fgczQuartoTemplate/fgcz-plot-finder.html</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz-buttons</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">search</span><span class="kw">,</span><span class="at"> download</span><span class="kw">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Use <code>fgcz-buttons: search</code> or <code>fgcz-buttons: download</code> for one button. Omit <code>fgcz-buttons</code> to show both when the toolbar is included. Unknown names stop the render instead of silently hiding controls.</p>
 <hr>
@@ -300,17 +300,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">"My report"</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Step 3.</strong> Render with the one-call helper:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fgczquartotemplate<span class="sc">::</span><span class="fu">fgcz_render</span>(<span class="st">"my_report.qmd"</span>)                 <span class="co"># no toolbar</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fgczquartotemplate<span class="sc">::</span><span class="fu">fgcz_render</span>(<span class="st">"my_report.qmd"</span>, <span class="at">buttons =</span> <span class="cn">TRUE</span>) <span class="co"># 🔍 Find / 📥 Download</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fgczquartotemplate<span class="sc">::</span><span class="fu">fgcz_render</span>(<span class="st">"my_report.qmd"</span>, <span class="at">buttons =</span> <span class="st">"search"</span>) <span class="co"># 🔍 Find only</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fgczQuartoTemplate<span class="sc">::</span><span class="fu">fgcz_render</span>(<span class="st">"my_report.qmd"</span>)                 <span class="co"># no toolbar</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fgczQuartoTemplate<span class="sc">::</span><span class="fu">fgcz_render</span>(<span class="st">"my_report.qmd"</span>, <span class="at">buttons =</span> <span class="cn">TRUE</span>) <span class="co"># 🔍 Find / 📥 Download</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fgczQuartoTemplate<span class="sc">::</span><span class="fu">fgcz_render</span>(<span class="st">"my_report.qmd"</span>, <span class="at">buttons =</span> <span class="st">"search"</span>) <span class="co"># 🔍 Find only</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Done. ✅ (<code>fgcz_render</code> copies <code>_metadata.yml</code>, <code>fgcz.scss</code>, <code>fgcz_header_quarto.html</code>, and <code>fgcz-plot-finder.html</code> next to the <code>.qmd</code>, then calls <code>quarto::quarto_render()</code>. The toolbar is staged either way but only wired in when enabled. <code>TRUE</code> and <code>FALSE</code> remain supported; button names allow finer selection.)</p>
 <p>If you want to separate these two steps, copy the assets first and render yourself:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>input <span class="ot">&lt;-</span> <span class="st">"my_report.qmd"</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fgczquartotemplate<span class="sc">::</span><span class="fu">fgcz_copy_assets</span>(input)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fgczQuartoTemplate<span class="sc">::</span><span class="fu">fgcz_copy_assets</span>(input)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>quarto<span class="sc">::</span><span class="fu">quarto_render</span>(input)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>fgcz_copy_assets()</code> accepts either the <code>.qmd</code> path above, or an existing directory. These two calls are equivalent:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fgczquartotemplate<span class="sc">::</span><span class="fu">fgcz_copy_assets</span>(input)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fgczquartotemplate<span class="sc">::</span><span class="fu">fgcz_copy_assets</span>(<span class="fu">dirname</span>(<span class="fu">normalizePath</span>(input)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fgczQuartoTemplate<span class="sc">::</span><span class="fu">fgcz_copy_assets</span>(input)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fgczQuartoTemplate<span class="sc">::</span><span class="fu">fgcz_copy_assets</span>(<span class="fu">dirname</span>(<span class="fu">normalizePath</span>(input)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 <section id="which-one" class="level2">
@@ -336,13 +336,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td>YAML</td>
-<td><code>format: fgczquartotemplate-html</code></td>
+<td><code>format: fgczQuartoTemplate-html</code></td>
 <td>nothing</td>
 </tr>
 <tr class="odd">
 <td>Render</td>
 <td><code>quarto render</code></td>
-<td><code>fgczquartotemplate::fgcz_render()</code></td>
+<td><code>fgczQuartoTemplate::fgcz_render()</code></td>
 </tr>
 <tr class="even">
 <td>Use it when</td>
@@ -378,7 +378,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong><code>inst/quarto/</code> is the only place you hand-edit.</strong> Everything else is generated from it by <code>Rscript data-raw/sync_assets.R</code> (or <code>make sync</code>):
 <ul>
 <li><code>fgcz.scss</code>, <code>fgcz_header_quarto.html</code>, <code>fgcz-plot-finder.html</code>, <code>fgcz-buttons.lua</code> — byte-copied into <code>_extensions/</code> and <code>vignettes/_extensions/</code>.</li>
-<li><code>_extensions/fgczquartotemplate/_extension.yml</code> (nested, Way 1) — <strong>built</strong> from <code>inst/quarto/_metadata.yml</code> (flat, Way 2); edit the format options in <code>_metadata.yml</code> only. <code>version</code> is stamped from <code>DESCRIPTION</code>.</li>
+<li><code>_extensions/fgczQuartoTemplate/_extension.yml</code> (nested, Way 1) — <strong>built</strong> from <code>inst/quarto/_metadata.yml</code> (flat, Way 2); edit the format options in <code>_metadata.yml</code> only. <code>version</code> is stamped from <code>DESCRIPTION</code>.</li>
 <li><code>vignettes/example-report.qmd</code> — <strong>built</strong> from <code>inst/quarto/template.qmd</code> (same body, vignette header swapped in); edit the report in <code>template.qmd</code>.</li>
 </ul></li>
 <li><strong>Install the hook once per clone:</strong> <code>make hooks</code> (or <code>git config core.hooksPath .githooks</code>). It runs the sync and re-stages the generated files on every commit, so editing <code>inst/quarto/</code> is enough. CI (<code>.github/workflows/altdoc.yml</code>) re-runs the sync and fails on any drift as a backstop.</li>
