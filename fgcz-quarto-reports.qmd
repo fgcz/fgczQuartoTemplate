@@ -1,0 +1,19 @@
+---
+title: "FGCZ Quarto reports authoring guide"
+---
+
+[View the source skill file on GitHub](https://github.com/fgcz/fgczQuartoTemplate/blob/main/skills/fgcz-quarto-reports/SKILL.md).
+
+```{r}
+#| echo: false
+#| results: asis
+skill <- readLines(
+  "../skills/fgcz-quarto-reports/SKILL.md",
+  warn = FALSE
+)
+frontmatter <- which(skill == "---")
+stopifnot(length(frontmatter) >= 2L)
+body <- skill[-seq_len(frontmatter[[2]])]
+title_line <- grep("^# ", body)[[1]]
+cat(body[-title_line], sep = "\n")
+```
