@@ -32,7 +32,7 @@ package `README.md`; this is the short version.
 **Way 1 — Quarto extension (render with the `quarto` CLI, no R).**
 Install once per project, then opt in from the header:
 ```sh
-quarto add prolfqua/fgczquartotemplate
+quarto add fgcz/fgczQuartoTemplate
 ```
 ```yaml
 ---
@@ -43,7 +43,7 @@ format: fgczquartotemplate-html
 Render with plain `quarto render my_report.qmd`.
 
 **Way 2 — R helper (render from R, e.g. inside a package like prolfquapp).**
-Install once (`remotes::install_github("prolfqua/fgczquartotemplate")`), keep the
+Install once (`remotes::install_github("fgcz/fgczQuartoTemplate")`), keep the
 report header free of any `format:` line, and render with:
 ```r
 fgczquartotemplate::fgcz_render("my_report.qmd")

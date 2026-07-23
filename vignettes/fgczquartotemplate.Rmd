@@ -23,7 +23,7 @@ look and feel. A theme change becomes a single package bump instead of an edit
 in every downstream package.
 
 **See the layout live:**
-<https://prolfqua.github.io/fgczquartotemplate/vignettes/example-report.html> — a
+<https://fgcz.github.io/fgczQuartoTemplate/vignettes/example-report.html> — a
 full report rendered with the extension (tabsets, figure + callout rows, nesting,
 lightbox). The documentation site is built with
 [altdoc](https://altdoc.etiennebacher.com/), which renders that report through
@@ -32,9 +32,9 @@ locally (pkgdown, by contrast, mangles Quarto tabsets). This article explains ho
 to *use* the templates.
 
 **Author reports consistently:** read the
-[FGCZ Quarto reports authoring guide](https://prolfqua.github.io/fgczquartotemplate/fgcz-quarto-reports.html),
+[FGCZ Quarto reports authoring guide](https://fgcz.github.io/fgczQuartoTemplate/fgcz-quarto-reports.html),
 which altdoc publishes directly from the
-[skill source file](https://github.com/prolfqua/fgczquartotemplate/blob/main/skills/fgcz-quarto-reports/SKILL.md).
+[skill source file](https://github.com/fgcz/fgczQuartoTemplate/blob/main/skills/fgcz-quarto-reports/SKILL.md).
 It defines the required Overview and Session Info structure, tab-depth rules,
 figure layout, caption guidance, and provenance conventions.
 
@@ -43,7 +43,7 @@ figure layout, caption guidance, and provenance conventions.
 **Way 1 — Quarto extension** (plain `quarto render`, no R). Once per project:
 
 ```sh
-quarto add prolfqua/fgczquartotemplate
+quarto add fgcz/fgczQuartoTemplate
 ```
 
 then in the report header:
@@ -165,7 +165,7 @@ an unknown name stops the render with a validation error.
 ## Using it from a downstream package
 
 1. Add `fgczquartotemplate` to `Imports` (and, since it is distributed on
-   GitHub, `Remotes: prolfqua/fgczquartotemplate`).
+   GitHub, `Remotes: fgcz/fgczQuartoTemplate`).
 2. Replace `quarto::quarto_render()` calls with
    `fgczquartotemplate::fgcz_render()`.
 3. Leave report front matter free of any styling reference — the staged

@@ -1,6 +1,6 @@
 ## ─────────────────────────────────────────────────────────────
 ## FGCZ Quarto format extension
-## Installed into a project with:  quarto add prolfqua/fgczquartotemplate
+## Installed into a project with:  quarto add fgcz/fgczQuartoTemplate
 ## Reports then declare:           format: fgczquartotemplate-html
 ##
 ## The format options below mirror inst/quarto/_metadata.yml (the Model-A

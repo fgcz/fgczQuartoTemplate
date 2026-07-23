@@ -5,7 +5,7 @@ reusable across `ezRun`, `prolfqua`, `prolfquapp`, …. Reports can opt in to a
 top-right toolbar — **🔍 Find** any figure or table in a graphical table of
 contents, or **📥 Download** the plots as a ZIP.
 
-**👉 [See the documentation site](https://prolfqua.github.io/fgczquartotemplate/)** — including a live example report with the real layout, tabsets, figures, and the Find / Download toolbar.
+**👉 [See the documentation site](https://fgcz.github.io/fgczQuartoTemplate/)** — including a live example report with the real layout, tabsets, figures, and the Find / Download toolbar.
 
 There are **two ways** to use it. Pick one.
 
@@ -18,7 +18,7 @@ Best when you render with the `quarto` CLI.
 **Step 1.** In your project, once:
 
 ```sh
-quarto add prolfqua/fgczquartotemplate
+quarto add fgcz/fgczQuartoTemplate
 ```
 
 This creates `_extensions/fgczquartotemplate/` in the project. Without that
@@ -65,7 +65,7 @@ Best when you render from R (e.g. inside a package). **No `format:` line, no `qu
 **Step 1.** Install:
 
 ```r
-remotes::install_github("prolfqua/fgczquartotemplate")
+remotes::install_github("fgcz/fgczQuartoTemplate")
 ```
 
 **Step 2.** Your report's YAML header — just this, nothing FGCZ-specific:

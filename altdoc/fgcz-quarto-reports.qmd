@@ -2,7 +2,7 @@
 title: "FGCZ Quarto reports authoring guide"
 ---
 
-[View the source skill file on GitHub](https://github.com/prolfqua/fgczquartotemplate/blob/main/skills/fgcz-quarto-reports/SKILL.md).
+[View the source skill file on GitHub](https://github.com/fgcz/fgczQuartoTemplate/blob/main/skills/fgcz-quarto-reports/SKILL.md).
 
 ```{r}
 #| echo: false
