@@ -77,7 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-d88d70f6c7df7b9e20df5ff689ffded0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7db87aff3d14028862e8d47add95a991.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -375,8 +375,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="for-maintainers" class="level2">
 <h2 class="anchored" data-anchor-id="for-maintainers">For maintainers</h2>
 <ul>
-<li>Edit <code>fgcz.scss</code>, <code>fgcz_header_quarto.html</code>, <code>fgcz-plot-finder.html</code>, and <code>fgcz-buttons.lua</code> in <code>inst/quarto/</code>, then run <code>Rscript data-raw/sync_assets.R</code> to mirror them into <code>_extensions/</code> and <code>vignettes/_extensions/</code>.</li>
-<li>Keep <code>inst/quarto/_metadata.yml</code> and <code>_extensions/fgczquartotemplate/_extension.yml</code> in step (same format options, one flat / one nested under <code>contributes</code>).</li>
+<li><strong><code>inst/quarto/</code> is the only place you hand-edit.</strong> Everything else is generated from it by <code>Rscript data-raw/sync_assets.R</code> (or <code>make sync</code>):
+<ul>
+<li><code>fgcz.scss</code>, <code>fgcz_header_quarto.html</code>, <code>fgcz-plot-finder.html</code>, <code>fgcz-buttons.lua</code> — byte-copied into <code>_extensions/</code> and <code>vignettes/_extensions/</code>.</li>
+<li><code>_extensions/fgczquartotemplate/_extension.yml</code> (nested, Way 1) — <strong>built</strong> from <code>inst/quarto/_metadata.yml</code> (flat, Way 2); edit the format options in <code>_metadata.yml</code> only. <code>version</code> is stamped from <code>DESCRIPTION</code>.</li>
+<li><code>vignettes/example-report.qmd</code> — <strong>built</strong> from <code>inst/quarto/template.qmd</code> (same body, vignette header swapped in); edit the report in <code>template.qmd</code>.</li>
+</ul></li>
+<li><strong>Install the hook once per clone:</strong> <code>make hooks</code> (or <code>git config core.hooksPath .githooks</code>). It runs the sync and re-stages the generated files on every commit, so editing <code>inst/quarto/</code> is enough. CI (<code>.github/workflows/altdoc.yml</code>) re-runs the sync and fails on any drift as a backstop.</li>
 <li>The live example report is the <code>vignettes/example-report.qmd</code> vignette; the documentation site (built with <code>altdoc</code> — <code>make site</code>) renders it through Quarto with its tabsets intact.</li>
 </ul>
 </section>
