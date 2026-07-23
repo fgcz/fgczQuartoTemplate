@@ -144,6 +144,7 @@ needs the Quarto CLI, so the call below is shown but not run in this vignette:
 fgcz_render(qmd, execute_params = list(reportTitle = "My analysis"))
 fgcz_render(qmd, buttons = TRUE) # both toolbar buttons; FALSE remains the default
 fgcz_render(qmd, buttons = "search") # Find only; "download" selects Download
+fgcz_render(qmd, colour = TRUE, number = TRUE) # per-level tab colours + numbers
 ```
 
 That is the single call downstream packages use in place of a bare
@@ -161,6 +162,19 @@ fgcz-buttons: [search, download]
 
 Use a single name for one button. Omitting `fgcz-buttons` shows both controls;
 an unknown name stops the render with a validation error.
+
+Two further opt-in tab features, both off by default and independent of each
+other, are set as top-level YAML keys (or via `fgcz_render(colour =, number =)`
+from R):
+
+````yaml
+fgcz-colour: true   # per-nesting-level tab palette (deep blue → indigo)
+fgcz-number: true   # hierarchical tab numbers: 1, 1.1, 1.1.1 …
+````
+
+`fgcz-colour` replaces the uniform grey folder tabs with one hue per nesting
+level, so depth reads as colour; `fgcz-number` prefixes every tab label with its
+hierarchical position, counting across sibling tabsets at the same depth.
 
 ## Using it from a downstream package
 

@@ -8,6 +8,9 @@
   Quarto extension, or as `fgcz_render(colour = TRUE, number = TRUE)` from R.
   Both restore behaviour from the older `fgczReportTemplates` package. Reports
   that ignore them are unchanged.
+* The 📥 Download ZIP now bundles two whole-report extras alongside the checked
+  plots — the `.qmd` source and a standalone `.html` copy — and the ZIP is
+  buildable whenever any plot or any extra is ticked.
 
 # fgczQuartoTemplate 0.2.0
 
