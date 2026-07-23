@@ -1,20 +1,37 @@
-## Keep the two distribution channels consistent.
+## Regenerate every derived copy from the single source of truth: inst/quarto/.
 ##
-## Single source of truth: inst/quarto/
-##   - Model A (R): fgcz_copy_assets() stages inst/quarto/{_metadata.yml, scss, header}
-##   - Model B (Quarto extension): _extensions/fgczquartotemplate/ ships scss + header
-##                                 and _extension.yml (same options, nested)
+## The template ships through two channels (see README "Way 1 / Way 2"):
+##   - Way 1, the Quarto extension (`quarto add ...`): reads
+##     _extensions/fgczquartotemplate/ from the repo root.
+##   - Way 2, the R helper (`fgcz_render()`): stages inst/quarto/ next to a report.
+## Quarto cannot read assets out of an installed R package, so both trees must be
+## committed. To avoid hand-editing the same thing twice, ONLY inst/quarto/ is
+## edited by hand; this script regenerates everything else deterministically:
 ##
-## This script (1) copies fgcz.scss + fgcz_header_quarto.html from inst/quarto/
-## into the extension, and (2) asserts the FORMAT OPTIONS in inst/quarto/_metadata.yml
-## match those under contributes.formats.html in the extension's _extension.yml.
-## Run it after editing any of those files, then commit. CI re-runs it and fails
-## on any git change or option mismatch.
+##   1. copies the byte-identical shared assets into _extensions/;
+##   2. BUILDS _extensions/.../_extension.yml (nested) from inst/quarto/_metadata.yml
+##      (flat) -- so the format options have one source, not two shapes;
+##   3. mirrors the finished extension into vignettes/_extensions/;
+##   4. mirrors the visual abstract into vignettes/;
+##   5. BUILDS vignettes/example-report.qmd from inst/quarto/template.qmd by
+##      swapping only the YAML header -- so the docs-site example IS the template.
+##
+## Run it after editing anything in inst/quarto/, then commit. CI re-runs it and
+## fails on any resulting `git diff`; the pre-commit hook (.githooks/pre-commit)
+## runs it and re-stages the generated files so you cannot forget.
 ##
 ##   Rscript data-raw/sync_assets.R
 
 dest_dir <- file.path("_extensions", "fgczquartotemplate")
 stopifnot(dir.exists(dest_dir), dir.exists(file.path("inst", "quarto")))
+
+## Byte-compare two files in full (no size cap).
+same_bytes <- function(a, b) {
+  identical(
+    readBin(a, "raw", n = file.size(a)),
+    readBin(b, "raw", n = file.size(b))
+  )
+}
 
 ## (1) Sync the byte-identical shared files ----------------------------------
 shared <- c(
@@ -30,83 +47,95 @@ if (!all(ok)) {
   stop("Failed to sync: ", paste(shared[!ok], collapse = ", "))
 }
 for (f in shared) {
-  a <- readBin(file.path("inst", "quarto", f), "raw", n = 1e7)
-  b <- readBin(file.path(dest_dir, f), "raw", n = 1e7)
-  if (!identical(a, b)) stop("Out of sync after copy: ", f)
-}
-
-## (2) Assert the format options agree between the two channels ----------------
-if (!requireNamespace("yaml", quietly = TRUE)) {
-  stop("Package 'yaml' is required to check _metadata.yml vs _extension.yml.")
-}
-meta <- yaml::read_yaml(file.path("inst", "quarto", "_metadata.yml"))
-ext <- yaml::read_yaml(file.path(dest_dir, "_extension.yml"))
-
-# _metadata.yml keeps execute/knitr/crossref/lightbox at the top level (applied
-# document-wide); the extension nests them inside the contributed html format.
-meta_html <- meta$format$html
-for (k in c("execute", "knitr", "crossref", "lightbox")) {
-  meta_html[[k]] <- meta[[k]]
-}
-ext_html <- ext$contributes$formats$html
-
-# `filters` is extension-only: the R helper configures the staged toolbar
-# directly, while the Quarto extension reads `fgcz-buttons:` from report YAML.
-ext_html[["filters"]] <- NULL
-
-# Order-independent deep comparison of the two option trees.
-norm <- function(x) {
-  if (is.list(x)) {
-    nm <- names(x)
-    if (!is.null(nm)) {
-      x <- x[order(nm)]
-    }
-    lapply(x, norm)
-  } else {
-    x
+  if (!same_bytes(file.path("inst", "quarto", f), file.path(dest_dir, f))) {
+    stop("Out of sync after copy: ", f)
   }
 }
-if (!identical(norm(meta_html), norm(ext_html))) {
-  only_meta <- setdiff(names(meta_html), names(ext_html))
-  only_ext <- setdiff(names(ext_html), names(meta_html))
-  common <- intersect(names(meta_html), names(ext_html))
-  diffkeys <- common[
-    !vapply(
-      common,
-      function(k) identical(norm(meta_html[[k]]), norm(ext_html[[k]])),
-      logical(1)
-    )
-  ]
-  stop(
-    "Format options differ between inst/quarto/_metadata.yml and ",
-    dest_dir,
-    "/_extension.yml.\n",
-    if (length(only_meta)) {
-      paste0(
-        "  only in _metadata.yml: ",
-        paste(only_meta, collapse = ", "),
-        "\n"
-      )
-    },
-    if (length(only_ext)) {
-      paste0(
-        "  only in _extension.yml: ",
-        paste(only_ext, collapse = ", "),
-        "\n"
-      )
-    },
-    if (length(diffkeys)) {
-      paste0("  differing values for: ", paste(diffkeys, collapse = ", "), "\n")
-    },
-    "Reconcile them by hand so both channels render identically."
+
+## (2) Build _extension.yml from _metadata.yml -------------------------------
+## _metadata.yml is the single config source. It keeps `format.html` plus the
+## document-wide `execute`/`knitr`/`crossref`/`lightbox` blocks flat; the
+## extension needs the same options nested under `contributes.formats.html`,
+## plus a static header and the buttons filter. We copy the option *lines
+## verbatim* (only re-indenting), rather than round-tripping through a YAML
+## serializer: as.yaml() would rewrite booleans as `yes`/`no` (which Quarto's
+## YAML-1.2 parser reads as strings, not true/false) and drop quoting like
+## "40%". Copying the source lines keeps every value byte-faithful and makes the
+## output deterministic across R / yaml versions, so the CI diff stays stable.
+build_extension_yml <- function(meta_lines, version) {
+  indent_of <- function(s) attr(regexpr("^ *", s), "match.length")
+  drop_line <- function(s) grepl("^\\s*(#.*)?$", s) # blank or comment-only
+
+  # (a) the format.html options: every line indented under `  html:`, up to the
+  #     next top-level (indent 0) key. Comments/blanks dropped; re-indent +2
+  #     (base 4 -> base 6) to sit under contributes.formats.html.
+  html_at <- match(TRUE, grepl("^  html:[[:space:]]*$", meta_lines))
+  if (is.na(html_at)) {
+    stop("Expected a `  html:` line under `format:` in _metadata.yml.")
+  }
+  after <- meta_lines[(html_at + 1):length(meta_lines)]
+  end <- which(!drop_line(after) & indent_of(after) == 0)
+  html_block <- if (length(end)) after[seq_len(end[1] - 1)] else after
+  html_block <- paste0("  ", html_block[!drop_line(html_block)])
+
+  # (b) the document-wide blocks, re-indented from base 0 to base 6 (+6).
+  fold_top <- function(key) {
+    at <- match(TRUE, grepl(paste0("^", key, ":"), meta_lines))
+    if (is.na(at)) stop("Expected top-level `", key, ":` in _metadata.yml.")
+    block <- meta_lines[at]
+    j <- at + 1L
+    while (
+      j <= length(meta_lines) &&
+        (drop_line(meta_lines[j]) || indent_of(meta_lines[j]) > 0)
+    ) {
+      if (!drop_line(meta_lines[j])) block <- c(block, meta_lines[j])
+      j <- j + 1L
+    }
+    paste0("      ", block)
+  }
+  folded <- unlist(
+    lapply(c("execute", "knitr", "crossref", "lightbox"), fold_top),
+    use.names = FALSE
+  )
+
+  c(
+    "## ─────────────────────────────────────────────────────────────",
+    "## FGCZ Quarto format extension  —  GENERATED FILE, DO NOT EDIT.",
+    "## Regenerate with:  Rscript data-raw/sync_assets.R",
+    "## Source of truth:  inst/quarto/_metadata.yml (flat) → nested here.",
+    "## Installed with:   quarto add fgcz/fgczQuartoTemplate  (README: Way 1)",
+    "## Reports declare:  format: fgczquartotemplate-html",
+    "## `version` is stamped from DESCRIPTION.",
+    "## ─────────────────────────────────────────────────────────────",
+    "title: FGCZ Quarto Template",
+    "author: FGCZ",
+    paste0("version: ", version),
+    'quarto-required: ">=1.4.0"',
+    "contributes:",
+    "  formats:",
+    "    html:",
+    html_block,
+    "      # fgcz-buttons.lua reads an optional top-level `fgcz-buttons:`",
+    "      # selection and passes it to the toolbar. The toolbar itself",
+    "      # (fgcz-plot-finder.html) is opt-in: add per report",
+    "      #   include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html",
+    "      filters:",
+    "        - fgcz-buttons.lua",
+    folded
   )
 }
 
+meta_lines <- readLines(file.path("inst", "quarto", "_metadata.yml"), warn = FALSE)
+version <- unname(read.dcf("DESCRIPTION", fields = "Version")[1, 1])
+writeLines(
+  build_extension_yml(meta_lines, version),
+  file.path(dest_dir, "_extension.yml")
+)
+
 ## (3) Mirror the finished extension into vignettes/ -------------------------
-## The packaged demo vignette (vignettes/_example-report.qmd) renders with
+## The packaged demo vignette (vignettes/example-report.qmd) renders with
 ## `format: fgczquartotemplate-html`, so it needs the extension next to it at
-## R CMD build time. Keep inst/quarto/ as the single source: this mirrors the
-## already-synced _extensions/ tree into vignettes/_extensions/ verbatim.
+## R CMD build time. This mirrors the already-synced _extensions/ tree verbatim.
 vig_ext <- file.path("vignettes", "_extensions", "fgczquartotemplate")
 dir.create(vig_ext, recursive = TRUE, showWarnings = FALSE)
 ext_files <- list.files(dest_dir, full.names = TRUE)
@@ -115,9 +144,9 @@ if (!all(ok3)) {
   stop("Failed to mirror extension into ", vig_ext)
 }
 for (f in basename(ext_files)) {
-  a <- readBin(file.path(dest_dir, f), "raw", n = 1e7)
-  b <- readBin(file.path(vig_ext, f), "raw", n = 1e7)
-  if (!identical(a, b)) stop("Out of sync after mirror: vignettes copy of ", f)
+  if (!same_bytes(file.path(dest_dir, f), file.path(vig_ext, f))) {
+    stop("Out of sync after mirror: vignettes copy of ", f)
+  }
 }
 
 ## The vignette and copied starter use the same visual abstract. Keep its
@@ -128,17 +157,42 @@ overview_vignette <- file.path("vignettes", overview)
 if (!file.copy(overview_src, overview_vignette, overwrite = TRUE)) {
   stop("Failed to mirror ", overview, " into vignettes/.")
 }
-if (
-  !identical(
-    readBin(overview_src, "raw", n = 1e7),
-    readBin(overview_vignette, "raw", n = 1e7)
-  )
-) {
+if (!same_bytes(overview_src, overview_vignette)) {
   stop("Out of sync after mirror: vignettes copy of ", overview)
 }
 
-## The required report shell is part of the documented contract. Validate both
-## author-facing examples so later edits cannot silently drift from the skill.
+## (4) Build vignettes/example-report.qmd from template.qmd -------------------
+## The two reports differ ONLY in their YAML header: template.qmd carries a
+## `params`/`title` header for `fgcz_render()`, the vignette carries the
+## `format: fgczquartotemplate-html` + `fgcz-buttons:` + VignetteEngine header.
+## The ~450-line body is identical. We copy template.qmd's body verbatim and
+## swap in the vignette header, so the docs-site example is provably the
+## template and the CI diff-gate protects the shared body for free.
+vignette_header <- c(
+  "---",
+  'title: "FGCZ tabset layout example"',
+  "format:",
+  "  fgczquartotemplate-html:",
+  "    include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html",
+  "fgcz-buttons: [search, download]",
+  "vignette: >",
+  "  %\\VignetteIndexEntry{Example FGCZ tabset report}",
+  "  %\\VignetteEngine{quarto::format}",
+  "  %\\VignetteEncoding{UTF-8}",
+  "---"
+)
+tpl <- readLines(file.path("inst", "quarto", "template.qmd"), warn = FALSE)
+fences <- which(tpl == "---")
+if (length(fences) < 2 || fences[1] != 1L) {
+  stop("inst/quarto/template.qmd must open with a `---` YAML header.")
+}
+body <- tpl[(fences[2] + 1):length(tpl)]
+writeLines(
+  c(vignette_header, body),
+  file.path("vignettes", "example-report.qmd")
+)
+
+## (5) Belt-and-braces: both author-facing examples keep the required shell ----
 validate_report_layout <- function(path) {
   qmd <- trimws(readLines(path, warn = FALSE))
   top_level <- grep("^# ", qmd, value = TRUE)
@@ -176,6 +230,6 @@ invisible(lapply(
 message(
   "OK: synced ",
   paste(shared, collapse = ", "),
-  ", mirrored the extension and visual abstract into vignettes/, and verified ",
-  "_metadata.yml <-> _extension.yml format options match."
+  "; built _extension.yml from _metadata.yml and example-report.qmd from ",
+  "template.qmd; mirrored the extension and visual abstract into vignettes/."
 )

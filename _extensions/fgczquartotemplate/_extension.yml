@@ -1,23 +1,22 @@
 ## ─────────────────────────────────────────────────────────────
-## FGCZ Quarto format extension
-## Installed into a project with:  quarto add fgcz/fgczQuartoTemplate
-## Reports then declare:           format: fgczquartotemplate-html
-##
-## The format options below mirror inst/quarto/_metadata.yml (the Model-A
-## "directory metadata" variant). fgcz.scss and fgcz_header_quarto.html are
-## kept byte-identical to inst/quarto/ by data-raw/sync_assets.R.
+## FGCZ Quarto format extension  —  GENERATED FILE, DO NOT EDIT.
+## Regenerate with:  Rscript data-raw/sync_assets.R
+## Source of truth:  inst/quarto/_metadata.yml (flat) → nested here.
+## Installed with:   quarto add fgcz/fgczQuartoTemplate  (README: Way 1)
+## Reports declare:  format: fgczquartotemplate-html
+## `version` is stamped from DESCRIPTION.
 ## ─────────────────────────────────────────────────────────────
 title: FGCZ Quarto Template
 author: FGCZ
-version: 0.1.0
+version: 0.2.0
 quarto-required: ">=1.4.0"
 contributes:
   formats:
     html:
       embed-resources: true
       self-contained: true
-      page-layout: full
       smooth-scroll: true
+      page-layout: full
       code-fold: true
       code-tools: true
       theme: [spacelab, fgcz.scss]
@@ -26,16 +25,14 @@ contributes:
         sidebar-width: 250px
         margin-width: 100px
       include-in-header: fgcz_header_quarto.html
-      # Reads an optional top-level `fgcz-buttons:` selection and passes it to
-      # the toolbar. Invalid names fail the render with a clear error.
-      filters:
-        - fgcz-buttons.lua
-      # Toolbar (fgcz-plot-finder.html) is opt-in; see inst/quarto/_metadata.yml.
-      # Enable per report with:
-      #   include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html
-      #   fgcz-buttons: search      # optional; omit to show both buttons
       fig-dpi: 300
       fig-align: left
+      # fgcz-buttons.lua reads an optional top-level `fgcz-buttons:`
+      # selection and passes it to the toolbar. The toolbar itself
+      # (fgcz-plot-finder.html) is opt-in: add per report
+      #   include-after-body: _extensions/fgczquartotemplate/fgcz-plot-finder.html
+      filters:
+        - fgcz-buttons.lua
       execute:
         echo: false
         warning: false

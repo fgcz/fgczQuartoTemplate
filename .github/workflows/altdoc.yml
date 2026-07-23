@@ -36,9 +36,10 @@ jobs:
       - name: Verify extension assets are in sync
         run: |
           Rscript data-raw/sync_assets.R
-          if [ -n "$(git status --porcelain -- _extensions vignettes/_extensions)" ]; then
-            echo "::error::extension out of sync with inst/quarto — run data-raw/sync_assets.R and commit"
-            git --no-pager diff -- _extensions vignettes/_extensions
+          paths="_extensions vignettes/_extensions vignettes/example-report.qmd vignettes/fgcz-report-overview.svg"
+          if [ -n "$(git status --porcelain -- $paths)" ]; then
+            echo "::error::generated files out of sync with inst/quarto — run data-raw/sync_assets.R and commit"
+            git --no-pager diff -- $paths
             exit 1
           fi
 

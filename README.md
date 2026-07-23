@@ -145,12 +145,21 @@ sit next to the `.qmd` at render time. Two clean ways to get them there:
 
 ## For maintainers
 
-- Edit `fgcz.scss`, `fgcz_header_quarto.html`, `fgcz-plot-finder.html`, and
-  `fgcz-buttons.lua` in
-  `inst/quarto/`, then run `Rscript data-raw/sync_assets.R` to mirror them into
-  `_extensions/` and `vignettes/_extensions/`.
-- Keep `inst/quarto/_metadata.yml` and `_extensions/fgczquartotemplate/_extension.yml`
-  in step (same format options, one flat / one nested under `contributes`).
+- **`inst/quarto/` is the only place you hand-edit.** Everything else is
+  generated from it by `Rscript data-raw/sync_assets.R` (or `make sync`):
+  - `fgcz.scss`, `fgcz_header_quarto.html`, `fgcz-plot-finder.html`,
+    `fgcz-buttons.lua` — byte-copied into `_extensions/` and
+    `vignettes/_extensions/`.
+  - `_extensions/fgczquartotemplate/_extension.yml` (nested, Way 1) — **built**
+    from `inst/quarto/_metadata.yml` (flat, Way 2); edit the format options in
+    `_metadata.yml` only. `version` is stamped from `DESCRIPTION`.
+  - `vignettes/example-report.qmd` — **built** from `inst/quarto/template.qmd`
+    (same body, vignette header swapped in); edit the report in `template.qmd`.
+- **Install the hook once per clone:** `make hooks` (or
+  `git config core.hooksPath .githooks`). It runs the sync and re-stages the
+  generated files on every commit, so editing `inst/quarto/` is enough. CI
+  (`.github/workflows/altdoc.yml`) re-runs the sync and fails on any drift as a
+  backstop.
 - The live example report is the `vignettes/example-report.qmd` vignette; the
   documentation site (built with `altdoc` — `make site`) renders it through Quarto
   with its tabsets intact.

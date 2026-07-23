@@ -203,6 +203,10 @@ fgcz_render <- function(input, buttons = FALSE, ...) {
     stop("Package 'quarto' is required to render reports.")
   }
   stopifnot(file.exists(input))
+  # Re-stages a pristine fgcz-plot-finder.html every render. Load-bearing: the
+  # default overwrite = TRUE restores the `__FGCZ_BUTTONS__` placeholder that
+  # .fgcz_set_toolbar_buttons() consumes below, so a second render with a
+  # different `buttons` selection is not stuck with the first render's choice.
   fgcz_copy_assets(input)
   dots <- list(...)
   if (length(buttons)) {

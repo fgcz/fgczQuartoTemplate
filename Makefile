@@ -32,14 +32,15 @@ LINT_CMD = Rscript -e "lintr::lint_package()"
 SITE_CMD = Rscript -e "altdoc::render_docs(freeze = FALSE)"
 NEW_VERSION_CMD = Rscript -e "d <- read.dcf('DESCRIPTION'); old <- d[1, 'Version']; parts <- as.integer(strsplit(old, '.', fixed = TRUE)[[1]]); if (length(parts) < 3) parts <- c(parts, rep(0L, 3L - length(parts))); parts[3] <- parts[3] + 1L; new <- paste(parts, collapse = '.'); x <- readLines('DESCRIPTION'); x <- sub('^Version: .*', paste0('Version: ', new), x); writeLines(x, 'DESCRIPTION'); cat(new)"
 
-.PHONY: all help document sync build build-vignettes vignettes install test check-fast check-bioc check coverage lint format site clean new-version new_version vignette
+.PHONY: all help document sync hooks build build-vignettes vignettes install test check-fast check-bioc check coverage lint format site clean new-version new_version vignette
 
 all: check
 
 help:
 	@echo "$(PKG_NAME) development targets:"
 	@echo "  make document        - generate roxygen2 docs"
-	@echo "  make sync            - mirror inst/quarto assets into _extensions/ and vignettes/_extensions/, verify _metadata.yml <-> _extension.yml agree"
+	@echo "  make sync            - regenerate _extensions/, vignettes/_extensions/, _extension.yml and example-report.qmd from inst/quarto/"
+	@echo "  make hooks           - install the pre-commit hook that runs sync automatically"
 	@echo "  make build           - build source tarball with vignettes"
 	@echo "  make build-vignettes - build vignettes into inst/doc"
 	@echo "  make vignettes       - alias for build-vignettes"
@@ -59,9 +60,14 @@ help:
 document:
 	$(DOCUMENT_CMD)
 
-# DIVERGE: single source of truth is inst/quarto/; mirror it and fail on drift.
+# DIVERGE: single source of truth is inst/quarto/; regenerate every derived copy.
 sync:
 	$(SYNC_CMD)
+
+# Point git at the versioned hook dir so `sync` runs on every commit.
+hooks:
+	git config core.hooksPath .githooks
+	@echo "Installed pre-commit hook (core.hooksPath = .githooks)."
 
 build: document sync
 	$(BUILD_CMD)

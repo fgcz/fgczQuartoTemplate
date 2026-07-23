@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Keep the generated copies in step with inst/quarto/ on every commit.
+#
+# inst/quarto/ is the single hand-edited source; data-raw/sync_assets.R
+# regenerates _extensions/, vignettes/_extensions/, vignettes/example-report.qmd
+# and the mirrored visual abstract from it. This hook runs the sync and
+# re-stages the generated files, so editing inst/quarto/ and committing is
+# enough — you cannot forget to propagate. CI re-runs the same script as a
+# backstop.
+#
+# Install once per clone:  git config core.hooksPath .githooks   (or `make hooks`)
+
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+if ! command -v Rscript >/dev/null 2>&1; then
+  echo "pre-commit: Rscript not found; skipping asset sync." >&2
+  echo "pre-commit: run 'Rscript data-raw/sync_assets.R' manually before pushing." >&2
+  exit 0
+fi
+
+Rscript data-raw/sync_assets.R
+
+git add -- \
+  _extensions \
+  vignettes/_extensions \
+  vignettes/example-report.qmd \
+  vignettes/fgcz-report-overview.svg
