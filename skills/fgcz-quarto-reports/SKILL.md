@@ -178,6 +178,14 @@ long page does not — split that across tabs instead.
   with a side callout.
 - **Always give a figure a `#| fig-cap:`.** Captions are what the Find toolbar
   indexes and what makes cross-references work.
+- **Mind `fig-dpi` on figure-heavy reports.** The default is `fig-dpi: 300`, which
+  is right for most reports. But because the template is self-contained, every
+  figure is embedded, and a report with very many figures can balloon into the
+  hundreds of MB — no fun to share or load. In those cases drop to `fig-dpi: 150`
+  (the old ezRun default). Typical culprits: many-sample runs (> 50 samples, each
+  with a repeated per-sample figure), custom reports with many figures, or single
+  heavy figures (e.g. a UMAP of 100k cells). Set it document-wide under
+  `execute:` in the YAML, or per-chunk with `#| fig-dpi: 150`.
 
 ## Figure captions are searchable scientific labels
 
