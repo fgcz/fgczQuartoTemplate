@@ -112,10 +112,15 @@ test_that("feature flags map to the classes they add, in canonical order", {
   expect_identical(validate(colour = FALSE, number = FALSE), character(0))
   expect_identical(validate(colour = TRUE, number = FALSE), "fgcz-colour")
   expect_identical(validate(colour = FALSE, number = TRUE), "fgcz-number")
+  expect_identical(validate(full_width = TRUE), "fgcz-full-width")
   # Canonical order, not argument order.
   expect_identical(
     validate(number = TRUE, colour = TRUE),
     c("fgcz-colour", "fgcz-number")
+  )
+  expect_identical(
+    validate(full_width = TRUE, number = TRUE, colour = TRUE),
+    c("fgcz-colour", "fgcz-number", "fgcz-full-width")
   )
 })
 

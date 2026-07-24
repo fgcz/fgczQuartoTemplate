@@ -8,10 +8,11 @@
 -- The toolbar remains opt-in through `include-after-body`. If this key is
 -- omitted, an included toolbar shows both buttons.
 --
--- It can also switch on the two optional tab features, both off by default:
+-- It can also switch on the optional layout/tab features, all off by default:
 --
---   fgcz-colour: true   per-nesting-level tab palette (see fgcz.scss)
---   fgcz-number: true   hierarchical tab numbers 1, 1.1, 1.1.1 …
+--   fgcz-colour: true      per-nesting-level tab palette (see fgcz.scss)
+--   fgcz-number: true      hierarchical tab numbers 1, 1.1, 1.1.1 …
+--   fgcz-full-width: true  fill the screen instead of the centred body cap
 --
 -- Those two are applied as classes on <html>, which the always-included header
 -- (fgcz_header_quarto.html) and fgcz.scss react to. The R helper reaches the
@@ -24,6 +25,7 @@ local valid_lookup = { search = true, download = true }
 local flag_keys = {
   { key = "fgcz-colour", class = "fgcz-colour" },
   { key = "fgcz-number", class = "fgcz-number" },
+  { key = "fgcz-full-width", class = "fgcz-full-width" },
 }
 
 local function names_from(meta_value)
