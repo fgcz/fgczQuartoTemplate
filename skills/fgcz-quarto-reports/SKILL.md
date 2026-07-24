@@ -301,6 +301,7 @@ With the extension, set them as top-level YAML keys:
 ```yaml
 fgcz-colour: true
 fgcz-number: true
+fgcz-full-width: true
 ```
 
 Note numbering covers *every* top-level tab, so with the required layout

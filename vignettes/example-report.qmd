@@ -45,6 +45,9 @@ inputs, and analysis goal of the report you are authoring.
 #|   lists assay data and sample annotations, Analyse lists quality summaries,
 #|   tables, and figures, and Report lists overview, results, and provenance.
 #| out-width: "100%"
+if (!file.exists("fgcz-report-overview.svg")){
+ file.copy(system.file("quarto/fgcz-report-overview.svg", package="fgczQuartoTemplate"), ".")
+}
 knitr::include_graphics("fgcz-report-overview.svg")
 ```
 

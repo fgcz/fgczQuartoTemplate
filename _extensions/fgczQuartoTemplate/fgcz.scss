@@ -332,3 +332,33 @@ caption h1 {
     text-stroke: 0.4px currentColor;
   }
 }
+
+
+// ─────────────────────────────────────────────────────────────────
+// OPTIONAL: full-width body (opt-in, off by default)
+//
+// The template caps the body at grid.body-width (default 1800px) and centres
+// it, which leaves wide margins on large displays. Reports that prefer the old
+// ezRun html_document behaviour -- content filling the screen -- switch this on
+// from either channel:
+//
+//   fgcz_render(report.qmd, full_width = TRUE)   # R helper
+//   fgcz-full-width: true                        # front matter, Quarto extension
+//
+// It collapses the page grid to one fluid column. Trade-off: this drops the
+// right-hand margin track, so `.column-margin` margin notes and `.column-screen`
+// full-bleed blocks are unsupported while it is on. The FGCZ house style
+// (tabsets, callouts, layout-ncol figures, tables) does not use those.
+//
+// The class sits on <html> (added by the flags script in
+// fgcz_header_quarto.html), so the descendant selector matches; !important lifts
+// it over Quarto's own `.page-columns` grid rules.
+// ─────────────────────────────────────────────────────────────────
+.fgcz-full-width .page-columns {
+  grid-template-columns:
+    [screen-start] 1.5em
+    [screen-start-inset page-start page-start-inset body-start-outset body-start body-content-start]
+    minmax(0, 1fr)
+    [body-content-end body-end body-end-outset page-end-inset page-end screen-end-inset] 1.5em
+    [screen-end] !important;
+}
