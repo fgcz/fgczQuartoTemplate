@@ -10,3 +10,5 @@
 ^Meta$
 ^altdoc$
 ^_quarto$
+^.*\.Rproj$
+^\.Rproj\.user$
