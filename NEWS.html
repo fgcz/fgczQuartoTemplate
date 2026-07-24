@@ -232,6 +232,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Package metadata now describes the configurable tabs, searchable report content, and downloadable report bundle.</li>
 <li>Two optional tab features, both off by default and independent of each other: <code>fgcz-colour: true</code> applies a per-nesting-level palette (deep blue → indigo) instead of the uniform folder tabs, and <code>fgcz-number: true</code> prefixes every tab label with its hierarchical number (<code>1</code>, <code>1.1</code>, <code>1.1.1</code> …), counting across sibling tabsets at the same depth. Set them as top-level YAML keys with the Quarto extension, or as <code>fgcz_render(colour = TRUE, number = TRUE)</code> from R. Both restore behaviour from the older <code>fgczReportTemplates</code> package. Reports that ignore them are unchanged.</li>
+<li>New optional <code>fgcz-full-width: true</code> (or <code>fgcz_render(full_width = TRUE)</code>), off by default: collapses the centred body cap so report content fills the screen on large displays, like the older ezRun <code>html_document</code>. Trade-off: <code>.column-margin</code> margin notes and <code>.column-screen</code> full-bleed blocks are unsupported while it is on. Reports that ignore it are unchanged.</li>
 <li>The 📥 Download ZIP now bundles two whole-report extras alongside the checked plots — the <code>.qmd</code> source and a standalone <code>.html</code> copy — and the ZIP is buildable whenever any plot or any extra is ticked.</li>
 </ul>
 </section>
