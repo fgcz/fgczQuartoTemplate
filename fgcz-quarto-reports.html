@@ -363,6 +363,7 @@ Method C → { Foo, Bar }          ← different sub-tabs</code></pre>
 <pre><code>#| layout-ncol: 2</code></pre>
 <p>inside a chunk (or <code>::: {layout-ncol="2"}</code> around several figures). The template also provides <code>.fig-row</code> / <code>.fig-main</code> / <code>.fig-side</code> for a figure with a side callout.</p></li>
 <li><p><strong>Always give a figure a <code>#| fig-cap:</code>.</strong> Captions are what the Find toolbar indexes and what makes cross-references work.</p></li>
+<li><p><strong>Mind <code>fig-dpi</code> on figure-heavy reports.</strong> The default is <code>fig-dpi: 300</code>, which is right for most reports. But because the template is self-contained, every figure is embedded, and a report with very many figures can balloon into the hundreds of MB — no fun to share or load. In those cases drop to <code>fig-dpi: 150</code> (the old ezRun default). Typical culprits: many-sample runs (&gt; 50 samples, each with a repeated per-sample figure), custom reports with many figures, or single heavy figures (e.g.&nbsp;a UMAP of 100k cells). Set it document-wide under <code>execute:</code> in the YAML, or per-chunk with <code>#| fig-dpi: 150</code>.</p></li>
 </ul>
 </section>
 <section id="figure-captions-are-searchable-scientific-labels" class="level2">
