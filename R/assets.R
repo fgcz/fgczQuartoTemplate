@@ -188,10 +188,13 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #'   indigo) instead of the default uniform folder tabs. Defaults to `FALSE`.
 #' @param number Prefix every tab label with its hierarchical number (`1`,
 #'   `1.1`, `1.1.1` …). Defaults to `FALSE`.
+#' @param full_width Fill the screen instead of the centred body cap. Drops
+#'   the right margin track, so `.column-margin` / `.column-screen` are
+#'   unsupported while on. Defaults to `FALSE`.
 #' @param ... Passed on to [quarto::quarto_render()] (e.g. `execute_params`,
 #'   `output_file`, `quarto_args`). A `metadata` list passed here is honored;
 #'   enabling buttons merges `include-after-body` into it, and enabling `colour`
-#'   or `number` merges the matching `fgcz-colour` / `fgcz-number` keys.
+#'   or `number` merges the matching `fgcz-colour` / `fgcz-number` / `fgcz-full-width` keys.
 #'
 #' @return The value of [quarto::quarto_render()], invisibly.
 #' @export
@@ -202,10 +205,11 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #' fgcz_render("CountQC.qmd", buttons = TRUE) # with the Find/Download toolbar
 #' fgcz_render("CountQC.qmd", buttons = "search") # Find only
 #' fgcz_render("CountQC.qmd", colour = TRUE, number = TRUE) # coloured, numbered
+#' fgcz_render("CountQC.qmd", full_width = TRUE) # content fills the screen
 #' }
-fgcz_render <- function(input, buttons = FALSE, colour = FALSE, number = FALSE, ...) {
+fgcz_render <- function(input, buttons = FALSE, colour = FALSE, number = FALSE, full_width = FALSE, ...) {
   buttons <- .fgcz_validate_buttons(buttons)
-  flags <- .fgcz_validate_flags(colour = colour, number = number)
+  flags <- .fgcz_validate_flags(colour = colour, number = number, full_width = full_width)
   if (!requireNamespace("quarto", quietly = TRUE)) {
     stop("Package 'quarto' is required to render reports.")
   }
@@ -326,8 +330,8 @@ fgcz_render <- function(input, buttons = FALSE, colour = FALSE, number = FALSE, 
 
 # Render-time feature toggles, mapped to the class each one adds to <html>.
 # Named in the order the classes are written into the staged header; the same
-# two names are what fgcz-buttons.lua reads from a report's front matter.
-.fgcz_valid_flags <- c(colour = "fgcz-colour", number = "fgcz-number")
+# names are what fgcz-buttons.lua reads from a report's front matter.
+.fgcz_valid_flags <- c(colour = "fgcz-colour", number = "fgcz-number", full_width = "fgcz-full-width")
 
 # Validate the feature toggles and return the classes to apply, in canonical
 # order. Arguments are passed by name (`colour = `, `number = `) so the error
