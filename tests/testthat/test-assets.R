@@ -174,8 +174,23 @@ test_that("fgcz_render applies the colour and numbering flags", {
   on.exit(unlink(dir, recursive = TRUE), add = TRUE)
   qmd <- file.path(dir, "report.qmd")
   writeLines(
-    c("---", 'title: "Flag test"', "---", "", "::: {.panel-tabset}", "",
-      "# One", "", "a", "", "# Two", "", "b", "", ":::"),
+    c(
+      "---",
+      'title: "Flag test"',
+      "---",
+      "",
+      "::: {.panel-tabset}",
+      "",
+      "# One",
+      "",
+      "a",
+      "",
+      "# Two",
+      "",
+      "b",
+      "",
+      ":::"
+    ),
     qmd
   )
   output <- file.path(dir, "report.html")
@@ -249,8 +264,7 @@ test_that("the Quarto filter leaves the feature classes alone by default", {
   file.copy(fgcz_quarto_dir("fgcz-buttons.lua"), dir)
   qmd <- file.path(dir, "noflags.qmd")
   writeLines(
-    c("---", 'title: "No flags"', "format: html", "filters: [fgcz-buttons.lua]",
-      "---", "", "Report body."),
+    c("---", 'title: "No flags"', "format: html", "filters: [fgcz-buttons.lua]", "---", "", "Report body."),
     qmd
   )
 

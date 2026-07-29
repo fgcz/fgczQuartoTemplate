@@ -81,14 +81,18 @@ build_extension_yml <- function(meta_lines, version) {
   # (b) the document-wide blocks, re-indented from base 0 to base 6 (+6).
   fold_top <- function(key) {
     at <- match(TRUE, grepl(paste0("^", key, ":"), meta_lines))
-    if (is.na(at)) stop("Expected top-level `", key, ":` in _metadata.yml.")
+    if (is.na(at)) {
+      stop("Expected top-level `", key, ":` in _metadata.yml.")
+    }
     block <- meta_lines[at]
     j <- at + 1L
     while (
       j <= length(meta_lines) &&
         (drop_line(meta_lines[j]) || indent_of(meta_lines[j]) > 0)
     ) {
-      if (!drop_line(meta_lines[j])) block <- c(block, meta_lines[j])
+      if (!drop_line(meta_lines[j])) {
+        block <- c(block, meta_lines[j])
+      }
       j <- j + 1L
     }
     paste0("      ", block)
