@@ -322,6 +322,80 @@ test_that("the Quarto filter rejects unknown button names", {
   )
 })
 
+# Minimal base64 decoder (base R only, no new package dependency): the PNG
+# IHDR chunk with width/height always sits in the first 24 bytes, so decoding
+# a short prefix of the (possibly huge) embedded image is enough.
+.base64_decode_prefix <- function(s, n_bytes) {
+  n_chars <- ceiling(n_bytes / 3) * 4L
+  s <- substr(s, 1L, min(nchar(s), n_chars))
+  alphabet <- c(LETTERS, letters, as.character(0:9), "+", "/")
+  lookup <- stats::setNames(0:63, alphabet)
+  vals <- lookup[strsplit(s, "")[[1]]]
+  bits <- unlist(lapply(vals, function(v) bitwAnd(bitwShiftR(v, 5:0), 1L)))
+  nbytes <- length(bits) %/% 8L
+  as.raw(vapply(seq_len(nbytes), function(i) {
+    b <- bits[((i - 1) * 8 + 1):(i * 8)]
+    sum(b * 2^(7:0))
+  }, numeric(1)))
+}
+
+# Read width/height (pixels) from a PNG's IHDR chunk: 8-byte signature, then
+# a 4-byte length + 4-byte "IHDR" type, then width/height as big-endian uint32.
+.png_dims <- function(raw) {
+  con <- rawConnection(raw)
+  on.exit(close(con))
+  seek(con, 16)
+  c(
+    width = readBin(con, "integer", n = 1L, size = 4L, endian = "big"),
+    height = readBin(con, "integer", n = 1L, size = 4L, endian = "big")
+  )
+}
+
+# The last base64-embedded PNG in a self-contained render is the plot (the
+# FGCZ banner logo, embedded via the header, always comes first).
+.last_embedded_png_dims <- function(html_path) {
+  html <- paste(readLines(html_path, warn = FALSE), collapse = "\n")
+  m <- gregexpr("data:image/png;base64,[A-Za-z0-9+/=]+", html)
+  all_matches <- regmatches(html, m)[[1]]
+  b64 <- sub("^data:image/png;base64,", "", all_matches[length(all_matches)])
+  .png_dims(.base64_decode_prefix(b64, 24L))
+}
+
+test_that("fgcz_render honors fig_dpi and fig_retina overrides", {
+  testthat::skip_if_not(quarto::quarto_available())
+  dir <- tempfile()
+  dir.create(dir)
+  on.exit(unlink(dir, recursive = TRUE), add = TRUE)
+  qmd <- file.path(dir, "report.qmd")
+  writeLines(
+    c(
+      "---", 'title: "DPI test"', "---", "",
+      "```{r}", "#| fig-cap: test", "plot(1:10)", "```"
+    ),
+    qmd
+  )
+
+  fgcz_render(qmd, output_file = "override.html", quiet = TRUE, fig_dpi = 72, fig_retina = 1)
+  dims <- .last_embedded_png_dims(file.path(dir, "override.html"))
+
+  # _metadata.yml sets knitr fig.width/fig.height to 6in x 5in.
+  expect_equal(unname(dims["width"]), 6L * 72L)
+  expect_equal(unname(dims["height"]), 5L * 72L)
+})
+
+test_that("fgcz_render validates fig_dpi and fig_retina", {
+  dir <- tempfile()
+  dir.create(dir)
+  on.exit(unlink(dir, recursive = TRUE), add = TRUE)
+  qmd <- file.path(dir, "report.qmd")
+  writeLines(c("---", 'title: "Invalid"', "---", "", "Body."), qmd)
+
+  expect_error(fgcz_render(qmd, fig_dpi = "150", quiet = TRUE), "`fig_dpi`")
+  expect_error(fgcz_render(qmd, fig_dpi = -1, quiet = TRUE), "`fig_dpi`")
+  expect_error(fgcz_render(qmd, fig_dpi = c(150, 300), quiet = TRUE), "`fig_dpi`")
+  expect_error(fgcz_render(qmd, fig_retina = 0, quiet = TRUE), "`fig_retina`")
+})
+
 test_that("the Quarto filter injects and normalizes a valid button list", {
   testthat::skip_if_not(quarto::quarto_available())
   dir <- tempfile()

@@ -151,6 +151,7 @@ fgcz_render("report.qmd", buttons = "download") # ...or just 📥 Download
 fgcz_render("report.qmd", colour = TRUE)  # per-level tab colours
 fgcz_render("report.qmd", number = TRUE)  # tab numbers 1, 1.1, 1.1.1 …
 fgcz_render("report.qmd", full_width = TRUE) # fill the screen (drops margin/screen columns)
+fgcz_render("report.qmd", fig_dpi = 150, fig_retina = 1) # smaller self-contained HTML
 fgcz_copy_assets("report.qmd")          # stage assets next to that file
 fgcz_copy_assets("dir")                 # or stage assets into an existing dir
 fgcz_use_template("dir", "report.qmd")  # start a new report from the template

@@ -181,11 +181,13 @@ long page does not — split that across tabs instead.
 - **Mind `fig-dpi` on figure-heavy reports.** The default is `fig-dpi: 300`, which
   is right for most reports. But because the template is self-contained, every
   figure is embedded, and a report with very many figures can balloon into the
-  hundreds of MB — no fun to share or load. In those cases drop to `fig-dpi: 150`
-  (the old ezRun default). Typical culprits: many-sample runs (> 50 samples, each
-  with a repeated per-sample figure), custom reports with many figures, or single
-  heavy figures (e.g. a UMAP of 100k cells). Set it document-wide under
-  `execute:` in the YAML, or per-chunk with `#| fig-dpi: 150`.
+  hundreds of MB — no fun to share or load. In those cases drop resolution.
+  Typical culprits: many-sample runs (> 50 samples, each with a repeated
+  per-sample figure), custom reports with many figures, or single heavy figures
+  (e.g. a UMAP of 100k cells). Prefer
+  `fgczQuartoTemplate::fgcz_render(qmd, fig_dpi = 150, fig_retina = 1)` — a
+  per-render override with no `.qmd` edit needed. Per-chunk with
+  `#| fig-dpi: 150` also still works when only one figure is the culprit.
 
 ## Figure captions are searchable scientific labels
 

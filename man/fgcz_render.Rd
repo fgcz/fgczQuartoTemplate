@@ -10,6 +10,8 @@ fgcz_render(
   colour = FALSE,
   number = FALSE,
   full_width = FALSE,
+  fig_dpi = NULL,
+  fig_retina = NULL,
   ...
 )
 }
@@ -32,10 +34,25 @@ indigo) instead of the default uniform folder tabs. Defaults to \code{FALSE}.}
 the right margin track, so \code{.column-margin} / \code{.column-screen} are
 unsupported while on. Defaults to \code{FALSE}.}
 
+\item{fig_dpi}{Override the shared \verb{_metadata.yml} figure DPI
+(\code{format.html.fig-dpi}, default \code{300}) for this render only. Useful for
+figure-heavy reports (many samples, many plots) where the default blows
+up the self-contained HTML size. \code{NULL} (the default) leaves the
+\verb{_metadata.yml} value untouched.}
+
+\item{fig_retina}{Override the shared \verb{_metadata.yml} retina multiplier
+(\code{knitr.opts_chunk.fig.retina}, default \code{2}) for this render only. The
+actual embedded-image resolution is \code{fig_dpi * fig_retina}, so dropping
+this alongside \code{fig_dpi} compounds the file-size reduction. \code{NULL} (the
+default) leaves the \verb{_metadata.yml} value untouched.}
+
 \item{...}{Passed on to \code{\link[quarto:quarto_render]{quarto::quarto_render()}} (e.g. \code{execute_params},
 \code{output_file}, \code{quarto_args}). A \code{metadata} list passed here is honored;
-enabling buttons merges \code{include-after-body} into it, and enabling \code{colour}
-or \code{number} merges the matching \code{fgcz-colour} / \code{fgcz-number} / \code{fgcz-full-width} keys.}
+enabling buttons merges \code{include-after-body} into it, enabling \code{colour}
+or \code{number} merges the matching \code{fgcz-colour} / \code{fgcz-number} / \code{fgcz-full-width} keys,
+and \code{fig_dpi} / \code{fig_retina} merge into \code{format.html.fig-dpi} /
+\code{knitr.opts_chunk.fig.retina} -- none of these clobber other keys you pass
+in \code{metadata}.}
 }
 \value{
 The value of \code{\link[quarto:quarto_render]{quarto::quarto_render()}}, invisibly.
@@ -53,5 +70,6 @@ fgcz_render("CountQC.qmd", buttons = TRUE) # with the Find/Download toolbar
 fgcz_render("CountQC.qmd", buttons = "search") # Find only
 fgcz_render("CountQC.qmd", colour = TRUE, number = TRUE) # coloured, numbered
 fgcz_render("CountQC.qmd", full_width = TRUE) # content fills the screen
+fgcz_render("CountQC.qmd", fig_dpi = 150, fig_retina = 1) # smaller HTML
 }
 }

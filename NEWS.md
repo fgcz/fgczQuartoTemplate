@@ -1,5 +1,10 @@
 # fgczQuartoTemplate (development version)
 
+* New `fgcz_render(fig_dpi =, fig_retina =)`, both `NULL` (unset) by default:
+  override the shared `_metadata.yml` figure resolution for a single render
+  without editing the `.qmd`. Useful for figure-heavy reports (many samples,
+  many plots) where the default self-contained HTML balloons in size — e.g.
+  `fgcz_render(qmd, fig_dpi = 150, fig_retina = 1)`.
 * Package metadata now describes the configurable tabs, searchable report
   content, and downloadable report bundle.
 * Two optional tab features, both off by default and independent of each other:

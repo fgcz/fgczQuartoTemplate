@@ -145,10 +145,18 @@ fgcz_render(qmd, execute_params = list(reportTitle = "My analysis"))
 fgcz_render(qmd, buttons = TRUE) # both toolbar buttons; FALSE remains the default
 fgcz_render(qmd, buttons = "search") # Find only; "download" selects Download
 fgcz_render(qmd, colour = TRUE, number = TRUE) # per-level tab colours + numbers
+fgcz_render(qmd, fig_dpi = 150, fig_retina = 1) # smaller self-contained HTML
 ```
 
 That is the single call downstream packages use in place of a bare
 `quarto::quarto_render()`.
+
+`fig_dpi` and `fig_retina` override the shared `_metadata.yml` figure
+resolution (`format.html.fig-dpi`, default `300`, and
+`knitr.opts_chunk.fig.retina`, default `2`) for a single render, without
+editing the `.qmd`. Reach for these on figure-heavy reports — many samples,
+each with a repeated per-sample plot — where the default balloons the
+self-contained HTML into the hundreds of MB.
 
 With the Quarto extension route, opt into the toolbar with
 `include-after-body` and select controls using a top-level `fgcz-buttons:` key:

@@ -12,3 +12,5 @@ skills/*-workspace/
 altdoc/freeze.rds
 _quarto/*
 !_quarto/_freeze/
+# scratch: p42092 CountQC report copy for interactive fig-height/width tidy-up
+scratch-p42092-CountQC/

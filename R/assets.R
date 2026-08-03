@@ -191,10 +191,23 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #' @param full_width Fill the screen instead of the centred body cap. Drops
 #'   the right margin track, so `.column-margin` / `.column-screen` are
 #'   unsupported while on. Defaults to `FALSE`.
+#' @param fig_dpi Override the shared `_metadata.yml` figure DPI
+#'   (`format.html.fig-dpi`, default `300`) for this render only. Useful for
+#'   figure-heavy reports (many samples, many plots) where the default blows
+#'   up the self-contained HTML size. `NULL` (the default) leaves the
+#'   `_metadata.yml` value untouched.
+#' @param fig_retina Override the shared `_metadata.yml` retina multiplier
+#'   (`knitr.opts_chunk.fig.retina`, default `2`) for this render only. The
+#'   actual embedded-image resolution is `fig_dpi * fig_retina`, so dropping
+#'   this alongside `fig_dpi` compounds the file-size reduction. `NULL` (the
+#'   default) leaves the `_metadata.yml` value untouched.
 #' @param ... Passed on to [quarto::quarto_render()] (e.g. `execute_params`,
 #'   `output_file`, `quarto_args`). A `metadata` list passed here is honored;
-#'   enabling buttons merges `include-after-body` into it, and enabling `colour`
-#'   or `number` merges the matching `fgcz-colour` / `fgcz-number` / `fgcz-full-width` keys.
+#'   enabling buttons merges `include-after-body` into it, enabling `colour`
+#'   or `number` merges the matching `fgcz-colour` / `fgcz-number` / `fgcz-full-width` keys,
+#'   and `fig_dpi` / `fig_retina` merge into `format.html.fig-dpi` /
+#'   `knitr.opts_chunk.fig.retina` -- none of these clobber other keys you pass
+#'   in `metadata`.
 #'
 #' @return The value of [quarto::quarto_render()], invisibly.
 #' @export
@@ -206,10 +219,22 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #' fgcz_render("CountQC.qmd", buttons = "search") # Find only
 #' fgcz_render("CountQC.qmd", colour = TRUE, number = TRUE) # coloured, numbered
 #' fgcz_render("CountQC.qmd", full_width = TRUE) # content fills the screen
+#' fgcz_render("CountQC.qmd", fig_dpi = 150, fig_retina = 1) # smaller HTML
 #' }
-fgcz_render <- function(input, buttons = FALSE, colour = FALSE, number = FALSE, full_width = FALSE, ...) {
+fgcz_render <- function(
+  input,
+  buttons = FALSE,
+  colour = FALSE,
+  number = FALSE,
+  full_width = FALSE,
+  fig_dpi = NULL,
+  fig_retina = NULL,
+  ...
+) {
   buttons <- .fgcz_validate_buttons(buttons)
   flags <- .fgcz_validate_flags(colour = colour, number = number, full_width = full_width)
+  fig_dpi <- .fgcz_validate_positive_number(fig_dpi, "fig_dpi")
+  fig_retina <- .fgcz_validate_positive_number(fig_retina, "fig_retina")
   if (!requireNamespace("quarto", quietly = TRUE)) {
     stop("Package 'quarto' is required to render reports.")
   }
@@ -260,6 +285,28 @@ fgcz_render <- function(input, buttons = FALSE, colour = FALSE, number = FALSE, 
     md[["include-after-body"]] <- toolbar
     dots$metadata <- md
   }
+  if (!is.null(fig_dpi) || !is.null(fig_retina)) {
+    # Nested overrides: `metadata` is deep-merged by Quarto against
+    # `_metadata.yml` key-by-key, so read-modify-write each level instead of
+    # assigning `md$format`/`md$knitr` wholesale, which would clobber any
+    # sibling format/knitr options the caller passed in `metadata`.
+    md <- if (is.null(dots$metadata)) list() else dots$metadata
+    if (!is.null(fig_dpi)) {
+      fmt <- if (is.null(md$format)) list() else md$format
+      html <- if (is.null(fmt$html)) list() else fmt$html
+      html[["fig-dpi"]] <- fig_dpi
+      fmt$html <- html
+      md$format <- fmt
+    }
+    if (!is.null(fig_retina)) {
+      knitr_md <- if (is.null(md$knitr)) list() else md$knitr
+      opts_chunk <- if (is.null(knitr_md$opts_chunk)) list() else knitr_md$opts_chunk
+      opts_chunk[["fig.retina"]] <- fig_retina
+      knitr_md$opts_chunk <- opts_chunk
+      md$knitr <- knitr_md
+    }
+    dots$metadata <- md
+  }
   invisible(do.call(quarto::quarto_render, c(list(input = input), dots)))
 }
 
@@ -304,6 +351,19 @@ fgcz_render <- function(input, buttons = FALSE, colour = FALSE, number = FALSE, 
     )
   }
   .fgcz_valid_buttons[.fgcz_valid_buttons %in% buttons]
+}
+
+# Validate the `fig_dpi` / `fig_retina` arguments: NULL (leave untouched) or a
+# single finite positive number. `name` is the caller's argument name, so the
+# error message points at the offending one.
+.fgcz_validate_positive_number <- function(x, name) {
+  if (is.null(x)) {
+    return(NULL)
+  }
+  if (!is.numeric(x) || length(x) != 1L || is.na(x) || !is.finite(x) || x <= 0) {
+    stop("`", name, "` must be NULL or a single positive number.", call. = FALSE)
+  }
+  x
 }
 
 # Replace the button-selection placeholder in a staged toolbar. The packaged
