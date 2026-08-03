@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -74,10 +77,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-d88d70f6c7df7b9e20df5ff689ffded0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5c523d0c34c0ff0a560572695705ff8b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -363,7 +366,7 @@ Method C → { Foo, Bar }          ← different sub-tabs</code></pre>
 <pre><code>#| layout-ncol: 2</code></pre>
 <p>inside a chunk (or <code>::: {layout-ncol="2"}</code> around several figures). The template also provides <code>.fig-row</code> / <code>.fig-main</code> / <code>.fig-side</code> for a figure with a side callout.</p></li>
 <li><p><strong>Always give a figure a <code>#| fig-cap:</code>.</strong> Captions are what the Find toolbar indexes and what makes cross-references work.</p></li>
-<li><p><strong>Mind <code>fig-dpi</code> on figure-heavy reports.</strong> The default is <code>fig-dpi: 300</code>, which is right for most reports. But because the template is self-contained, every figure is embedded, and a report with very many figures can balloon into the hundreds of MB — no fun to share or load. In those cases drop to <code>fig-dpi: 150</code> (the old ezRun default). Typical culprits: many-sample runs (&gt; 50 samples, each with a repeated per-sample figure), custom reports with many figures, or single heavy figures (e.g.&nbsp;a UMAP of 100k cells). Set it document-wide under <code>execute:</code> in the YAML, or per-chunk with <code>#| fig-dpi: 150</code>.</p></li>
+<li><p><strong>Mind <code>fig-dpi</code> on figure-heavy reports.</strong> The default is <code>fig-dpi: 300</code>, which is right for most reports. But because the template is self-contained, every figure is embedded, and a report with very many figures can balloon into the hundreds of MB — no fun to share or load. In those cases drop resolution. Typical culprits: many-sample runs (&gt; 50 samples, each with a repeated per-sample figure), custom reports with many figures, or single heavy figures (e.g.&nbsp;a UMAP of 100k cells). Prefer <code>fgczQuartoTemplate::fgcz_render(qmd, fig_dpi = 150, fig_retina = 1)</code> — a per-render override with no <code>.qmd</code> edit needed. Per-chunk with <code>#| fig-dpi: 150</code> also still works when only one figure is the culprit.</p></li>
 </ul>
 </section>
 <section id="figure-captions-are-searchable-scientific-labels" class="level2">

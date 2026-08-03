@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -39,10 +42,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-d88d70f6c7df7b9e20df5ff689ffded0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5c523d0c34c0ff0a560572695705ff8b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -230,6 +233,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="fgczquartotemplate-development-version" class="level1">
 <h1>fgczQuartoTemplate (development version)</h1>
 <ul>
+<li>New <code>fgcz_render(fig_dpi =, fig_retina =)</code>, both <code>NULL</code> (unset) by default: override the shared <code>_metadata.yml</code> figure resolution for a single render without editing the <code>.qmd</code>. Useful for figure-heavy reports (many samples, many plots) where the default self-contained HTML balloons in size — e.g. <code>fgcz_render(qmd, fig_dpi = 150, fig_retina = 1)</code>.</li>
 <li>Package metadata now describes the configurable tabs, searchable report content, and downloadable report bundle.</li>
 <li>Two optional tab features, both off by default and independent of each other: <code>fgcz-colour: true</code> applies a per-nesting-level palette (deep blue → indigo) instead of the uniform folder tabs, and <code>fgcz-number: true</code> prefixes every tab label with its hierarchical number (<code>1</code>, <code>1.1</code>, <code>1.1.1</code> …), counting across sibling tabsets at the same depth. Set them as top-level YAML keys with the Quarto extension, or as <code>fgcz_render(colour = TRUE, number = TRUE)</code> from R. Both restore behaviour from the older <code>fgczReportTemplates</code> package. Reports that ignore them are unchanged.</li>
 <li>New optional <code>fgcz-full-width: true</code> (or <code>fgcz_render(full_width = TRUE)</code>), off by default: collapses the centred body cap so report content fills the screen on large displays, like the older ezRun <code>html_document</code>. Trade-off: <code>.column-margin</code> margin notes and <code>.column-screen</code> full-bleed blocks are unsupported while it is on. Reports that ignore it are unchanged.</li>
