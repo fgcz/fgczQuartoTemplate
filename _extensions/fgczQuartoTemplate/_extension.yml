@@ -25,7 +25,7 @@ contributes:
         sidebar-width: 250px
         margin-width: 100px
       include-in-header: fgcz_header_quarto.html
-      fig-dpi: 300
+      fig-dpi: 96
       fig-align: left
       # fgcz-buttons.lua reads an optional top-level `fgcz-buttons:`
       # selection and passes it to the toolbar. The toolbar itself
