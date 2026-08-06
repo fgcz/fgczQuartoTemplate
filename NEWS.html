@@ -45,7 +45,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5c523d0c34c0ff0a560572695705ff8b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7270f94ee1535c6cecbea04afa530813.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -174,6 +174,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./man/fgcz_qmd_source_link.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">fgcz_qmd_source_link</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./man/fgcz_quarto_dir.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">fgcz_quarto_dir</span></a>
   </div>
@@ -233,6 +239,8 @@ ul.task-list li input[type="checkbox"] {
 <section id="fgczquartotemplate-development-version" class="level1">
 <h1>fgczQuartoTemplate (development version)</h1>
 <ul>
+<li>A “<code>&lt;/&gt;</code> Show code” badge now appears directly on any figure or table chunk labelled Quarto’s own way (<code>#| label: fig-xxx</code> / <code>#| label: tbl-xxx</code> with a matching <code>fig-cap:</code>/<code>tbl-cap:</code>) — both in its top-right corner in the report body and on its card in the Find panel — click either to open View Source already scrolled to and highlighting that exact chunk. Fully automatic and client-side, resolved from what Quarto already renders (the crossref id + the embedded source); unlabelled chunks show nothing extra, in either place. Requires <code>code-tools: true</code>, same as the View source button.</li>
+<li>The toolbar gains a third button, <code>&lt;/&gt;</code> View source, alongside 🔍 Find and 📥 Download: opens Quarto’s own view-source overlay in place, driving its native machinery (<code>#quarto-view-source</code> / the embedded-source modal / the native code-tools button) rather than reimplementing it. Select it with <code>fgcz_render(buttons = "source")</code> or <code>fgcz-buttons: source</code>; <code>TRUE</code> / omitting <code>fgcz-buttons</code> now enables all three.</li>
 <li>New <code>fgcz_render(fig_dpi =, fig_retina =)</code>, both <code>NULL</code> (unset) by default: override the shared <code>_metadata.yml</code> figure resolution for a single render without editing the <code>.qmd</code>. Useful for figure-heavy reports (many samples, many plots) where the default self-contained HTML balloons in size — e.g. <code>fgcz_render(qmd, fig_dpi = 150, fig_retina = 1)</code>.</li>
 <li>Package metadata now describes the configurable tabs, searchable report content, and downloadable report bundle.</li>
 <li>Two optional tab features, both off by default and independent of each other: <code>fgcz-colour: true</code> applies a per-nesting-level palette (deep blue → indigo) instead of the uniform folder tabs, and <code>fgcz-number: true</code> prefixes every tab label with its hierarchical number (<code>1</code>, <code>1.1</code>, <code>1.1.1</code> …), counting across sibling tabsets at the same depth. Set them as top-level YAML keys with the Quarto extension, or as <code>fgcz_render(colour = TRUE, number = TRUE)</code> from R. Both restore behaviour from the older <code>fgczReportTemplates</code> package. Reports that ignore them are unchanged.</li>

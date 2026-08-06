@@ -80,7 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5c523d0c34c0ff0a560572695705ff8b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-7270f94ee1535c6cecbea04afa530813.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -205,6 +205,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../man/fgcz_copy_assets.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">fgcz_copy_assets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/fgcz_qmd_source_link.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">fgcz_qmd_source_link</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -429,8 +435,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>fgcz_render()</code> stages the assets and then calls <code>quarto::quarto_render()</code>. It needs the Quarto CLI, so the call below is shown but not run in this vignette:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(qmd, <span class="at">execute_params =</span> <span class="fu">list</span>(<span class="at">reportTitle =</span> <span class="st">"My analysis"</span>))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(qmd, <span class="at">buttons =</span> <span class="cn">TRUE</span>) <span class="co"># both toolbar buttons; FALSE remains the default</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(qmd, <span class="at">buttons =</span> <span class="st">"search"</span>) <span class="co"># Find only; "download" selects Download</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(qmd, <span class="at">buttons =</span> <span class="cn">TRUE</span>) <span class="co"># all three toolbar buttons; FALSE remains the default</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(qmd, <span class="at">buttons =</span> <span class="st">"search"</span>) <span class="co"># Find only; "download"/"source" select the others</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(qmd, <span class="at">colour =</span> <span class="cn">TRUE</span>, <span class="at">number =</span> <span class="cn">TRUE</span>) <span class="co"># per-level tab colours + numbers</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(qmd, <span class="at">fig_dpi =</span> <span class="dv">150</span>, <span class="at">fig_retina =</span> <span class="dv">1</span>) <span class="co"># smaller self-contained HTML</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -440,8 +446,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">fgczQuartoTemplate-html</span><span class="kw">:</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">include-after-body</span><span class="kw">:</span><span class="at"> _extensions/fgczQuartoTemplate/fgcz-plot-finder.html</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz-buttons</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">search</span><span class="kw">,</span><span class="at"> download</span><span class="kw">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Use a single name for one button. Omitting <code>fgcz-buttons</code> shows both controls; an unknown name stops the render with a validation error.</p>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz-buttons</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">search</span><span class="kw">,</span><span class="at"> download</span><span class="kw">,</span><span class="at"> source</span><span class="kw">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Use a single name for one button, or any subset. Omitting <code>fgcz-buttons</code> shows all three controls; an unknown name stops the render with a validation error.</p>
+<p>Independent of the toolbar selection, any figure or table chunk with <code>#| label: fig-xxx</code> / <code>#| label: tbl-xxx</code> and a matching <code>fig-cap:</code>/<code>tbl-cap:</code> gets a small “Show code” <code>&lt;/&gt;</code> badge — on the figure/table itself and on its card in the Find panel — that jumps to and highlights that chunk in View Source. It needs only <code>code-tools: true</code>, which is already a <code>_metadata.yml</code> default, so an unlabelled chunk (the default) simply shows nothing extra.</p>
 <p>Two further opt-in tab features, both off by default and independent of each other, are set as top-level YAML keys (or via <code>fgcz_render(colour =, number =)</code> from R):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz-colour</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="co">   # per-nesting-level tab palette (deep blue → indigo)</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz-number</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="co">   # hierarchical tab numbers: 1, 1.1, 1.1.1 …</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

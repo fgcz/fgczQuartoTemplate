@@ -80,7 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5c523d0c34c0ff0a560572695705ff8b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7270f94ee1535c6cecbea04afa530813.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -209,6 +209,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./man/fgcz_qmd_source_link.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">fgcz_qmd_source_link</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./man/fgcz_quarto_dir.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">fgcz_quarto_dir</span></a>
   </div>
@@ -285,12 +291,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Step 3.</strong> Render:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render my_report.qmd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Done. ✅</p>
-<p><strong>Optional — 🔍 Find / 📥 Download toolbar</strong> (off by default). Switch it on and select its buttons in the report header:</p>
+<p><strong>Optional — 🔍 Find / 📥 Download / <code>&lt;/&gt;</code> View source toolbar</strong> (off by default). Switch it on and select its buttons in the report header:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">fgczQuartoTemplate-html</span><span class="kw">:</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">include-after-body</span><span class="kw">:</span><span class="at"> _extensions/fgczQuartoTemplate/fgcz-plot-finder.html</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz-buttons</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">search</span><span class="kw">,</span><span class="at"> download</span><span class="kw">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Use <code>fgcz-buttons: search</code> or <code>fgcz-buttons: download</code> for one button. Omit <code>fgcz-buttons</code> to show both when the toolbar is included. Unknown names stop the render instead of silently hiding controls.</p>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz-buttons</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">search</span><span class="kw">,</span><span class="at"> download</span><span class="kw">,</span><span class="at"> source</span><span class="kw">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Use <code>fgcz-buttons: search</code> (or any subset, e.g.&nbsp;<code>[search, download]</code>) to pick individual buttons. Omit <code>fgcz-buttons</code> to show all three when the toolbar is included. Unknown names stop the render instead of silently hiding controls. The View source button opens Quarto’s own view-source overlay and only appears when the report was rendered with <code>code-tools: true</code> (a template default already set in <code>_metadata.yml</code>).</p>
+<p><strong>Bonus — “Show code” per plot/table.</strong> Any figure/table chunk with <code>#| label: fig-xxx</code> / <code>#| label: tbl-xxx</code> and a matching <code>fig-cap:</code>/<code>tbl-cap:</code> automatically gets a small <code>&lt;/&gt;</code> badge — on the figure itself and in the Find panel — that jumps to and highlights that chunk in View Source. No wiring needed beyond the label; unlabelled chunks show nothing extra.</p>
 <p><strong>Optional — tab colour and layout switches</strong> (all off by default). Three independent switches in the report header:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz-colour</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="co">      # per-nesting-level tab palette (deep blue → indigo)</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz-number</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="co">      # hierarchical tab numbers: 1, 1.1, 1.1.1 …</span></span>
@@ -309,7 +316,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Step 3.</strong> Render with the one-call helper:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fgczQuartoTemplate<span class="sc">::</span><span class="fu">fgcz_render</span>(<span class="st">"my_report.qmd"</span>)                 <span class="co"># no toolbar</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fgczQuartoTemplate<span class="sc">::</span><span class="fu">fgcz_render</span>(<span class="st">"my_report.qmd"</span>, <span class="at">buttons =</span> <span class="cn">TRUE</span>) <span class="co"># 🔍 Find / 📥 Download</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fgczQuartoTemplate<span class="sc">::</span><span class="fu">fgcz_render</span>(<span class="st">"my_report.qmd"</span>, <span class="at">buttons =</span> <span class="cn">TRUE</span>) <span class="co"># 🔍 Find / 📥 Download / &lt;/&gt; View source</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>fgczQuartoTemplate<span class="sc">::</span><span class="fu">fgcz_render</span>(<span class="st">"my_report.qmd"</span>, <span class="at">buttons =</span> <span class="st">"search"</span>) <span class="co"># 🔍 Find only</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>fgczQuartoTemplate<span class="sc">::</span><span class="fu">fgcz_render</span>(<span class="st">"my_report.qmd"</span>, <span class="at">colour =</span> <span class="cn">TRUE</span>, <span class="at">number =</span> <span class="cn">TRUE</span>) <span class="co"># coloured + numbered tabs</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>fgczQuartoTemplate<span class="sc">::</span><span class="fu">fgcz_render</span>(<span class="st">"my_report.qmd"</span>, <span class="at">full_width =</span> <span class="cn">TRUE</span>) <span class="co"># content fills the screen</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -367,7 +374,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="r-helper-cheatsheet-way-2" class="level2">
 <h2 class="anchored" data-anchor-id="r-helper-cheatsheet-way-2">R helper cheatsheet (Way 2)</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"report.qmd"</span>)               <span class="co"># stage assets + render (the usual one)</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"report.qmd"</span>, <span class="at">buttons =</span> <span class="cn">TRUE</span>) <span class="co"># ...plus the 🔍 Find / 📥 Download toolbar</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"report.qmd"</span>, <span class="at">buttons =</span> <span class="cn">TRUE</span>) <span class="co"># ...plus the 🔍 Find / 📥 Download / &lt;/&gt; View source toolbar</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"report.qmd"</span>, <span class="at">buttons =</span> <span class="st">"download"</span>) <span class="co"># ...or just 📥 Download</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"report.qmd"</span>, <span class="at">colour =</span> <span class="cn">TRUE</span>)  <span class="co"># per-level tab colours</span></span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_render</span>(<span class="st">"report.qmd"</span>, <span class="at">number =</span> <span class="cn">TRUE</span>)  <span class="co"># tab numbers 1, 1.1, 1.1.1 …</span></span>
@@ -376,7 +383,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_copy_assets</span>(<span class="st">"report.qmd"</span>)          <span class="co"># stage assets next to that file</span></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_copy_assets</span>(<span class="st">"dir"</span>)                 <span class="co"># or stage assets into an existing dir</span></span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_use_template</span>(<span class="st">"dir"</span>, <span class="st">"report.qmd"</span>)  <span class="co"># start a new report from the template</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_quarto_dir</span>()                       <span class="co"># where the installed assets live</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_quarto_dir</span>()                       <span class="co"># where the installed assets live</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">fgcz_qmd_source_link</span>()                  <span class="co"># &lt;a&gt; link to this report's .qmd, for a Report provenance table</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="why-two-mechanisms-exist-30-second-version" class="level2">
 <h2 class="anchored" data-anchor-id="why-two-mechanisms-exist-30-second-version">Why two mechanisms exist (30-second version)</h2>
