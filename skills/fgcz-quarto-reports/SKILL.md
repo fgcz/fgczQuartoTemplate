@@ -55,10 +55,11 @@ from the annotated starter, `fgcz_copy_assets()` just stages the files, and
 `fgcz_quarto_dir()` points at the installed assets.
 
 Either way you get the theme and the FGCZ header for free. The top-right
-**🔍 Find / 📥 Download** toolbar is opt-in — turn on both controls with
-`fgcz_render(buttons = TRUE)`, or select `"search"` and/or `"download"` by
-name. For the CLI route, add an `include-after-body:` line and optionally a
-top-level `fgcz-buttons:` selection; see the last section. Tab colouring and
+**🔍 Find / 📥 Download / `</>` View source** toolbar is opt-in — turn on all
+three with `fgcz_render(buttons = TRUE)`, or select `"search"`, `"download"`,
+and/or `"source"` by name. For the CLI route, add an `include-after-body:`
+line and optionally a top-level `fgcz-buttons:` selection; see the last
+section. Tab colouring and
 numbering are likewise opt-in — see "Optional tab colour and numbering" below.
 Start from `inst/quarto/template.qmd` (via
 `fgcz_use_template()`), which demonstrates every layout pattern below in code.
@@ -178,6 +179,12 @@ long page does not — split that across tabs instead.
   with a side callout.
 - **Always give a figure a `#| fig-cap:`.** Captions are what the Find toolbar
   indexes and what makes cross-references work.
+- **Add `#| label: fig-xxx` (or `tbl-xxx` for a table) when you want "Show
+  code".** A labelled chunk with a matching `fig-cap:`/`tbl-cap:` automatically
+  gets a small `</>` badge — right on the figure/table and on its card in the
+  Find panel — that jumps to and highlights that exact chunk in View Source.
+  Nothing to wire up beyond the label; an unlabelled chunk just doesn't get
+  the badge.
 - **Mind `fig-dpi` on figure-heavy reports.** The default is `fig-dpi: 300`, which
   is right for most reports. But because the template is self-contained, every
   figure is embedded, and a report with very many figures can balloon into the
@@ -311,21 +318,27 @@ Overview becomes `1` and Session Info the last number. Don't hand-roll either
 effect with your own CSS or a numbering chunk; both ship with the template and
 stay inert until asked for.
 
-## The Find / Download toolbar: opt-in, and don't hand-build it
+## The Find / Download / View source toolbar: opt-in, and don't hand-build it
 
-The template ships a dynamic top-right toolbar with two tools — **🔍 Find** (a
-searchable graphical table of contents for every figure and table; clicking one
-opens the tab it lives in and scrolls to it) and **📥 Download** (tick-box
+The template ships a dynamic top-right toolbar with three tools — **🔍 Find**
+(a searchable graphical table of contents for every figure and table; clicking
+one opens the tab it lives in and scrolls to it), **📥 Download** (tick-box
 download of the static plots, plus two whole-report extras — the `.qmd` source
-and a standalone `.html` copy — bundled into a single ZIP). It is **off by
-default**. With R,
-use `fgcz_render(buttons = TRUE)` for both, `buttons = "search"` for Find, or
-`buttons = "download"` for Download; `FALSE` remains valid. With the extension,
-add an `include-after-body: …/fgcz-plot-finder.html` line and select controls
-with `fgcz-buttons: search`, `fgcz-buttons: download`, or
-`fgcz-buttons: [search, download]`. Omit the selection to show both. Never
-hand-add buttons, a table-of-figures, or a thumbnail gallery; the template's
-version is complete and tested.
+and a standalone `.html` copy — bundled into a single ZIP), and **`</>` View
+source** (opens Quarto's own view-source overlay in place). It is **off by
+default**. With R, use `fgcz_render(buttons = TRUE)` for all three, or
+`buttons = "search"` / `"download"` / `"source"` (or any combination) for
+specific ones; `FALSE` remains valid. With the extension, add an
+`include-after-body: …/fgcz-plot-finder.html` line and select controls with
+`fgcz-buttons: search`, `fgcz-buttons: [search, download]`, etc. Omit the
+selection to show all three. Never hand-add buttons, a table-of-figures, or a
+thumbnail gallery; the template's version is complete and tested.
+
+Labelled figures/tables (see "Figures: small and gridded" above) also get a
+**Show code** `</>` badge, on the figure/table itself and in the Find panel,
+independent of which toolbar buttons are selected — it works automatically off
+the same `code-tools: true` the template already sets by default in
+`_metadata.yml`, same as View source.
 
 The controls are icon-only, with no visible text label, to stay compact. Each
 icon carries an accessible tooltip and label instead. The toolbar follows the
@@ -340,7 +353,11 @@ mandatory final **Session Info** tab and its exactly two subtabs:
   quantification software, model where applicable, and report-package version.
   Include the fields available for the report, and link to input data or
   B-Fabric records when available, but do not embed raw data or a large input
-  table in the HTML.
+  table in the HTML. Add a **Qmd source** row with
+  `fgczQuartoTemplate::fgcz_qmd_source_link()` — it links to the `.qmd`
+  whenever it renders alongside the output (the normal case on gStore/pStore)
+  and resolves to `""` otherwise, so drop it with the same nzchar-filter idiom
+  used for the other optional fields rather than showing a blank row.
 - **R session info** — `sessionInfo()` only.
 
 Do **not** repeat this metadata in a top-of-page callout. The final Session Info

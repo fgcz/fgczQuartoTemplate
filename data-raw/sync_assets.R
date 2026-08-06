@@ -174,7 +174,7 @@ vignette_header <- c(
   "format:",
   "  fgczQuartoTemplate-html:",
   "    include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html",
-  "fgcz-buttons: [search, download]",
+  "fgcz-buttons: [search, download, source]",
   "vignette: >",
   "  %\\VignetteIndexEntry{Example FGCZ tabset report}",
   "  %\\VignetteEngine{quarto::format}",

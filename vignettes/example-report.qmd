@@ -3,7 +3,7 @@ title: "FGCZ tabset layout example"
 format:
   fgczQuartoTemplate-html:
     include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html
-fgcz-buttons: [search, download]
+fgcz-buttons: [search, download, source]
 vignette: >
   %\VignetteIndexEntry{Example FGCZ tabset report}
   %\VignetteEngine{quarto::format}
@@ -426,33 +426,23 @@ cat(
 ```
 
 ```{r report-provenance}
+.prov <- c(
+  "Project"               = "Example project",
+  "Order"                 = "Example order",
+  "Workunit"              = "Example workunit",
+  "Created by"            = "fgczQuartoTemplate example vignette",
+  "Creation timestamp"    = generated_at,
+  "Qmd source"            = fgczQuartoTemplate::fgcz_qmd_source_link(),
+  "Input data reference"  = "datasets::iris and datasets::mtcars (bundled with R)",
+  "Analysis software"     = R.version.string,
+  "Model"                 = "Not applicable (layout demonstration)",
+  "Report package"        = paste("fgczQuartoTemplate", report_package_version)
+)
+.prov <- .prov[nzchar(.prov)]
 knitr::kable(
-  data.frame(
-    Field = c(
-      "Project",
-      "Order",
-      "Workunit",
-      "Created by",
-      "Creation timestamp",
-      "Input data reference",
-      "Analysis software",
-      "Model",
-      "Report package"
-    ),
-    Value = c(
-      "Example project",
-      "Example order",
-      "Example workunit",
-      "fgczQuartoTemplate example vignette",
-      generated_at,
-      "datasets::iris and datasets::mtcars (bundled with R)",
-      R.version.string,
-      "Not applicable (layout demonstration)",
-      paste("fgczQuartoTemplate", report_package_version)
-    ),
-    check.names = FALSE
-  ),
-  caption = "Provenance for this rendered example report."
+  data.frame(Field = names(.prov), Value = unname(.prov), check.names = FALSE),
+  caption = "Provenance for this rendered example report.",
+  escape = FALSE
 )
 ```
 

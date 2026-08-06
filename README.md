@@ -43,19 +43,28 @@ quarto render my_report.qmd
 
 Done. ✅
 
-**Optional — 🔍 Find / 📥 Download toolbar** (off by default). Switch it on and
-select its buttons in the report header:
+**Optional — 🔍 Find / 📥 Download / `</>` View source toolbar** (off by
+default). Switch it on and select its buttons in the report header:
 
 ```yaml
 format:
   fgczQuartoTemplate-html:
     include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html
-fgcz-buttons: [search, download]
+fgcz-buttons: [search, download, source]
 ```
 
-Use `fgcz-buttons: search` or `fgcz-buttons: download` for one button. Omit
-`fgcz-buttons` to show both when the toolbar is included. Unknown names stop the
-render instead of silently hiding controls.
+Use `fgcz-buttons: search` (or any subset, e.g. `[search, download]`) to pick
+individual buttons. Omit `fgcz-buttons` to show all three when the toolbar is
+included. Unknown names stop the render instead of silently hiding controls.
+The View source button opens Quarto's own view-source overlay and only
+appears when the report was rendered with `code-tools: true` (a template
+default already set in `_metadata.yml`).
+
+**Bonus — "Show code" per plot/table.** Any figure/table chunk with
+`#| label: fig-xxx` / `#| label: tbl-xxx` and a matching `fig-cap:`/`tbl-cap:`
+automatically gets a small `</>` badge — on the figure itself and in the Find
+panel — that jumps to and highlights that chunk in View Source. No wiring
+needed beyond the label; unlabelled chunks show nothing extra.
 
 **Optional — tab colour and layout switches** (all off by default). Three independent
 switches in the report header:
@@ -98,7 +107,7 @@ title: "My report"
 
 ```r
 fgczQuartoTemplate::fgcz_render("my_report.qmd")                 # no toolbar
-fgczQuartoTemplate::fgcz_render("my_report.qmd", buttons = TRUE) # 🔍 Find / 📥 Download
+fgczQuartoTemplate::fgcz_render("my_report.qmd", buttons = TRUE) # 🔍 Find / 📥 Download / </> View source
 fgczQuartoTemplate::fgcz_render("my_report.qmd", buttons = "search") # 🔍 Find only
 fgczQuartoTemplate::fgcz_render("my_report.qmd", colour = TRUE, number = TRUE) # coloured + numbered tabs
 fgczQuartoTemplate::fgcz_render("my_report.qmd", full_width = TRUE) # content fills the screen
@@ -146,7 +155,7 @@ Both produce the **same** report. They can coexist in one repo.
 
 ```r
 fgcz_render("report.qmd")               # stage assets + render (the usual one)
-fgcz_render("report.qmd", buttons = TRUE) # ...plus the 🔍 Find / 📥 Download toolbar
+fgcz_render("report.qmd", buttons = TRUE) # ...plus the 🔍 Find / 📥 Download / </> View source toolbar
 fgcz_render("report.qmd", buttons = "download") # ...or just 📥 Download
 fgcz_render("report.qmd", colour = TRUE)  # per-level tab colours
 fgcz_render("report.qmd", number = TRUE)  # tab numbers 1, 1.1, 1.1.1 …
@@ -156,6 +165,7 @@ fgcz_copy_assets("report.qmd")          # stage assets next to that file
 fgcz_copy_assets("dir")                 # or stage assets into an existing dir
 fgcz_use_template("dir", "report.qmd")  # start a new report from the template
 fgcz_quarto_dir()                       # where the installed assets live
+fgcz_qmd_source_link()                  # <a> link to this report's .qmd, for a Report provenance table
 ```
 
 ## Why two mechanisms exist (30-second version)

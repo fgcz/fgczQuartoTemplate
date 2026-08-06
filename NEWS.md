@@ -1,5 +1,19 @@
 # fgczQuartoTemplate (development version)
 
+* A "`</>` Show code" badge now appears directly on any figure or table chunk
+  labelled Quarto's own way (`#| label: fig-xxx` / `#| label: tbl-xxx` with a
+  matching `fig-cap:`/`tbl-cap:`) — both in its top-right corner in the report
+  body and on its card in the Find panel — click either to open View Source
+  already scrolled to and highlighting that exact chunk. Fully automatic and
+  client-side, resolved from what Quarto already renders (the crossref id +
+  the embedded source); unlabelled chunks show nothing extra, in either
+  place. Requires `code-tools: true`, same as the View source button.
+* The toolbar gains a third button, `</>` View source, alongside 🔍 Find and
+  📥 Download: opens Quarto's own view-source overlay in place, driving its
+  native machinery (`#quarto-view-source` / the embedded-source modal / the
+  native code-tools button) rather than reimplementing it. Select it with
+  `fgcz_render(buttons = "source")` or `fgcz-buttons: source`; `TRUE` /
+  omitting `fgcz-buttons` now enables all three.
 * New `fgcz_render(fig_dpi =, fig_retina =)`, both `NULL` (unset) by default:
   override the shared `_metadata.yml` figure resolution for a single render
   without editing the `.qmd`. Useful for figure-heavy reports (many samples,

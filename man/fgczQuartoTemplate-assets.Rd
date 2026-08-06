@@ -16,8 +16,8 @@ because of its reserved name -- reports need no reference to it.}
 \item{\code{fgcz.scss}}{Theme overrides (tabset/card styling, figure rows).}
 \item{\code{fgcz_header_quarto.html}}{FGCZ header injected via
 \verb{include-in-header}.}
-\item{\code{fgcz-plot-finder.html}}{Top-right search + download toolbar.
-Opt-in: staged next to every report but only injected (via
+\item{\code{fgcz-plot-finder.html}}{Top-right search + download + view-source
+toolbar. Opt-in: staged next to every report but only injected (via
 \code{include-after-body}) when asked for, e.g.
 \code{fgcz_render(buttons = "search")}.}
 \item{\code{fgcz-buttons.lua}}{Quarto extension filter that validates and
@@ -34,6 +34,6 @@ same directory. The \verb{_metadata.yml} references \code{fgcz.scss} and
 \code{fgcz_header_quarto.html} by bare filename, which Quarto resolves relative to
 the input \code{.qmd}, so they must travel together; see \code{\link[=fgcz_copy_assets]{fgcz_copy_assets()}} and
 \code{\link[=fgcz_render]{fgcz_render()}}. The toolbar (\code{fgcz-plot-finder.html}) is staged too but is
-opt-in -- enable both buttons with \code{fgcz_render(buttons = TRUE)}, or select
-buttons by name.
+opt-in -- enable all three buttons with \code{fgcz_render(buttons = TRUE)}, or
+select buttons by name.
 }

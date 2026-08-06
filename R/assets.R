@@ -11,8 +11,8 @@
 #'   \item{`fgcz.scss`}{Theme overrides (tabset/card styling, figure rows).}
 #'   \item{`fgcz_header_quarto.html`}{FGCZ header injected via
 #'     `include-in-header`.}
-#'   \item{`fgcz-plot-finder.html`}{Top-right search + download toolbar.
-#'     Opt-in: staged next to every report but only injected (via
+#'   \item{`fgcz-plot-finder.html`}{Top-right search + download + view-source
+#'     toolbar. Opt-in: staged next to every report but only injected (via
 #'     `include-after-body`) when asked for, e.g.
 #'     `fgcz_render(buttons = "search")`.}
 #'   \item{`fgcz-buttons.lua`}{Quarto extension filter that validates and
@@ -29,8 +29,8 @@
 #' `fgcz_header_quarto.html` by bare filename, which Quarto resolves relative to
 #' the input `.qmd`, so they must travel together; see [fgcz_copy_assets()] and
 #' [fgcz_render()]. The toolbar (`fgcz-plot-finder.html`) is staged too but is
-#' opt-in -- enable both buttons with `fgcz_render(buttons = TRUE)`, or select
-#' buttons by name.
+#' opt-in -- enable all three buttons with `fgcz_render(buttons = TRUE)`, or
+#' select buttons by name.
 #'
 #' @name fgczQuartoTemplate-assets
 NULL
@@ -38,9 +38,10 @@ NULL
 #' The names of the shared styling assets
 #'
 #' The files that every FGCZ report needs alongside it: the directory metadata
-#' (`_metadata.yml`), the SCSS theme, the HTML header, and the search + download
-#' toolbar. The first three are wired in by `_metadata.yml`; the toolbar is
-#' staged too but stays opt-in (see [fgcz_render()]'s `buttons` argument).
+#' (`_metadata.yml`), the SCSS theme, the HTML header, and the search +
+#' download + view-source toolbar. The first three are wired in by
+#' `_metadata.yml`; the toolbar is staged too but stays opt-in (see
+#' [fgcz_render()]'s `buttons` argument).
 #' `template.qmd` is deliberately excluded -- it is a starter you copy once, not
 #' an asset staged on every render.
 #'
@@ -180,10 +181,11 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #'
 #' @param input Path to the `.qmd` to render.
 #' @param buttons Which top-right toolbar buttons (`fgcz-plot-finder.html`) to
-#'   add. Defaults to `FALSE`; `TRUE` enables both buttons for backward
+#'   add. Defaults to `FALSE`; `TRUE` enables all three buttons for backward
 #'   compatibility. Alternatively, pass `"search"` for Find, `"download"` for
-#'   Download, or `c("search", "download")` for both. `FALSE`, `NULL`, and
-#'   `character(0)` disable the toolbar.
+#'   Download, `"source"` for View source, or any combination, e.g.
+#'   `c("search", "download")`. `FALSE`, `NULL`, and `character(0)` disable the
+#'   toolbar.
 #' @param colour Use the per-nesting-level tab colour palette (deep blue →
 #'   indigo) instead of the default uniform folder tabs. Defaults to `FALSE`.
 #' @param number Prefix every tab label with its hierarchical number (`1`,
@@ -215,8 +217,9 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
 #' @examples
 #' \dontrun{
 #' fgcz_render("CountQC.qmd", execute_params = list(reportTitle = "CountQC"))
-#' fgcz_render("CountQC.qmd", buttons = TRUE) # with the Find/Download toolbar
+#' fgcz_render("CountQC.qmd", buttons = TRUE) # with the full toolbar
 #' fgcz_render("CountQC.qmd", buttons = "search") # Find only
+#' fgcz_render("CountQC.qmd", buttons = c("search", "source")) # Find + View source
 #' fgcz_render("CountQC.qmd", colour = TRUE, number = TRUE) # coloured, numbered
 #' fgcz_render("CountQC.qmd", full_width = TRUE) # content fills the screen
 #' fgcz_render("CountQC.qmd", fig_dpi = 150, fig_retina = 1) # smaller HTML
@@ -311,7 +314,7 @@ fgcz_render <- function(
 }
 
 # Valid toolbar button names, in display order.
-.fgcz_valid_buttons <- c("search", "download")
+.fgcz_valid_buttons <- c("search", "download", "source")
 
 # Validate and normalize the `buttons` argument. Logical scalars are retained
 # for backward compatibility; named selections are returned in display order.
@@ -323,7 +326,7 @@ fgcz_render <- function(
     if (length(buttons) != 1L || is.na(buttons)) {
       stop(
         "`buttons` must be a single TRUE or FALSE, NULL, or a character ",
-        "vector containing only \"search\" and/or \"download\".",
+        "vector containing only \"search\", \"download\", and/or \"source\".",
         call. = FALSE
       )
     }
@@ -335,7 +338,7 @@ fgcz_render <- function(
   if (!is.character(buttons) || anyNA(buttons)) {
     stop(
       "`buttons` must be a single TRUE or FALSE, NULL, or a character ",
-      "vector containing only \"search\" and/or \"download\".",
+      "vector containing only \"search\", \"download\", and/or \"source\".",
       call. = FALSE
     )
   }

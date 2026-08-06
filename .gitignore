@@ -14,3 +14,5 @@ _quarto/*
 !_quarto/_freeze/
 # scratch: p42092 CountQC report copy for interactive fig-height/width tidy-up
 scratch-p42092-CountQC/
+# scratch: rendered demo of the toolbar/qmd-link/show-code feedback (2026-08-06)
+scratch-feature-demo/

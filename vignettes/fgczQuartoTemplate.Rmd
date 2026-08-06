@@ -142,8 +142,8 @@ needs the Quarto CLI, so the call below is shown but not run in this vignette:
 
 ```{r render, eval = FALSE}
 fgcz_render(qmd, execute_params = list(reportTitle = "My analysis"))
-fgcz_render(qmd, buttons = TRUE) # both toolbar buttons; FALSE remains the default
-fgcz_render(qmd, buttons = "search") # Find only; "download" selects Download
+fgcz_render(qmd, buttons = TRUE) # all three toolbar buttons; FALSE remains the default
+fgcz_render(qmd, buttons = "search") # Find only; "download"/"source" select the others
 fgcz_render(qmd, colour = TRUE, number = TRUE) # per-level tab colours + numbers
 fgcz_render(qmd, fig_dpi = 150, fig_retina = 1) # smaller self-contained HTML
 ```
@@ -165,11 +165,18 @@ With the Quarto extension route, opt into the toolbar with
 format:
   fgczQuartoTemplate-html:
     include-after-body: _extensions/fgczQuartoTemplate/fgcz-plot-finder.html
-fgcz-buttons: [search, download]
+fgcz-buttons: [search, download, source]
 ````
 
-Use a single name for one button. Omitting `fgcz-buttons` shows both controls;
-an unknown name stops the render with a validation error.
+Use a single name for one button, or any subset. Omitting `fgcz-buttons` shows
+all three controls; an unknown name stops the render with a validation error.
+
+Independent of the toolbar selection, any figure or table chunk with
+`#| label: fig-xxx` / `#| label: tbl-xxx` and a matching `fig-cap:`/`tbl-cap:`
+gets a small "Show code" `</>` badge — on the figure/table itself and on its
+card in the Find panel — that jumps to and highlights that chunk in View
+Source. It needs only `code-tools: true`, which is already a `_metadata.yml`
+default, so an unlabelled chunk (the default) simply shows nothing extra.
 
 Two further opt-in tab features, both off by default and independent of each
 other, are set as top-level YAML keys (or via `fgcz_render(colour =, number =)`

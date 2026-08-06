@@ -3,10 +3,10 @@
 -- A report using the Quarto extension can select toolbar buttons with:
 --
 --   fgcz-buttons: search
---   fgcz-buttons: [search, download]
+--   fgcz-buttons: [search, download, source]
 --
 -- The toolbar remains opt-in through `include-after-body`. If this key is
--- omitted, an included toolbar shows both buttons.
+-- omitted, an included toolbar shows all three buttons.
 --
 -- It can also switch on the optional layout/tab features, all off by default:
 --
@@ -18,8 +18,8 @@
 -- (fgcz_header_quarto.html) and fgcz.scss react to. The R helper reaches the
 -- same classes by patching the header instead -- see .fgcz_set_header_flags().
 
-local valid_names = { "search", "download" }
-local valid_lookup = { search = true, download = true }
+local valid_names = { "search", "download", "source" }
+local valid_lookup = { search = true, download = true, source = true }
 
 -- Boolean feature keys → the class each one adds to <html>.
 local flag_keys = {
@@ -103,7 +103,7 @@ local function apply_buttons(meta)
     assert(
       false,
       "Unknown fgcz-buttons value(s): " .. table.concat(unknown_names, ", ") ..
-        ". Valid values are: search, download."
+        ". Valid values are: " .. table.concat(valid_names, ", ") .. "."
     )
   end
 

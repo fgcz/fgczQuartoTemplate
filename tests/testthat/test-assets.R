@@ -72,13 +72,18 @@ test_that("toolbar button selections preserve logical compatibility", {
 
   expect_identical(validate(NULL), character(0))
   expect_identical(validate(FALSE), character(0))
-  expect_identical(validate(TRUE), c("search", "download"))
+  expect_identical(validate(TRUE), c("search", "download", "source"))
   expect_identical(validate(character(0)), character(0))
   expect_identical(validate("search"), "search")
   expect_identical(validate("download"), "download")
+  expect_identical(validate("source"), "source")
   expect_identical(
     validate(c("download", "search", "search")),
     c("search", "download")
+  )
+  expect_identical(
+    validate(c("source", "search")),
+    c("search", "source")
   )
 })
 
@@ -98,12 +103,12 @@ test_that("staged toolbar receives the selected button names", {
 
   fgczQuartoTemplate:::.fgcz_set_toolbar_buttons(
     tmp,
-    c("search", "download")
+    c("search", "download", "source")
   )
 
   patched <- paste(readLines(tmp, warn = FALSE), collapse = "\n")
   expect_equal(grepl("__FGCZ_BUTTONS__", patched, fixed = TRUE), FALSE)
-  expect_equal(grepl('"search download"', patched, fixed = TRUE), TRUE)
+  expect_equal(grepl('"search download source"', patched, fixed = TRUE), TRUE)
 })
 
 test_that("feature flags map to the classes they add, in canonical order", {
@@ -275,13 +280,17 @@ test_that("fgcz_render supports logical and named toolbar selections", {
   html <- paste(readLines(output, warn = FALSE), collapse = "\n")
   expect_equal(grepl("fgcz-pf-toolbar", html, fixed = TRUE), TRUE)
   expect_equal(
-    grepl('FGCZ_BUTTONS = "search download"', html, fixed = TRUE),
+    grepl('FGCZ_BUTTONS = "search download source"', html, fixed = TRUE),
     TRUE
   )
 
   fgcz_render(qmd, buttons = "search", quiet = TRUE)
   html <- paste(readLines(output, warn = FALSE), collapse = "\n")
   expect_equal(grepl('FGCZ_BUTTONS = "search"', html, fixed = TRUE), TRUE)
+
+  fgcz_render(qmd, buttons = "source", quiet = TRUE)
+  html <- paste(readLines(output, warn = FALSE), collapse = "\n")
+  expect_equal(grepl('FGCZ_BUTTONS = "source"', html, fixed = TRUE), TRUE)
 })
 
 test_that("the Quarto filter rejects unknown button names", {
@@ -317,7 +326,7 @@ test_that("the Quarto filter rejects unknown button names", {
   expect_equal(attr(output, "status"), 1L)
   expect_match(
     paste(output, collapse = "\n"),
-    "Unknown fgcz-buttons value(s): bogus. Valid values are: search, download.",
+    "Unknown fgcz-buttons value(s): bogus. Valid values are: search, download, source.",
     fixed = TRUE
   )
 })
@@ -430,6 +439,40 @@ test_that("the Quarto filter injects and normalizes a valid button list", {
   )
 })
 
+test_that("the Quarto filter accepts the source button, canonically ordered", {
+  testthat::skip_if_not(quarto::quarto_available())
+  dir <- tempfile()
+  dir.create(dir)
+  on.exit(unlink(dir, recursive = TRUE), add = TRUE)
+  file.copy(fgcz_quarto_dir("fgcz-buttons.lua"), dir)
+  qmd <- file.path(dir, "source-button.qmd")
+  writeLines(
+    c(
+      "---",
+      'title: "Source button"',
+      "format: html",
+      "filters: [fgcz-buttons.lua]",
+      "fgcz-buttons: [source, search]",
+      "---",
+      "",
+      "Report body."
+    ),
+    qmd
+  )
+
+  quarto::quarto_render(qmd, quiet = TRUE)
+  html <- paste(
+    readLines(file.path(dir, "source-button.html"), warn = FALSE),
+    collapse = "\n"
+  )
+
+  expect_match(
+    html,
+    'window.FGCZ_BUTTONS = ["search","source"]',
+    fixed = TRUE
+  )
+})
+
 test_that("plot finder downloads use report metadata and current timestamps", {
   toolbar <- paste(
     readLines(fgcz_quarto_dir("fgcz-plot-finder.html"), warn = FALSE),
@@ -442,12 +485,29 @@ test_that("plot finder downloads use report metadata and current timestamps", {
   # reveals one on hover or focus.
   expect_false(grepl('class="lbl">Find', toolbar, fixed = TRUE))
   expect_false(grepl('class="lbl">Download', toolbar, fixed = TRUE))
+  expect_false(grepl('class="lbl">View source', toolbar, fixed = TRUE))
   expect_false(grepl(".fgcz-pf-toolbar .lbl", toolbar, fixed = TRUE))
   # The icons must still announce themselves to tooltips and screen readers,
   # which is the whole reason dropping the visible label is acceptable.
   expect_match(toolbar, 'aria-label="Find figures and tables"', fixed = TRUE)
   expect_match(toolbar, 'aria-label="Download plots"', fixed = TRUE)
+  expect_match(toolbar, 'aria-label="View source"', fixed = TRUE)
   expect_match(toolbar, "positionToolbar", fixed = TRUE)
+  # The view-source button drives Quarto's own machinery rather than
+  # reimplementing a source viewer, trying each hook Quarto might have emitted
+  # in turn, and is dropped when none of them exist.
+  expect_match(toolbar, "getElementById('fgcz-src-btn')", fixed = TRUE)
+  expect_match(toolbar, "getElementById('quarto-view-source')", fixed = TRUE)
+  expect_match(toolbar, "querySelector('.code-tools-button')", fixed = TRUE)
+  expect_match(toolbar, "var hasSource", fixed = TRUE)
+  # Manual include (no fgcz_render() patching, no Lua filter) falls back to
+  # showing all three buttons -- this literal regressed to two when the
+  # source button was added and only the R/Lua defaults were updated.
+  expect_match(
+    toolbar,
+    'FGCZ_BUTTONS = ["search", "download", "source"]',
+    fixed = TRUE
+  )
   # Whole-report extras alongside the per-plot gallery: the qmd source Quarto
   # embeds under code-tools, and a standalone snapshot of the page.
   expect_match(toolbar, 'data-what="qmd"', fixed = TRUE)
@@ -471,4 +531,69 @@ test_that("plot finder downloads use report metadata and current timestamps", {
   expect_match(toolbar, "timestampForFilename(new Date())", fixed = TRUE)
   expect_match(toolbar, "zipDosDateTime", fixed = TRUE)
   expect_match(toolbar, "u16(stamp.time), u16(stamp.date)", fixed = TRUE)
+})
+
+test_that("the Find panel can locate a labelled chunk in the embedded source", {
+  toolbar <- paste(
+    readLines(fgcz_quarto_dir("fgcz-plot-finder.html"), warn = FALSE),
+    collapse = "\n"
+  )
+
+  expect_match(toolbar, "function crossrefIdFor", fixed = TRUE)
+  expect_match(toolbar, "function chunkRangeForId", fixed = TRUE)
+  expect_match(toolbar, "function showChunkForId", fixed = TRUE)
+  expect_match(toolbar, ".fgcz-toc-code {", fixed = TRUE)
+  expect_match(toolbar, "codeBtn.className = 'fgcz-toc-code'", fixed = TRUE)
+  expect_match(toolbar, "fgcz-src-hl", fixed = TRUE)
+  # Quarto puts the crossref id on an ancestor div, never on the <figure>
+  # element itself that buildIndex() indexes -- crossrefIdFor() must look
+  # there, not at el.id directly, or every item resolves to no id and the
+  # button never appears for anyone.
+  expect_match(toolbar, '[id^="fig-"], [id^="tbl-"]', fixed = TRUE)
+  # Same action also surfaced inline on the figure/table itself, not just in
+  # the Find panel.
+  expect_match(toolbar, "function decorateInlineCode", fixed = TRUE)
+  expect_match(toolbar, ".fgcz-inline-code {", fixed = TRUE)
+  expect_match(toolbar, "badge.className = 'fgcz-inline-code'", fixed = TRUE)
+  expect_match(toolbar, "decorateInlineCode();", fixed = TRUE)
+})
+
+test_that("a labelled chunk's crossref id and source both resolve as the JS expects", {
+  testthat::skip_if_not(quarto::quarto_available())
+  dir <- tempfile()
+  dir.create(dir)
+  on.exit(unlink(dir, recursive = TRUE), add = TRUE)
+  qmd <- file.path(dir, "showcode.qmd")
+  writeLines(
+    c(
+      "---", 'title: "Show code test"', "---", "",
+      "```{r}", "#| label: fig-alpha", '#| fig-cap: "Alpha"', "plot(1:10)", "```",
+      "",
+      "```{r}", '#| fig-cap: "Beta, unlabelled"', "plot(10:1)", "```"
+    ),
+    qmd
+  )
+
+  fgcz_render(
+    qmd,
+    buttons = TRUE,
+    quiet = TRUE,
+    metadata = list(`code-tools` = TRUE)
+  )
+  html <- paste(
+    readLines(file.path(dir, "showcode.html"), warn = FALSE),
+    collapse = "\n"
+  )
+
+  # The labelled chunk gets exactly this crossref id -- the precondition
+  # crossrefIdFor()/chunkRangeForId() rely on to show the button for Alpha
+  # and nothing for the unlabelled Beta chunk. (Quarto also stamps a
+  # "fig-alpha-caption-<uuid>" id on the figcaption itself, hence matching
+  # the exact id rather than counting every "fig-"-prefixed id in the page.)
+  expect_equal(length(gregexpr('id="fig-alpha"', html, fixed = TRUE)[[1]]), 1L)
+  # That id sits on an ancestor of <figure>, not on <figure> itself.
+  expect_false(grepl('<figure[^>]*id="fig-alpha"', html))
+  # The label chunk option survives verbatim into the embedded source text
+  # chunkRangeForId() searches.
+  expect_match(html, "label: fig-alpha", fixed = TRUE)
 })

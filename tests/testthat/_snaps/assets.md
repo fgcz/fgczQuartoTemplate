@@ -12,7 +12,7 @@
       validate(NA)
     Condition
       Error:
-      ! `buttons` must be a single TRUE or FALSE, NULL, or a character vector containing only "search" and/or "download".
+      ! `buttons` must be a single TRUE or FALSE, NULL, or a character vector containing only "search", "download", and/or "source".
 
 ---
 
@@ -20,7 +20,7 @@
       validate(c(TRUE, FALSE))
     Condition
       Error:
-      ! `buttons` must be a single TRUE or FALSE, NULL, or a character vector containing only "search" and/or "download".
+      ! `buttons` must be a single TRUE or FALSE, NULL, or a character vector containing only "search", "download", and/or "source".
 
 ---
 
@@ -28,7 +28,7 @@
       validate(1L)
     Condition
       Error:
-      ! `buttons` must be a single TRUE or FALSE, NULL, or a character vector containing only "search" and/or "download".
+      ! `buttons` must be a single TRUE or FALSE, NULL, or a character vector containing only "search", "download", and/or "source".
 
 ---
 
@@ -36,7 +36,7 @@
       validate("bogus")
     Condition
       Error:
-      ! Unknown toolbar button name(s): bogus. Valid names are: search, download.
+      ! Unknown toolbar button name(s): bogus. Valid names are: search, download, source.
 
 ---
 
@@ -44,5 +44,5 @@
       validate(c("search", "bogus"))
     Condition
       Error:
-      ! Unknown toolbar button name(s): bogus. Valid names are: search, download.
+      ! Unknown toolbar button name(s): bogus. Valid names are: search, download, source.
 

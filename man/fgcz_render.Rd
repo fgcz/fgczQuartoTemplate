@@ -19,10 +19,11 @@ fgcz_render(
 \item{input}{Path to the \code{.qmd} to render.}
 
 \item{buttons}{Which top-right toolbar buttons (\code{fgcz-plot-finder.html}) to
-add. Defaults to \code{FALSE}; \code{TRUE} enables both buttons for backward
+add. Defaults to \code{FALSE}; \code{TRUE} enables all three buttons for backward
 compatibility. Alternatively, pass \code{"search"} for Find, \code{"download"} for
-Download, or \code{c("search", "download")} for both. \code{FALSE}, \code{NULL}, and
-\code{character(0)} disable the toolbar.}
+Download, \code{"source"} for View source, or any combination, e.g.
+\code{c("search", "download")}. \code{FALSE}, \code{NULL}, and \code{character(0)} disable the
+toolbar.}
 
 \item{colour}{Use the per-nesting-level tab colour palette (deep blue →
 indigo) instead of the default uniform folder tabs. Defaults to \code{FALSE}.}
@@ -66,8 +67,9 @@ Quarto automatically, so the report stays fully portable.
 \examples{
 \dontrun{
 fgcz_render("CountQC.qmd", execute_params = list(reportTitle = "CountQC"))
-fgcz_render("CountQC.qmd", buttons = TRUE) # with the Find/Download toolbar
+fgcz_render("CountQC.qmd", buttons = TRUE) # with the full toolbar
 fgcz_render("CountQC.qmd", buttons = "search") # Find only
+fgcz_render("CountQC.qmd", buttons = c("search", "source")) # Find + View source
 fgcz_render("CountQC.qmd", colour = TRUE, number = TRUE) # coloured, numbered
 fgcz_render("CountQC.qmd", full_width = TRUE) # content fills the screen
 fgcz_render("CountQC.qmd", fig_dpi = 150, fig_retina = 1) # smaller HTML
