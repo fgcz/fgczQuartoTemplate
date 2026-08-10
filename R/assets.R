@@ -151,9 +151,7 @@ fgcz_use_template <- function(dir, to = "template.qmd", overwrite = FALSE) {
   if (file.exists(dest) && !overwrite) {
     stop("'", dest, "' already exists; pass overwrite = TRUE to replace it.")
   }
-  if (
-    !file.copy(fgcz_quarto_dir("template.qmd"), dest, overwrite = overwrite)
-  ) {
+  if (!file.copy(fgcz_quarto_dir("template.qmd"), dest, overwrite = overwrite)) {
     stop("Failed to copy template to '", dest, "'.")
   }
   overview <- "fgcz-report-overview.svg"

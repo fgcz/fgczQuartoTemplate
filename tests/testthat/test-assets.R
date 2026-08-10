@@ -174,8 +174,23 @@ test_that("fgcz_render applies the colour and numbering flags", {
   on.exit(unlink(dir, recursive = TRUE), add = TRUE)
   qmd <- file.path(dir, "report.qmd")
   writeLines(
-    c("---", 'title: "Flag test"', "---", "", "::: {.panel-tabset}", "",
-      "# One", "", "a", "", "# Two", "", "b", "", ":::"),
+    c(
+      "---",
+      'title: "Flag test"',
+      "---",
+      "",
+      "::: {.panel-tabset}",
+      "",
+      "# One",
+      "",
+      "a",
+      "",
+      "# Two",
+      "",
+      "b",
+      "",
+      ":::"
+    ),
     qmd
   )
   output <- file.path(dir, "report.html")
@@ -249,8 +264,7 @@ test_that("the Quarto filter leaves the feature classes alone by default", {
   file.copy(fgcz_quarto_dir("fgcz-buttons.lua"), dir)
   qmd <- file.path(dir, "noflags.qmd")
   writeLines(
-    c("---", 'title: "No flags"', "format: html", "filters: [fgcz-buttons.lua]",
-      "---", "", "Report body."),
+    c("---", 'title: "No flags"', "format: html", "filters: [fgcz-buttons.lua]", "---", "", "Report body."),
     qmd
   )
 
@@ -342,10 +356,14 @@ test_that("the Quarto filter rejects unknown button names", {
   vals <- lookup[strsplit(s, "")[[1]]]
   bits <- unlist(lapply(vals, function(v) bitwAnd(bitwShiftR(v, 5:0), 1L)))
   nbytes <- length(bits) %/% 8L
-  as.raw(vapply(seq_len(nbytes), function(i) {
-    b <- bits[((i - 1) * 8 + 1):(i * 8)]
-    sum(b * 2^(7:0))
-  }, numeric(1)))
+  as.raw(vapply(
+    seq_len(nbytes),
+    function(i) {
+      b <- bits[((i - 1) * 8 + 1):(i * 8)]
+      sum(b * 2^(7:0))
+    },
+    numeric(1)
+  ))
 }
 
 # Read width/height (pixels) from a PNG's IHDR chunk: 8-byte signature, then
@@ -378,8 +396,14 @@ test_that("fgcz_render honors fig_dpi and fig_retina overrides", {
   qmd <- file.path(dir, "report.qmd")
   writeLines(
     c(
-      "---", 'title: "DPI test"', "---", "",
-      "```{r}", "#| fig-cap: test", "plot(1:10)", "```"
+      "---",
+      'title: "DPI test"',
+      "---",
+      "",
+      "```{r}",
+      "#| fig-cap: test",
+      "plot(1:10)",
+      "```"
     ),
     qmd
   )
@@ -566,10 +590,20 @@ test_that("a labelled chunk's crossref id and source both resolve as the JS expe
   qmd <- file.path(dir, "showcode.qmd")
   writeLines(
     c(
-      "---", 'title: "Show code test"', "---", "",
-      "```{r}", "#| label: fig-alpha", '#| fig-cap: "Alpha"', "plot(1:10)", "```",
+      "---",
+      'title: "Show code test"',
+      "---",
       "",
-      "```{r}", '#| fig-cap: "Beta, unlabelled"', "plot(10:1)", "```"
+      "```{r}",
+      "#| label: fig-alpha",
+      '#| fig-cap: "Alpha"',
+      "plot(1:10)",
+      "```",
+      "",
+      "```{r}",
+      '#| fig-cap: "Beta, unlabelled"',
+      "plot(10:1)",
+      "```"
     ),
     qmd
   )
