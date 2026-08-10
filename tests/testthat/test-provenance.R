@@ -10,9 +10,15 @@ test_that("fgcz_qmd_source_link links the .qmd when it renders alongside its out
   qmd <- file.path(dir, "report.qmd")
   writeLines(
     c(
-      "---", 'title: "Qmd link test"', "---", "",
-      "```{r}", "#| echo: false", "#| results: asis",
-      'cat(fgczQuartoTemplate::fgcz_qmd_source_link())', "```"
+      "---",
+      'title: "Qmd link test"',
+      "---",
+      "",
+      "```{r}",
+      "#| echo: false",
+      "#| results: asis",
+      "cat(fgczQuartoTemplate::fgcz_qmd_source_link())",
+      "```"
     ),
     qmd
   )
